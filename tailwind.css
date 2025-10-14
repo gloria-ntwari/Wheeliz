@@ -35,6 +35,34 @@
   animation: var(--animate-spin);
 }
 
+.animate-car-move {
+  animation: car-move 5s ease-in-out infinite;
+}
+
+.animate-wheel-float-1 {
+  animation: wheel-float-1 3s ease-in-out infinite;
+}
+
+.animate-wheel-float-2 {
+  animation: wheel-float-2 4s ease-in-out infinite;
+}
+
+.animate-wheel-float-3 {
+  animation: wheel-float-3 3.5s ease-in-out infinite;
+}
+
+.animate-wheel-float-4 {
+  animation: wheel-float-4 4.5s ease-in-out infinite;
+}
+
+.animate-wheel-float-5 {
+  animation: wheel-float-5 3.2s ease-in-out infinite;
+}
+
+.animate-wheel-rotate {
+  animation: wheel-rotate 2s linear infinite;
+}
+
 @keyframes spin {
   to {
     transform: rotate(1turn);
@@ -111,6 +139,104 @@
 
   to {
     transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes car-move {
+  0% {
+    transform: translateX(-50vw) translateY(0px) rotate(0deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  10% {
+    transform: translateX(-30vw) translateY(5px) rotate(1deg);
+  }
+  20% {
+    transform: translateX(-10vw) translateY(12px) rotate(3deg);
+  }
+  30% {
+    transform: translateX(10vw) translateY(18px) rotate(5deg);
+  }
+  40% {
+    transform: translateX(30vw) translateY(20px) rotate(4deg);
+  }
+  50% {
+    transform: translateX(50vw) translateY(16px) rotate(2deg);
+  }
+  60% {
+    transform: translateX(70vw) translateY(10px) rotate(-1deg);
+  }
+  70% {
+    transform: translateX(90vw) translateY(5px) rotate(-3deg);
+  }
+  80% {
+    transform: translateX(110vw) translateY(2px) rotate(-2deg);
+  }
+  90% {
+    transform: translateX(130vw) translateY(0px) rotate(0deg);
+  }
+  97% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(150vw) translateY(0px) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+@keyframes wheel-float-1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(180deg);
+  }
+}
+
+@keyframes wheel-float-2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(-180deg);
+  }
+}
+
+@keyframes wheel-float-3 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(90deg);
+  }
+}
+
+@keyframes wheel-float-4 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(-90deg);
+  }
+}
+
+@keyframes wheel-float-5 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(270deg);
+  }
+}
+
+@keyframes wheel-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 

@@ -1,5 +1,5 @@
 import { ArrowRightIcon, Menu, X } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "../../../../components/ui/button";
 
 const navigationItems = [
@@ -57,7 +57,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         />
 
         <img
-          className="absolute h-[35.13%] top-[56.54%] left-[calc(50%-864px)] w-[562px] hidden lg:block"
+          className="absolute h-[25%] sm:h-[30%] md:h-[35%] top-[65%] left-[calc(50%-864px)] w-[400px] sm:w-[450px] md:w-[500px] lg:w-[562px] animate-car-move"
           alt="Clip path group"
           src="/clip-path-group-2.png"
         />
@@ -134,13 +134,13 @@ export const FeaturedProductsSection = (): JSX.Element => {
         />
 
         <img
-          className="absolute w-[7.15%] h-[4.80%] top-[11.85%] left-[12.15%]"
+          className="absolute w-[7.15%] h-[4.80%] top-[11.85%] left-[12.15%] animate-wheel-rotate"
           alt="Clip path group"
           src="/clip-path-group-5.png"
         />
 
         <img
-          className="absolute w-[7.22%] h-[2.70%] top-[13.95%] left-[8.68%]"
+          className="absolute w-[7.22%] h-[2.70%] top-[13.95%] left-[8.68%] animate-wheel-rotate"
           alt="Clip path group"
           src="/clip-path-group-6.png"
         />
@@ -194,31 +194,31 @@ export const FeaturedProductsSection = (): JSX.Element => {
         />
 
         <img
-          className="absolute w-[6.46%] h-[13.43%] top-[28.73%] left-[71.90%]"
+          className="absolute w-[6.46%] h-[13.43%] top-[28.73%] left-[71.90%] animate-wheel-float-1"
           alt="Clip path group"
           src="/clip-path-group-10.png"
         />
 
         <img
-          className="absolute w-[6.46%] h-[13.43%] top-[67.78%] left-[16.41%]"
+          className="absolute w-[6.46%] h-[13.43%] top-[67.78%] left-[16.41%] animate-wheel-float-2"
           alt="Clip path group"
           src="/clip-path-group-11.png"
         />
 
         <img
-          className="absolute w-[6.46%] h-[13.43%] top-[26.94%] left-[2.41%]"
+          className="absolute w-[6.46%] h-[13.43%] top-[26.94%] left-[2.41%] animate-wheel-float-3"
           alt="Clip path group"
           src="/clip-path-group-12.png"
         />
 
         <img
-          className="absolute w-[6.09%] h-[12.78%] top-[64.20%] left-[82.34%]"
+          className="absolute w-[6.09%] h-[12.78%] top-[64.20%] left-[82.34%] animate-wheel-float-4"
           alt="Clip path group"
           src="/clip-path-group-13.png"
         />
 
         <img
-          className="absolute w-[6.09%] h-[12.72%] top-[61.73%] left-[3.27%]"
+          className="absolute w-[6.09%] h-[12.72%] top-[61.73%] left-[3.27%] animate-wheel-float-5"
           alt="Clip path group"
           src="/clip-path-group-14.png"
         />
@@ -229,13 +229,13 @@ export const FeaturedProductsSection = (): JSX.Element => {
         <div className="lg:hidden">
           <Button
             variant="ghost"
-            className="h-auto p-2 hover:bg-transparent"
+            className="h-auto p-4 hover:bg-transparent bg-white/80 rounded-lg shadow-lg"
             onClick={toggleMenu}
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6 text-[#68161c]" />
+              <X className="w-10 h-10 text-[#68161c]" />
             ) : (
-              <Menu className="w-6 h-6 text-[#68161c]" />
+              <Menu className="w-10 h-10 text-[#68161c]" />
             )}
           </Button>
         </div>
@@ -256,7 +256,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
             className="h-auto p-2 hover:bg-transparent"
             onClick={() => smoothScrollTo('about-section')}
           >
-            <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-[25px] tracking-[0] leading-[normal]">
+            <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-[20px] tracking-[0] leading-[normal]">
               {navigationItems[0].label}
             </span>
           </Button>
@@ -266,7 +266,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
             className="h-auto p-2 hover:bg-transparent"
             onClick={() => smoothScrollTo('hero-section')}
           >
-            <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-[25px] tracking-[0] leading-[normal] whitespace-nowrap">
+            <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-[20px] tracking-[0] leading-[normal] whitespace-nowrap">
               {navigationItems[1].label}
             </span>
           </Button>
@@ -282,7 +282,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
             className="h-auto p-2 hover:bg-transparent"
             onClick={() => smoothScrollTo('newsletter-section')}
           >
-            <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-[25px] tracking-[0] leading-[normal] whitespace-nowrap">
+            <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-[20px] tracking-[0] leading-[normal] whitespace-nowrap">
               {navigationItems[2].label}
             </span>
           </Button>
@@ -292,7 +292,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
             className="h-auto p-2 hover:bg-transparent"
             onClick={() => smoothScrollTo('contact-section')}
           >
-            <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-[25px] tracking-[0] leading-[normal] whitespace-nowrap">
+            <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-[20px] tracking-[0] leading-[normal] whitespace-nowrap">
               {navigationItems[3].label}
             </span>
           </Button>
@@ -300,19 +300,19 @@ export const FeaturedProductsSection = (): JSX.Element => {
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 lg:hidden">
-            <div className="flex flex-col py-4">
+          <div className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-sm shadow-xl border-t border-gray-200 lg:hidden z-20">
+            <div className="flex flex-col py-6">
               {navigationItems.map((item, index) => (
                 <Button
                   key={index}
                   variant="ghost"
-                  className="h-auto p-4 hover:bg-gray-50 justify-start"
+                  className="h-auto p-6 hover:bg-gray-50 justify-start"
                   onClick={() => {
                     const sectionIds = ['about-section', 'hero-section', 'newsletter-section', 'contact-section'];
                     smoothScrollTo(sectionIds[index]);
                   }}
                 >
-                  <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-lg tracking-[0] leading-[normal]">
+                  <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-xl tracking-[0] leading-[normal]">
                     {item.label}
                   </span>
                 </Button>
@@ -322,7 +322,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         )}
       </nav>
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-[166px] w-full max-w-[968px] px-4 sm:px-6 md:px-8">
+      <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-[166px] w-full max-w-[968px] px-4 sm:px-6 md:px-8">
         <h1 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[90px] tracking-[-1.80px] leading-tight text-center">
           EXPLORER WHAT&apos;S REAL
         </h1>

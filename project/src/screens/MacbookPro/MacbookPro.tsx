@@ -69,11 +69,11 @@ export const MacbookPro = (): JSX.Element => {
                   className="flex flex-col items-center gap-4 sm:gap-5 max-w-[308px] w-full"
                 >
                   <img className="w-6 h-6 sm:w-8 sm:h-8" alt={item.title} src={item.icon} />
-                  <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-lg sm:text-xl md:text-2xl lg:text-[25px] tracking-[-0.50px] leading-tight">
+                  <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-lg sm:text-xl md:text-2xl lg:text-[25px] tracking-[-0.50px] leading-tight text-center">
                     {item.title}
                   </div>
                   
-                  <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-xl tracking-[-0.40px] leading-relaxed">
+                  <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-xl tracking-[-0.40px] leading-relaxed text-center">
                     {item.description.split("\n").map((line, i) => (
                       <React.Fragment key={i}>
                         {line}
@@ -99,7 +99,7 @@ export const MacbookPro = (): JSX.Element => {
               {featureItems.slice(2, 4).map((item, index) => (
                 <div
                   key={index + 2}
-                  className="flex flex-col items-center gap-4 sm:gap-5 max-w-[308px] w-full"
+                  className="flex flex-col items-center gap-4 sm:gap-5 max-w-[308px] w-full text-center"
                 >
                   <img className="w-6 h-6 sm:w-8 sm:h-8" alt={item.title} src={item.icon} />
                   <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-lg sm:text-xl md:text-2xl lg:text-[25px] tracking-[-0.50px] leading-tight">
