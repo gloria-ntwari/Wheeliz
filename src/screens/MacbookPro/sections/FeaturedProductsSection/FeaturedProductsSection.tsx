@@ -322,7 +322,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         )}
       </nav>
 
-      <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-[166px] w-full max-w-[968px] px-4 sm:px-6 md:px-8">
+      <div className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-[166px] w-full max-w-[968px] px-4 sm:px-6 md:px-8">
         <h1 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[90px] tracking-[-1.80px] leading-tight text-center">
           EXPLORER WHAT&apos;S REAL
         </h1>
