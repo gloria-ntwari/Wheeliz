@@ -11,7 +11,7 @@ export const AboutSection = (): JSX.Element => {
             LIFE
           </h2>
 
-          <p className="[font-family:'Barlow',Helvetica] font-normal text-black text-base sm:text-lg md:text-xl lg:text-2xl tracking-[0] leading-relaxed text-left">
+           <p className="[font-family:'Barlow',Helvetica] font-normal text-black text-sm sm:text-base md:text-lg lg:text-xl tracking-[0] leading-relaxed text-left">
           Born from the adventurous spirit of <strong>Hollanda FairFoods</strong>, Wheeliez brings together flavor, excitement, and a dash of play in every crunchy bite. For over 10 years, we have proudly been crafting high-quality snacks made in Rwanda. Wheeliez is our invitation to every explorer at heart; the ones who seek laughter, good vibes, and unforgettable moments.
           <br /><br />
           Whether you're hanging out with friends, on the go, or just in the mood for a snack, Wheeliez is the perfect choice to brighten your day. <strong>So buckle up</strong>, grab a pack, and let the adventure begin, because with Wheeliez, every crunch is a journey worth taking!
