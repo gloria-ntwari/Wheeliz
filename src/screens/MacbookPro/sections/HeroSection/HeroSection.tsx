@@ -8,14 +8,12 @@ export const HeroSection = (): JSX.Element => {
           <h1 className="w-full max-w-[691px] [font-family:'Barlow',Helvetica] font-bold text-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-[-1.20px] leading-tight text-center lg:text-left">
             Keeping It Real
             <br />
-            since 1998
+            since 2015
           </h1>
 
           <p className="w-full max-w-[691px] [font-family:'Barlow',Helvetica] font-normal text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed text-center lg:text-left">
-            We got into the chip-crafting business with one goal in mind: to
-            create the ultimate all-natural chip we possibly can. We love chips
-            (if you couldn&apos;t tell) and we&apos;re committed to staying true
-            to our roots—crafting independent, innovative, Canadian snacks.
+          For the last 10 years, Hollanda FairFoods has been dedicated to making delicious snacks right here in Rwanda. We believe that our snacks do more than just taste great; they bring people together. From our kitchen to yours, we’re all about spreading joy and flavor, one crunchy bite at a time!
+
           </p>
         </div>
       </div>

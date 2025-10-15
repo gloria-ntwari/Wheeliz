@@ -57,7 +57,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         />
 
         <img
-          className="absolute h-[25%] sm:h-[30%] md:h-[35%] top-[65%] left-[calc(50%-864px)] w-[400px] sm:w-[450px] md:w-[500px] lg:w-[562px] animate-car-move"
+          className="absolute h-[35.13%] top-[65%] left-[calc(50%-864px)] w-[562px] hidden lg:block animate-car-move"
           alt="Clip path group"
           src="/clip-path-group-2.png"
         />
@@ -229,13 +229,13 @@ export const FeaturedProductsSection = (): JSX.Element => {
         <div className="lg:hidden">
           <Button
             variant="ghost"
-            className="h-auto p-4 hover:bg-transparent bg-white/80 rounded-lg shadow-lg"
+            className="h-auto p-2 hover:bg-transparent"
             onClick={toggleMenu}
           >
             {isMenuOpen ? (
-              <X className="w-10 h-10 text-[#68161c]" />
+              <X className="w-6 h-6 text-[#68161c]" />
             ) : (
-              <Menu className="w-10 h-10 text-[#68161c]" />
+              <Menu className="w-6 h-6 text-[#68161c]" />
             )}
           </Button>
         </div>
@@ -300,19 +300,19 @@ export const FeaturedProductsSection = (): JSX.Element => {
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-sm shadow-xl border-t border-gray-200 lg:hidden z-20">
-            <div className="flex flex-col py-6">
+          <div className="absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 lg:hidden">
+            <div className="flex flex-col py-4">
               {navigationItems.map((item, index) => (
                 <Button
                   key={index}
                   variant="ghost"
-                  className="h-auto p-6 hover:bg-gray-50 justify-start"
+                  className="h-auto p-4 hover:bg-gray-50 justify-start"
                   onClick={() => {
                     const sectionIds = ['about-section', 'hero-section', 'newsletter-section', 'contact-section'];
                     smoothScrollTo(sectionIds[index]);
                   }}
                 >
-                  <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-xl tracking-[0] leading-[normal]">
+                  <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-lg tracking-[0] leading-[normal]">
                     {item.label}
                   </span>
                 </Button>
@@ -324,7 +324,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
 
       <div className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-[166px] w-full max-w-[968px] px-4 sm:px-6 md:px-8">
         <h1 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[90px] tracking-[-1.80px] leading-tight text-center">
-          EXPLORER WHAT&apos;S REAL
+          CHASE THE ADVENTURE
         </h1>
 
         <Button className="w-[200px] sm:w-[250px] md:w-[280px] lg:w-[300px] h-[50px] sm:h-[55px] md:h-[60px] bg-[#68161c] hover:bg-[#68161c]/90 flex items-center justify-center gap-2.5 p-2.5">

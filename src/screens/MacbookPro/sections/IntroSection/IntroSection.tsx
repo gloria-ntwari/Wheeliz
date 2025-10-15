@@ -4,10 +4,10 @@ const contentData = [
   {
     imageSrc: "/rectangle-339-1.svg",
     imageAlt: "Rectangle",
-    label: "TOMATO",
-    title: "Sweet Tomato",
+    label: "CHEESE",
+    title: "Sweet Cheese",
     description:
-      "We believe the best moments in life come with a side of snacks. Whether you're trekking a trail with a buddy, cracking up with a co-worker, or enjoying a movie night with the fam, Hardbite wants you to take a bite outta life, one crunchy, all-natural chip at a time.",
+      "Wheeliez Sweet Cheese combines the irresistible crunch of golden potato and wheat with a smooth, cheesy sweetness that keeps you rolling back for more. It’s the perfect balance of fun, flavor, and crunch ;  a cheesy joyride in every bite!",
     bestSellingLabel: "BEST SELLING",
     bestSellingText: "ALL NATURE",
     imagePosition: "left",
@@ -18,7 +18,7 @@ const contentData = [
     label: "TOMATO",
     title: "Sweet Tomato",
     description:
-      "We believe the best moments in life come with a side of snacks. Whether you're trekking a trail with a buddy, cracking up with a co-worker, or enjoying a movie night with the fam, Hardbite wants you to take a bite outta life, one crunchy, all-natural chip at a time.",
+      "Buckle up for a tangy twist! Wheeliez Sweet Tomato brings together the bright, zesty flavor of ripe tomatoes with a hint of sweetness,  full of energy and excitement. Every bite is a burst of flavor that makes snacking feel like an adventure.",
     bestSellingLabel: "BEST SELLING",
     bestSellingText: "ALL NATURE",
     imagePosition: "left",

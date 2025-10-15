@@ -6,47 +6,32 @@ const commonAnswer = "To ensure our products remain non-GMO, sometimes sourcing 
 const faqDataColumn1 = [
   {
     id: "item-1",
-    question: "Are your products gluten free?",
-    answer: commonAnswer,
+    question: "What are Wheeliez made from",
+    answer: "Wheeliez are made from a delicious blend of high-quality potatoes and wheat for that perfect crispy crunch.",
   },
   {
     id: "item-2",
-    question: "Are your products gluten free?",
-    answer: commonAnswer,
+    question: "What flavours are available?",
+    answer: "Wheeliez come in two exciting flavours ; Sweet Cheese and Sweet Tomato.",
   },
   {
     id: "item-3",
-    question: "Are your products gluten free?",
-    answer: commonAnswer,
-  },
-  {
-    id: "item-4",
-    question:
-      "Why do your products contain both imported and domestic ingredients?",
-    answer: commonAnswer,
+    question: "How can I become a distributor?",
+    answer: "You can become a distributor by visiting our contact page and following the same simple steps ",
   },
 ];
 
 const faqDataColumn2 = [
   {
+    id: "item-4",
+    question:
+      "Where is Wheeliez from?",
+    answer: "Wheeliez are proudly made in Rwanda by Hollanda FairFoods.",
+  },
+  {
     id: "item-5",
-    question: "Are your products gluten free?",
-    answer: commonAnswer,
-  },
-  {
-    id: "item-6",
-    question: "Are your products gluten free?",
-    answer: commonAnswer,
-  },
-  {
-    id: "item-7",
-    question: "Are your products gluten free?",
-    answer: commonAnswer,
-  },
-  {
-    id: "item-8",
-    question: "Are your products gluten free?",
-    answer: commonAnswer,
+    question: "Are Wheeliez for adults or kids?",
+    answer: "Wheeliez are made for kids but loved and enjoyed by all ages!",
   },
 ];
 
