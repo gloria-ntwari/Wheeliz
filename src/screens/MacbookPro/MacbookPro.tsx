@@ -25,13 +25,13 @@ const featureItems = [
   },
   {
     icon: "/emojione-monotone-potato.svg",
-    title: "HIGH QUALITY FLAVOUR",
+    title: "IRRESISTABLE FLAVOUR",
     description:
       "Proudly crafting snacks in British Columbia's one and only chip making facility.",
   },
   {
     icon: "/emojione-monotone-potato.svg",
-    title: "HIGH QUALITY FLAVOUR",
+    title: "IRRESISTABLE FLAVOUR",
     description:
       "Proudly crafting snacks in British Columbia's one and only chip making facility.",
   },

@@ -11,56 +11,9 @@
   --animate-spin: spin 1s linear infinite;
 }
 
-.animate-fade-in {
-  animation: fade-in 1s var(--animation-delay, 0s) ease forwards;
-}
-
-.animate-fade-up {
-  animation: fade-up 1s var(--animation-delay, 0s) ease forwards;
-}
-
-.animate-marquee {
-  animation: marquee var(--duration) infinite linear;
-}
-
-.animate-marquee-vertical {
-  animation: marquee-vertical var(--duration) linear infinite;
-}
-
-.animate-shimmer {
-  animation: shimmer 8s infinite;
-}
-
-.animate-spin {
-  animation: var(--animate-spin);
-}
-
-.animate-car-move {
-  animation: car-move 5s ease-in-out infinite;
-}
-
-.animate-wheel-float-1 {
-  animation: wheel-float-1 3s ease-in-out infinite;
-}
-
-.animate-wheel-float-2 {
-  animation: wheel-float-2 4s ease-in-out infinite;
-}
-
-.animate-wheel-float-3 {
-  animation: wheel-float-3 3.5s ease-in-out infinite;
-}
-
-.animate-wheel-float-4 {
-  animation: wheel-float-4 4.5s ease-in-out infinite;
-}
-
-.animate-wheel-float-5 {
-  animation: wheel-float-5 3.2s ease-in-out infinite;
-}
-
-.animate-wheel-rotate {
-  animation: wheel-rotate 2s linear infinite;
+/* ONLY CAR ANIMATION - Remove all others */
+.animate-car-entrance {
+  animation: car-entrance 4s ease-out forwards;
 }
 
 @keyframes spin {
@@ -69,174 +22,35 @@
   }
 }
 
-@keyframes image-glow {
+/* Car Animation: Realistic mountain path following with scaling */
+@keyframes car-entrance {
   0% {
-    opacity: 0;
-    animation-timing-function: cubic-bezier(0.74, 0.25, 0.76, 1);
-  }
-
-  10% {
-    opacity: 0.7;
-    animation-timing-function: cubic-bezier(0.12, 0.01, 0.08, 0.99);
-  }
-
-  to {
-    opacity: 0.4;
-  }
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes fade-up {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes shimmer {
-  0%,
-  90%,
-  to {
-    background-position: calc(-100% - var(--shimmer-width)) 0;
-  }
-
-  30%,
-  60% {
-    background-position: calc(100% + var(--shimmer-width)) 0;
-  }
-}
-
-@keyframes marquee {
-  0% {
-    transform: translate(0);
-  }
-
-  to {
-    transform: translateX(calc(-100% - var(--gap)));
-  }
-}
-
-@keyframes marquee-vertical {
-  0% {
-    transform: translateY(0);
-  }
-
-  to {
-    transform: translateY(calc(-100% - var(--gap)));
-  }
-}
-
-@keyframes car-move {
-  0% {
-    transform: translateX(-50vw) translateY(0px) rotate(0deg);
+    transform: translateX(-120vw) translateY(20px) scale(0.2) rotate(-2deg);
     opacity: 0;
   }
-  3% {
-    opacity: 1;
-  }
-  10% {
-    transform: translateX(-30vw) translateY(5px) rotate(1deg);
-  }
-  20% {
-    transform: translateX(-10vw) translateY(12px) rotate(3deg);
+  15% {
+    transform: translateX(-80vw) translateY(15px) scale(0.4) rotate(-1deg);
+    opacity: 0.6;
   }
   30% {
-    transform: translateX(10vw) translateY(18px) rotate(5deg);
+    transform: translateX(-50vw) translateY(8px) scale(0.6) rotate(0deg);
+    opacity: 0.8;
   }
-  40% {
-    transform: translateX(30vw) translateY(20px) rotate(4deg);
-  }
-  50% {
-    transform: translateX(50vw) translateY(16px) rotate(2deg);
+  45% {
+    transform: translateX(-25vw) translateY(2px) scale(0.8) rotate(1deg);
+    opacity: 0.9;
   }
   60% {
-    transform: translateX(70vw) translateY(10px) rotate(-1deg);
-  }
-  70% {
-    transform: translateX(90vw) translateY(5px) rotate(-3deg);
+    transform: translateX(-5vw) translateY(-45px) scale(0.9) rotate(0deg);
+    opacity: 1;
   }
   80% {
-    transform: translateX(110vw) translateY(2px) rotate(-2deg);
-  }
-  90% {
-    transform: translateX(130vw) translateY(0px) rotate(0deg);
-  }
-  97% {
+    transform: translateX(15vw) translateY(-90px) scale(1.1) rotate(0deg);
     opacity: 1;
   }
   100% {
-    transform: translateX(150vw) translateY(0px) rotate(0deg);
-    opacity: 0;
-  }
-}
-
-@keyframes wheel-float-1 {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-15px) rotate(180deg);
-  }
-}
-
-@keyframes wheel-float-2 {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(-180deg);
-  }
-}
-
-@keyframes wheel-float-3 {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-12px) rotate(90deg);
-  }
-}
-
-@keyframes wheel-float-4 {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-18px) rotate(-90deg);
-  }
-}
-
-@keyframes wheel-float-5 {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(270deg);
-  }
-}
-
-@keyframes wheel-rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+    transform: translateX(25vw) translateY(-140px) scale(1.6) rotate(0deg);
+    opacity: 1;
   }
 }
 
@@ -248,66 +62,46 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
-
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 47.4% 11.2%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-
     --card: transparent;
     --card-foreground: 222.2 47.4% 11.2%;
-
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
-
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
-
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
-
     --ring: 215 20.2% 65.1%;
-
     --radius: 0.5rem;
   }
 
   .dark {
     --background: 224 71% 4%;
     --foreground: 213 31% 91%;
-
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
-
     --accent: 216 34% 17%;
     --accent-foreground: 210 40% 98%;
-
     --popover: 224 71% 4%;
     --popover-foreground: 215 20.2% 65.1%;
-
     --border: 216 34% 17%;
     --input: 216 34% 17%;
-
     --card: transparent;
     --card-foreground: 213 31% 91%;
-
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 1.2%;
-
     --secondary: 222.2 47.4% 11.2%;
     --secondary-foreground: 210 40% 98%;
-
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
-
     --ring: 216 34% 17%;
-
     --radius: 0.5rem;
   }
 }
@@ -316,7 +110,6 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;

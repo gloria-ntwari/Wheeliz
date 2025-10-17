@@ -25,7 +25,6 @@ export const FeaturedProductsSection = (): JSX.Element => {
         inline: 'nearest'
       });
     }
-    // Close mobile menu after clicking
     setIsMenuOpen(false);
   };
 
@@ -56,12 +55,14 @@ export const FeaturedProductsSection = (): JSX.Element => {
           src="/clip-path-group-1.png"
         />
 
+        {/* ONLY ANIMATED ELEMENT - Car */}
         <img
-          className="absolute h-[35.13%] top-[65%] left-[calc(50%-864px)] w-[562px] hidden lg:block animate-car-move"
-          alt="Clip path group"
+          className="absolute h-[35.13%] top-[65%] left-[calc(50%-864px)] w-[562px] hidden lg:block animate-car-entrance"
+          alt="Moving Car"
           src="/clip-path-group-2.png"
         />
 
+        {/* ALL OTHER ELEMENTS - NO ANIMATIONS */}
         <img
           className="absolute w-[6.60%] h-[4.05%] top-0 left-[10.76%]"
           alt="Clip path group"
@@ -133,14 +134,15 @@ export const FeaturedProductsSection = (): JSX.Element => {
           src="/vector-8.svg"
         />
 
+        {/* Wheels - NO ANIMATIONS */}
         <img
-          className="absolute w-[7.15%] h-[4.80%] top-[11.85%] left-[12.15%] animate-wheel-rotate"
+          className="absolute w-[7.15%] h-[4.80%] top-[11.85%] left-[12.15%]"
           alt="Clip path group"
           src="/clip-path-group-5.png"
         />
 
         <img
-          className="absolute w-[7.22%] h-[2.70%] top-[13.95%] left-[8.68%] animate-wheel-rotate"
+          className="absolute w-[7.22%] h-[2.70%] top-[13.95%] left-[8.68%]"
           alt="Clip path group"
           src="/clip-path-group-6.png"
         />
@@ -193,32 +195,33 @@ export const FeaturedProductsSection = (): JSX.Element => {
           src="/clip-path-group-9.png"
         />
 
+        {/* Floating Wheels - NO ANIMATIONS */}
         <img
-          className="absolute w-[6.46%] h-[13.43%] top-[28.73%] left-[71.90%] animate-wheel-float-1"
+          className="absolute w-[6.46%] h-[13.43%] top-[28.73%] left-[71.90%]"
           alt="Clip path group"
           src="/clip-path-group-10.png"
         />
 
         <img
-          className="absolute w-[6.46%] h-[13.43%] top-[67.78%] left-[16.41%] animate-wheel-float-2"
+          className="absolute w-[6.46%] h-[13.43%] top-[67.78%] left-[16.41%]"
           alt="Clip path group"
           src="/clip-path-group-11.png"
         />
 
         <img
-          className="absolute w-[6.46%] h-[13.43%] top-[26.94%] left-[2.41%] animate-wheel-float-3"
+          className="absolute w-[6.46%] h-[13.43%] top-[26.94%] left-[2.41%]"
           alt="Clip path group"
           src="/clip-path-group-12.png"
         />
 
         <img
-          className="absolute w-[6.09%] h-[12.78%] top-[64.20%] left-[82.34%] animate-wheel-float-4"
+          className="absolute w-[6.09%] h-[12.78%] top-[64.20%] left-[82.34%]"
           alt="Clip path group"
           src="/clip-path-group-13.png"
         />
 
         <img
-          className="absolute w-[6.09%] h-[12.72%] top-[61.73%] left-[3.27%] animate-wheel-float-5"
+          className="absolute w-[6.09%] h-[12.72%] top-[61.73%] left-[3.27%]"
           alt="Clip path group"
           src="/clip-path-group-14.png"
         />
@@ -322,8 +325,8 @@ export const FeaturedProductsSection = (): JSX.Element => {
         )}
       </nav>
 
-      <div className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-[166px] w-full max-w-[968px] px-4 sm:px-6 md:px-8">
-        <h1 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[90px] tracking-[-1.80px] leading-tight text-center">
+      <div className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-[166px] w-full max-w-[95%] px-4 sm:px-6 md:px-8">
+        <h1 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[90px] tracking-[-1.80px] leading-tight text-center whitespace-nowrap">
           CHASE THE ADVENTURE
         </h1>
 
