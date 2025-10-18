@@ -29,7 +29,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
   };
 
   return (
-    <section className="relative w-full h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] xl:h-[956px] overflow-hidden">
+    <section className="relative w-full h-[420px] sm:h-[480px] md:h-[560px] lg:h-[760px] xl:h-[760px] overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         <img
           className="absolute w-[120%] h-[120%] top-[-10%] left-[-10%]"
@@ -44,7 +44,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         />
 
         <img
-          className="absolute w-full h-full top-0 left-0"
+          className="absolute top-0 left-0 w-full h-full"
           alt="Group"
           src="/group.png"
         />
@@ -246,7 +246,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         {/* Mobile Logo */}
         <div className="lg:hidden">
           <img
-            className="w-32 sm:w-40 md:w-48 h-auto sm:h-20 md:h-24"
+            className="w-32 h-auto sm:w-40 md:w-48 sm:h-20 md:h-24"
             alt="Clip path group"
             src="/clip-path-group-15.png"
           />
@@ -275,7 +275,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
           </Button>
 
           <img
-            className="w-[325.33px] h-[105.2px]"
+            className="w-[255.33px] h-[85.2px]"
             alt="Clip path group"
             src="/clip-path-group-15.png"
           />
@@ -303,13 +303,13 @@ export const FeaturedProductsSection = (): JSX.Element => {
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 lg:hidden">
+          <div className="absolute left-0 right-0 bg-white border-t border-gray-200 shadow-lg top-full lg:hidden">
             <div className="flex flex-col py-4">
               {navigationItems.map((item, index) => (
                 <Button
                   key={index}
                   variant="ghost"
-                  className="h-auto p-4 hover:bg-gray-50 justify-start"
+                  className="justify-start h-auto p-4 hover:bg-gray-50"
                   onClick={() => {
                     const sectionIds = ['about-section', 'hero-section', 'newsletter-section', 'contact-section'];
                     smoothScrollTo(sectionIds[index]);
@@ -325,13 +325,12 @@ export const FeaturedProductsSection = (): JSX.Element => {
         )}
       </nav>
 
-      <div className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-[166px] w-full max-w-[95%] px-4 sm:px-6 md:px-8">
-        <h1 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[90px] tracking-[-1.80px] leading-tight text-center whitespace-nowrap">
-          CHASE THE ADVENTURE
-        </h1>
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 [font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-[90px] xl:text-[90px] tracking-[-1.80px] leading-tight text-center whitespace-nowrap"> CHASE THE ADVENTURE
+          </h1>
 
-        <Button className="w-[200px] sm:w-[250px] md:w-[280px] lg:w-[300px] h-[50px] sm:h-[55px] md:h-[60px] bg-[#68161c] hover:bg-[#68161c]/90 flex items-center justify-center gap-2.5 p-2.5">
-          <span className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-xl tracking-[-0.40px] leading-[22.6px] whitespace-nowrap">
+        <Button className="pointer-events-auto absolute left-1/2 -translate-x-1/2 top-[calc(50%+60px)] sm:top-[calc(50%+70px)] md:top-[calc(50%+80px)] lg:top-[calc(50%+85px)] xl:top-[calc(50%+205px)] w-[200px] sm:w-[250px] md:w-[280px] lg:w-[300px] h-[50px] sm:h-[55px] md:h-[60px] bg-[#68161c] hover:bg-[#68161c]/90 flex items-center justify-center gap-2.5 p-2.5 rounded-none">
+          <span className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[-0.40px] leading-[22.6px] whitespace-nowrap rounded-none">
             FIND OUR FAVORS
           </span>
           <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />

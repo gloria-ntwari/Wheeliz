@@ -1,11 +1,11 @@
 export const ProductShowcaseSection = (): JSX.Element => {
   return (
     <div className="flex flex-col items-center lg:items-start gap-6 sm:gap-8 md:gap-10 lg:gap-[38px] w-full">
-      <h2 className="w-full max-w-[691px] [font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[45px] tracking-[-0.90px] leading-tight text-center lg:text-left">
+      <h2 className="w-full max-w-[691px] [font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[43px] tracking-[-0.90px] leading-tight text-center lg:text-left">
         CONTACT US
       </h2>
 
-      <p className="w-full max-w-[882px] font-normal text-black text-base sm:text-lg md:text-xl [font-family:'Barlow',Helvetica] tracking-[0] leading-relaxed text-center lg:text-left">
+      <p className="w-full max-w-[882px] font-normal text-black text-base sm:text-lg md:text-xl [font-family:'Barlow',Helvetica] tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
         We believe the best moments in life come with a side of snacks. Whether
         you&apos;re trekking a trail with a buddy, cracking up with a co-worker,
         or enjoying a movie night withWe love hearing from the folks that enjoy

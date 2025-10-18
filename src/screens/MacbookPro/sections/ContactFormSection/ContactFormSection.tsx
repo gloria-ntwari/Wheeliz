@@ -47,7 +47,7 @@ export const ContactFormSection = (): JSX.Element => {
           >
             <Label
               htmlFor={field.id}
-              className="[font-family:'Barlow',Helvetica] font-semibold text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed"
+              className="[font-family:'Barlow',Helvetica] font-semibold text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed lg:text-[20px]"
             >
               {field.label}
             </Label>
@@ -64,7 +64,7 @@ export const ContactFormSection = (): JSX.Element => {
           <div className="flex flex-col w-full items-start gap-3 sm:gap-4 md:gap-[13px]">
             <Label
               htmlFor={field.id}
-              className="[font-family:'Barlow',Helvetica] font-semibold text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed"
+              className="[font-family:'Barlow',Helvetica] font-semibold text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed lg:text-[20px]"
             >
               {field.label}
             </Label>
@@ -84,7 +84,7 @@ export const ContactFormSection = (): JSX.Element => {
       ))}
 
       <Button className="w-[120px] sm:w-[130px] md:w-[140px] lg:w-[150px] h-[45px] sm:h-[50px] md:h-[55px] bg-[#fcc809] hover:bg-[#fcc809]/90 rounded-none p-2.5">
-        <span className="[font-family:'Barlow',Helvetica] font-semibold text-black text-sm sm:text-base md:text-lg lg:text-xl tracking-[0] leading-relaxed whitespace-nowrap">
+        <span className="[font-family:'Barlow',Helvetica] font-semibold text-black text-sm sm:text-base md:text-lg lg:text-xl tracking-[0] leading-relaxed whitespace-nowrap lg:text-[20px]">
           SUBMIT
         </span>
       </Button>
