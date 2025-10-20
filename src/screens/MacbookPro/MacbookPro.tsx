@@ -39,7 +39,7 @@ const featureItems = [
 
 export const MacbookPro = (): JSX.Element => {
   return (
-    <div className="flex flex-col w-full min-h-screen bg-white" style={{ scrollBehavior: 'smooth' }}>
+    <div className="flex flex-col w-full min-h-screen bg-white overflow-x-hidden" style={{ scrollBehavior: 'smooth' }}>
       <section id="featured-products-section">
         <FeaturedProductsSection />
       </section>
@@ -62,7 +62,7 @@ export const MacbookPro = (): JSX.Element => {
         <div className="max-w-[1490px] mx-auto">
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:gap-4">
             {/* Left side - 2 text blocks */}
-            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:w-auto">
+            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[308px]">
               {featureItems.slice(0, 2).map((item, index) => (
                 <div
                   key={index}
