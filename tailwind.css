@@ -66,9 +66,15 @@
     transform: translateX(15vw) translateY(-90px) scale(1.1) rotate(0deg);
     opacity: 1;
   }
-  100% {
+  90% {
     transform: translateX(25vw) translateY(-140px) scale(1.6) rotate(0deg);
     opacity: 1;
+    filter: none;
+  }
+  100% {
+    transform: translateX(35vw) translateY(-120px) scale(2.1) rotate(0deg);
+    opacity: 1;
+    filter: none;
   }
 }
 

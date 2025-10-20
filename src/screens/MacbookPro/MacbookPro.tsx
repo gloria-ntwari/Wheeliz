@@ -141,7 +141,7 @@ export const MacbookPro = (): JSX.Element => {
                 Warehouse: KG 173 st, Kigali- Remera <br></br>
                 Opposite Grand Legacy Hotel Main office: KG 622 st, House 3 <br></br>
                 Factory: Musanze Gyanika Road
-                <br></br><br></br>
+                <br></br>
                 Tel: +250780050540 <br></br>
                 Email: customerservice@hollandafairfoods.com
               </div>
