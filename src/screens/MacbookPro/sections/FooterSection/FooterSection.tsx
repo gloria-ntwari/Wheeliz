@@ -43,7 +43,7 @@ export const FooterSection = (): JSX.Element => {
               alt="Wheeliez Logo"
               src="/clip-path-group-16.png"
             />
-            <p className="[font-family:'Barlow',Helvetica] font-semibold text-[#ffffff80] text-base sm:text-lg lg:text-[25px] leading-relaxed">
+            <p className="[font-family:'Barlow',Helvetica] font-semibold text-[#ffffff80] text-base sm:text-lg lg:text-[18px] leading-relaxed">
               We craft great tasting natural snacks <br className="hidden sm:block" />
               that inspire people to go beyond.
             </p>
@@ -80,7 +80,7 @@ export const FooterSection = (): JSX.Element => {
                   <li key={index}>
                     <button
                       onClick={() => smoothScrollTo(link.href.replace('#', ''))}
-                      className="[font-family:'Barlow',Helvetica] font-medium text-white text-base sm:text-lg hover:opacity-80 transition-opacity cursor-pointer lg:text-[18px]"
+                      className="[font-family:'Barlow',Helvetica] font-medium text-white text-base sm:text-lg hover:opacity-80 transition-opacity cursor-pointer"
                     >
                       {link.label}
                     </button>
@@ -112,7 +112,7 @@ export const FooterSection = (): JSX.Element => {
           {/* Desktop Layout - Hidden on mobile/tablet */}
           {/* Column 2 - Quick Links */}
           <nav className="flex-col items-start hidden w-full gap-6 lg:flex sm:w-auto">
-            <h3 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl lg:text-3xl leading-[34px]">
+            <h3 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl lg:text-3xl leading-[34px] lg:text-[22px]">
               Quick Links
             </h3>
             <ul className="flex flex-col items-start gap-3">
@@ -120,7 +120,7 @@ export const FooterSection = (): JSX.Element => {
                 <li key={index}>
                   <button
                     onClick={() => smoothScrollTo(link.href.replace('#', ''))}
-                    className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl hover:opacity-80 transition-opacity text-left cursor-pointer lg:text-[25px]"
+                    className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl hover:opacity-80 transition-opacity text-left cursor-pointer lg:text-[18px]"
                   >
                     {link.label}
                   </button>
@@ -131,7 +131,7 @@ export const FooterSection = (): JSX.Element => {
 
           {/* Column 3 - Our Product */}
           <nav className="flex-col items-start hidden w-full gap-6 lg:flex sm:w-auto">
-            <h3 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl lg:text-3xl leading-[34px]">
+            <h3 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl lg:text-3xl leading-[34px] lg:text-[22px]">
               Our Product
             </h3>
             <ul className="flex flex-col items-start gap-3">
@@ -139,7 +139,7 @@ export const FooterSection = (): JSX.Element => {
                 <li key={index}>
                   <button
                     onClick={() => smoothScrollTo(link.href.replace('#', ''))}
-                    className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl lg:text-[25px] hover:opacity-80 transition-opacity text-left cursor-pointer"
+                    className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl hover:opacity-80 transition-opacity text-left cursor-pointer lg:text-[18px]"
                   >
                     {link.label}
                   </button>
@@ -150,7 +150,7 @@ export const FooterSection = (): JSX.Element => {
 
           {/* Column 4 - Connect */}
           <nav className="flex-col items-start hidden w-full gap-6 lg:flex sm:w-auto">
-            <h3 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl lg:text-3xl leading-[34px]">
+            <h3 className="[font-family:'Barlow',Helvetica] font-bold text-white text-2xl lg:text-3xl leading-[34px] lg:text-[22px]">
               Connect
             </h3>
             <ul className="flex flex-col items-start gap-3">
@@ -158,7 +158,7 @@ export const FooterSection = (): JSX.Element => {
                 <li key={index}>
                   <a
                     href="#"
-                    className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl lg:text-[25px] hover:opacity-80 transition-opacity"
+                    className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl lg:text-[18px] hover:opacity-80 transition-opacity"
                   >
                     {link.label}
                   </a>
@@ -175,7 +175,7 @@ export const FooterSection = (): JSX.Element => {
             <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-base sm:text-lg text-center">
               © Wheeliez 2025
             </div>
-            <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-base sm:text-lg text-center">
+            <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-base sm:text-lg text-center ">
               Privacy Policy
             </div>
           </div>
@@ -198,10 +198,10 @@ export const FooterSection = (): JSX.Element => {
 
           {/* Desktop Layout - Hidden on mobile/tablet */}
           <div className="items-center hidden gap-10 lg:flex" style={{ marginLeft: '501px' }}>
-            <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl lg:text-[25px]">
+            <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl lg:text-[18px]">
               © Wheeliez 2025
             </div>
-            <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl lg:text-[25px]">
+            <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl lg:text-[18px]">
               Privacy Policy
             </div>
           </div>
@@ -211,7 +211,7 @@ export const FooterSection = (): JSX.Element => {
               onClick={() => smoothScrollTo('featured-products-section')}
               className="w-[180px] sm:w-[200px] lg:w-[230px] h-[50px] sm:h-[55px] lg:h-[60px] bg-white hover:bg-gray-100 text-black flex items-center justify-center gap-2 rounded-none"
             >
-              <span className="[font-family:'Barlow',Helvetica] font-medium text-base sm:text-lg lg:text-xl whitespace-nowrap">
+              <span className="[font-family:'Barlow',Helvetica] font-medium text-base sm:text-lg lg:text-[18px] whitespace-nowrap">
                 BACK TO TOP
               </span>
               <img

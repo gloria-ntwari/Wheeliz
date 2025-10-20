@@ -39,7 +39,7 @@ const featureItems = [
 
 export const MacbookPro = (): JSX.Element => {
   return (
-    <div className="flex flex-col w-full min-h-screen bg-white overflow-x-hidden" style={{ scrollBehavior: 'smooth' }}>
+    <div className="flex flex-col w-full min-h-screen overflow-x-hidden bg-white" style={{ scrollBehavior: 'smooth' }}>
       <section id="featured-products-section">
         <FeaturedProductsSection />
       </section>
@@ -88,14 +88,14 @@ export const MacbookPro = (): JSX.Element => {
             {/* Center - Image */}
             <div className="flex-shrink-0 order-first mx-0 md:mx-8 md:order-none">
               <img
-                className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] lg:w-auto lg:h-[400px] object-contain"
+                className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[420px] lg:w-auto lg:h-[400px] object-contain"
                 alt="Central illustration"
                 src="/clip-path-group-2.png"
               />
             </div>
 
             {/* Right side - 2 text blocks */}
-            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:w-auto">
+            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[308px]">
               {featureItems.slice(2, 4).map((item, index) => (
                 <div
                   key={index + 2}
@@ -121,17 +121,19 @@ export const MacbookPro = (): JSX.Element => {
         </div>
       </section>
 
-      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32" style={{ paddingTop: '40px', paddingBottom: '35px' }}>
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32" style={{ paddingTop: '24px', paddingBottom: '20px' }}>
         <div className="max-w-[1490px] mx-auto">
-          <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-[88px]">
+          <div className="flex flex-col items-start gap-6 lg:flex-row lg:gap-12">
             {/* Left column - Contact Us content */}
-            <div id="contact-section" className="flex flex-col gap-6 sm:gap-8 md:gap-10 lg:gap-[38px] w-full lg:flex-1">
+            <div id="contact-section" className="flex flex-col gap-4 sm:gap-6 md:gap-8 lg:gap-8 w-full lg:flex-1 origin-top-left scale-[0.98] md:scale-95 lg:scale-95">
               <ProductShowcaseSection />
-              <ContactFormSection />
+              <div className="origin-top-left scale-[0.98] md:scale-95 lg:scale-90">
+                <ContactFormSection />
+              </div>
             </div>
 
             {/* Right column - Wheeliez info */}
-            <div className="flex flex-col items-center w-full gap-2 lg:items-start sm:gap-3 lg:w-auto">
+            <div className="flex flex-col items-center w-full gap-6 sm:gap-8 md:gap-10 lg:gap-[38px] lg:items-start lg:w-auto">
               <div className="[font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[43px] tracking-[-0.90px] leading-tight text-center lg:text-left">
                 Hollanda FairFoods LTD
               </div>
@@ -139,12 +141,9 @@ export const MacbookPro = (): JSX.Element => {
                 Warehouse: KG 173 st, Kigali- Remera <br></br>
                 Opposite Grand Legacy Hotel Main office: KG 622 st, House 3 <br></br>
                 Factory: Musanze Gyanika Road
-
-              </div>
-              <div className="[font-family:'Barlow',Helvetica] font-normal text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
+                <br></br><br></br>
                 Tel: +250780050540 <br></br>
                 Email: customerservice@hollandafairfoods.com
-
               </div>
             </div>
           </div>

@@ -7,6 +7,24 @@
   }
 }
 
+/* Per-character hero title animation for staggered reveal */
+.hero-char {
+  display: inline-block;
+  animation: hero-char 700ms ease-out both;
+}
+
+@keyframes hero-char {
+  from {
+    transform: translateY(18px);
+    opacity: 0;
+    filter: blur(2px);
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
 :root {
   --animate-spin: spin 1s linear infinite;
 }
@@ -50,6 +68,43 @@
   }
   100% {
     transform: translateX(25vw) translateY(-140px) scale(1.6) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Hero title fade-up and button rise animations */
+.animate-hero-title {
+  animation: hero-fade-up 900ms ease-out 150ms both;
+}
+
+.animate-hero-button {
+  animation: button-rise 900ms ease-out 450ms both;
+}
+
+@keyframes hero-fade-up {
+  0% {
+    transform: translateY(24px);
+    opacity: 0;
+    filter: blur(2px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes button-rise {
+  0% {
+    transform: translateY(28px) scale(0.98);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(0) scale(1.01);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }

@@ -27,10 +27,10 @@ const contentData = [
 
 export const IntroSection = (): JSX.Element => {
   return (
-    <section className="flex flex-col items-start w-full gap-16 px-4 lg:gap-24 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
+    <section className="flex flex-col items-start w-full gap-16 px-4 lg:gap-8 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
       {contentData.map((item, index) => (
         <div key={index} className="flex flex-col items-center w-full gap-0 lg:flex-row lg:gap-8">
-          <div className="flex flex-col w-full lg:w-1/2 items-start gap-2.5 order-1 lg:order-1">
+          <div className={`flex flex-col w-full lg:w-1/2 items-start gap-2.5 ${index === 1 ? 'order-2 lg:order-2 lg:pr-24' : 'order-1 lg:order-1 lg:-ml-12'}`}>
             <img
               className="h-[360px] sm:h-[440px] md:h-[540px] lg:h-[640px] xl:h-[700px] object-contain"
               alt={item.imageAlt}
@@ -38,7 +38,7 @@ export const IntroSection = (): JSX.Element => {
             />
           </div>
 
-          <div className="flex flex-col w-full lg:w-1/2 items-center lg:items-start justify-center gap-6 sm:gap-8 md:gap-10 lg:gap-[30px] px-4 sm:px-6 md:px-8 lg:px-[60px] py-8 sm:py-12 md:py-16 lg:py-0 order-2 lg:order-2">
+          <div className={`flex flex-col w-full lg:w-1/2 items-center lg:items-start justify-center gap-6 sm:gap-8 md:gap-10 lg:gap-[30px] px-4 sm:px-6 md:px-8 ${index === 1 ? 'lg:pr-24 lg:pl-0' : 'lg:pl-[60px] lg:pr-0'} py-8 sm:py-12 md:py-16 lg:py-0 ${index === 1 ? 'order-1 lg:order-1 lg:mr-20' : 'order-2 lg:order-2 '}`}>
             <div className="flex flex-col items-center lg:items-start gap-6 sm:gap-8 md:gap-10 lg:gap-[38px] w-full">
               <div className="w-full font-normal text-black text-base sm:text-lg md:text-xl [font-family:'Barlow',Helvetica] tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
                 {item.label}

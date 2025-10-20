@@ -326,15 +326,26 @@ export const FeaturedProductsSection = (): JSX.Element => {
       </nav>
 
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 [font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-[90px] xl:text-[90px] tracking-[-1.80px] leading-tight text-center whitespace-nowrap"> CHASE THE ADVENTURE
-          </h1>
-
-        <Button className="pointer-events-auto absolute left-1/2 -translate-x-1/2 top-[calc(50%+60px)] sm:top-[calc(50%+70px)] md:top-[calc(50%+80px)] lg:top-[calc(50%+85px)] xl:top-[calc(50%+205px)] w-[200px] sm:w-[250px] md:w-[280px] lg:w-[300px] h-[50px] sm:h-[55px] md:h-[60px] bg-[#68161c] hover:bg-[#68161c]/90 flex items-center justify-center gap-2.5 p-2.5 rounded-none">
-          <span className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[-0.40px] leading-[22.6px] whitespace-nowrap rounded-none">
-            FIND OUR FAVORS
+        <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 [font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-[90px] xl:text-[90px] tracking-[-1.80px] leading-tight text-center whitespace-nowrap">
+          <span className="inline-block animate-hero-title">
+            {"CHASE THE ADVENTURE".split("").map((ch, i) => (
+              <span
+                key={i}
+                className="hero-char"
+                style={{ animationDelay: `${i * 45}ms` }}
+              >
+                {ch === " " ? "\u00A0" : ch}
+              </span>
+            ))}
           </span>
-          <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-        </Button>
+        </h1>
+
+        <div className="pointer-events-none absolute inset-x-0 top-[calc(50%+60px)] sm:top-[calc(50%+70px)] md:top-[calc(50%+80px)] lg:top-[calc(50%+85px)] xl:top-[calc(50%+205px)] flex justify-center animate-hero-button" style={{ animationDelay: '1100ms' }}>
+          <Button className="pointer-events-auto w-[200px] sm:w-[250px] md:w-[280px] lg:w-[300px] h-[50px] sm:h-[55px] md:h-[60px] bg-[#68161c] hover:bg-[#68161c]/90 flex items-center justify-center gap-2.5 p-2.5 rounded-none">
+            <span className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[-0.40px] leading-[22.6px] whitespace-nowrap rounded-none">FIND OUR FAVORS</span>
+            <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+          </Button>
+        </div>
       </div>
     </section>
   );
