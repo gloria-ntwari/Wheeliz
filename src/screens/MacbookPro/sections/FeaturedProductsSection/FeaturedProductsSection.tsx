@@ -64,7 +64,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
 
         {/* ALL OTHER ELEMENTS - NO ANIMATIONS */}
         <img
-          className="absolute w-[6.60%] h-[4.05%] top-[30px] left-[10.76%]"
+          className="absolute w-[6.60%] h-[2.05%] top-[30px] left-[10.76%] -rotate-12"
           alt="Clip path group"
           src="/clip-path-group-3.png"
         />
@@ -99,7 +99,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         />
 
         <img
-          className="absolute w-[11.53%] h-[9.12%] top-[calc(9.53%+30px)] left-0"
+          className="absolute w-[9.8%] h-[6.4%] top-[calc(9.53%+25px)] left-8"
           alt="Clip path group"
           src="/clip-path-group-4.png"
         />
@@ -136,13 +136,13 @@ export const FeaturedProductsSection = (): JSX.Element => {
 
         {/* Wheels - NO ANIMATIONS */}
         <img
-          className="absolute w-[7.15%] h-[4.80%] top-[11.85%] left-[12.15%]"
+          className="absolute w-[7.15%] h-[1.80%] top-[18.85%] left-[12.15%] -rotate-3"
           alt="Clip path group"
           src="/clip-path-group-5.png"
         />
 
         <img
-          className="absolute w-[7.22%] h-[2.70%] top-[13.95%] left-[8.68%]"
+          className="absolute w-[7.22%] h-[1.2%] top-[16.95%] left-[16.68%] -rotate-14"
           alt="Clip path group"
           src="/clip-path-group-6.png"
         />
@@ -154,7 +154,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         />
 
         <img
-          className="absolute w-[11.32%] h-[8.24%] top-4 left-0"
+          className="absolute w-[10.32%] h-[6.8%] top-0 left-0"
           alt="Clip path group"
           src="/clip-path-group-7.png"
         />
