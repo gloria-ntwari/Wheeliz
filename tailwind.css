@@ -31,7 +31,10 @@
 
 /* ONLY CAR ANIMATION - Remove all others */
 .animate-car-entrance {
-  animation: car-entrance 4s ease-out forwards;
+  /* Keep your motion exactly as-is, add a second visibility-only finisher */
+  animation: car-entrance 4s ease-out forwards, car-clarity 1ms linear 4s forwards;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
 }
 
 @keyframes spin {
@@ -72,10 +75,18 @@
     filter: none;
   }
   100% {
-    transform: translateX(35vw) translateY(-120px) scale(2.1) rotate(0deg);
+    transform: translateX(35vw) translateY(-120px) scale(1.9) rotate(0deg);
     opacity: 1;
     filter: none;
   }
+}
+
+/* Visibility-only finisher: applies crisp filter at the end without changing position/size */
+@keyframes car-clarity {
+  0% {
+    filter: none;
+  }
+
 }
 
 /* Hero title fade-up and button rise animations */

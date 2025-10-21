@@ -64,7 +64,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
 
         {/* ALL OTHER ELEMENTS - NO ANIMATIONS */}
         <img
-          className="absolute w-[6.60%] h-[4.05%] top-0 left-[10.76%]"
+          className="absolute w-[6.60%] h-[4.05%] top-[30px] left-[10.76%]"
           alt="Clip path group"
           src="/clip-path-group-3.png"
         />
@@ -75,61 +75,61 @@ export const FeaturedProductsSection = (): JSX.Element => {
         />
 
         <img
-          className="absolute w-0 h-0 top-[7.51%] left-[13.22%]"
+          className="absolute w-0 h-0 top-[calc(7.51%+30px)] left-[13.22%]"
           alt="Vector"
           src="/vector-5.svg"
         />
 
         <img
-          className="absolute w-0 h-0 top-[8.87%] left-[10.58%]"
+          className="absolute w-0 h-0 top-[calc(8.87%+30px)] left-[10.58%]"
           alt="Vector"
           src="/vector-2.svg"
         />
 
         <img
-          className="absolute w-0 h-0 top-[10.18%] left-[12.84%]"
+          className="absolute w-0 h-0 top-[calc(10.18%+30px)] left-[12.84%]"
           alt="Vector"
           src="/vector-4.svg"
         />
 
         <img
-          className="absolute w-[9.80%] h-[6.21%] top-[8.97%] left-[2.04%]"
+          className="absolute w-[9.80%] h-[6.21%] top-[calc(8.97%+30px)] left-[2.04%]"
           alt="Vector"
           src="/vector-11.svg"
         />
 
         <img
-          className="absolute w-[11.53%] h-[9.12%] top-[7.53%] left-0"
+          className="absolute w-[11.53%] h-[9.12%] top-[calc(9.53%+30px)] left-0"
           alt="Clip path group"
           src="/clip-path-group-4.png"
         />
 
         <img
-          className="absolute w-0 h-0 top-[9.67%] left-[6.13%]"
+          className="absolute w-0 h-0 top-[calc(9.67%+30px)] left-[6.13%]"
           alt="Vector"
           src="/vector-10.svg"
         />
 
         <img
-          className="absolute w-0 h-0 top-[11.95%] left-[10.09%]"
+          className="absolute w-0 h-0 top-[calc(11.95%+30px)] left-[10.09%]"
           alt="Vector"
           src="/vector-12.svg"
         />
 
         <img
-          className="absolute w-0 h-0 top-[13.66%] left-[9.42%]"
+          className="absolute w-0 h-0 top-[calc(13.66%+30px)] left-[9.42%]"
           alt="Vector"
           src="/vector-13.svg"
         />
 
         <img
-          className="absolute w-0 h-0 top-[14.08%] left-[5.85%]"
+          className="absolute w-0 h-0 top-[calc(14.08%+30px)] left-[5.85%]"
           alt="Vector"
           src="/vector-13.svg"
         />
 
         <img
-          className="absolute w-0 h-0 top-[12.83%] left-[2.98%]"
+          className="absolute w-0 h-0 top-[calc(12.83%+30px)] left-[2.98%]"
           alt="Vector"
           src="/vector-8.svg"
         />
@@ -154,7 +154,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         />
 
         <img
-          className="absolute w-[11.32%] h-[8.24%] top-0 left-0"
+          className="absolute w-[11.32%] h-[8.24%] top-4 left-0"
           alt="Clip path group"
           src="/clip-path-group-7.png"
         />

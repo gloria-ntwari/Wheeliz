@@ -6,14 +6,11 @@ export const ProductShowcaseSection = (): JSX.Element => {
       </h2>
 
       <p className="w-full max-w-[882px] font-normal text-black text-base sm:text-lg md:text-xl [font-family:'Barlow',Helvetica] tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
-        We believe the best moments in life come with a side of snacks. Whether
-        you&apos;re trekking a trail with a buddy, cracking up with a co-worker,
-        or enjoying a movie night withWe love hearing from the folks that enjoy
-        our products! Whether it&apos;s about how great our products are or even
-        a subpar Hardbite experience, we want to hear about it. We&apos;re
-        probably busy making chips right now, but we promise to get back to you
-        within 2-3 business days. Happy Snackin&apos;! the fam, Hardbite wants
-        you to take a bite outta life, one crunchy, all-natural chip at a time.
+
+        We&apos;re always happy to hear from you! Whether it&apos;s a question, partnership inquiry, 
+        or feedback about our products, we&apos;d love to connect. Fill out the form below, 
+        and our team will get back to you within 2&ndash;3 business days. Let&apos;s keep the world 
+        rollin&apos; with great snacks!
       </p>
     </div>
   );
