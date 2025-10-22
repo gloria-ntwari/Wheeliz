@@ -116,7 +116,7 @@ export const MacbookPro = (): JSX.Element => {
 
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32" style={{ paddingTop: '24px', paddingBottom: '20px' }}>
         <div className="max-w-[1490px] mx-auto">
-          <div className="flex flex-col items-start gap-6 lg:flex-row lg:gap-12">
+          <div className="flex flex-col items-start gap-6 lg:flex-row lg:gap-12 lg:pt-8">
             {/* Left column - Contact Us content */}
             <div id="contact-section" className="flex flex-col gap-4 sm:gap-6 md:gap-8 lg:gap-8 w-full lg:flex-1 origin-top-left scale-[0.98] md:scale-95 lg:scale-95">
               <ProductShowcaseSection />
@@ -131,8 +131,13 @@ export const MacbookPro = (): JSX.Element => {
                 Hollanda FairFoods LTD
               </div>
               <div className="[font-family:'Barlow',Helvetica] font-normal text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
-                Kigali- Rwanda <br></br>
-                KN 09 ST
+                Warehouse: KG 173 st, Kigali- Remera
+                <br></br>
+                Opposite Grand Legacy Hotel Main office: KG 622 st, House 3<br></br>
+                Factory: Musanze Gyanika Road
+                <br></br><br></br>
+                Tel: +250780050540<br></br>
+                Email: customerservice@hollandafairfoods.com
               </div>
             </div>
           </div>
