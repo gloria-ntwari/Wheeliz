@@ -81,7 +81,7 @@ export const MacbookPro = (): JSX.Element => {
             {/* Center - Image */}
             <div className="flex-shrink-0 mx-0 md:mx-8">
               <img
-                className="w-full max-w-[320px] sm:max-w-[420px] md:max-w-[460px] lg:w-auto lg:h-[420px] object-contain lg:mr-[50px]"
+                className="w-full max-w-[320px] sm:max-w-[420px] md:max-w-[460px] lg:w-auto lg:h-[420px] object-contain lg:mr-[50px] lg:scale-y-110"
                 alt="Central illustration"
                 src="/clip-path-group.png"
               />
