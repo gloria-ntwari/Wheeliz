@@ -12,16 +12,16 @@ import { SecondSection } from "./sections/SecondSection.tsx";
 
 const featureItems = [
   {
-    icon: "/emojione-monotone-potato.svg",
+    icon: "/material-symbols-light-off.svg",
     title: "MADE IN RWANDA",
     description:
-      "Proudly crafting snacks in British Columbia's one and only chip making facility.",
+      "Proudly crafting snacks in British Columbia's\none and only chip making\nfacility.",
   },
   {
-    icon: "/emojione-monotone-potato.svg",
+    icon: "/token-rwn.svg",
     title: "IRRESISTABLE FLAVOUR",
     description:
-      "Proudly crafting snacks in British Columbia's one and only chip making facility.",
+      "Proudly crafting snacks in British Columbia's\none and only chip making\nfacility.",
   },
 ];
 
@@ -48,20 +48,25 @@ export const MacbookPro = (): JSX.Element => {
 
       <section className="w-full bg-[#181817] py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
         <div className="max-w-[1490px] mx-auto">
+          {/* Section header */}
+          <div className="flex flex-col items-center mb-8 text-center sm:mb-10 md:mb-12 lg:gap-4">
+            <div className="[font-family:'Barlow',Helvetica] font-semibold text-white text-sm sm:text-base tracking-[0] uppercase lg:text-[22px]">WHY WHEELIEZ</div>
+            <h2 className="[font-family:'Barlow',Helvetica] font-bold text-[#fcc809] text-2xl sm:text-3xl md:text-4xl lg:text-[43px] leading-tight mt-2">CHANGE THE WAY YOU CHIP</h2>
+          </div>
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:gap-4">
-            {/* Left side - 2 text blocks */}
-            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[360px]">
+            {/* Left side - text block */}
+            <div className="flex flex-col gap-10 sm:gap-14 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[420px]">
               {featureItems.slice(0, 1).map((item, index) => (
                 <div
                   key={index}
-                  className="flex flex-col items-center gap-4 sm:gap-5 max-w-[360px] w-full bg-[#1b1b1a]/70 border border-[#2a2a28] rounded-xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:-translate-y-1"
+                  className="flex flex-col items-start gap-3 sm:gap-4 max-w-[420px] w-full"
                 >
-                  <img className="w-6 h-6 sm:w-8 sm:h-8" alt={item.title} src={item.icon} />
-                  <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-lg sm:text-xl md:text-2xl lg:text-[20px] tracking-[-0.50px] leading-tight">
+                  <img className="w-5 h-5 sm:w-6 sm:h-6" alt={item.title} src={item.icon} />
+                  <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-xl sm:text-2xl tracking-[-0.50px] leading-tight">
                     {item.title}
                   </div>
 
-                  <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[-0.40px] leading-relaxed">
+                  <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-base sm:text-lg md:text-[18px] tracking-[-0px] leading-relaxed lg:text-[18px] max-w-[320px] sm:max-w-[340px] md:max-w-[360px] whitespace-nowrap">
                     {item.description.split("\n").map((line, i) => (
                       <React.Fragment key={i}>
                         {line}
@@ -74,27 +79,27 @@ export const MacbookPro = (): JSX.Element => {
             </div>
 
             {/* Center - Image */}
-            <div className="flex-shrink-0 order-first mx-0 md:mx-8 md:order-none">
+            <div className="flex-shrink-0 mx-0 md:mx-8">
               <img
-                className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[420px] lg:w-auto lg:h-[400px] object-contain"
+                className="w-full max-w-[320px] sm:max-w-[420px] md:max-w-[460px] lg:w-auto lg:h-[420px] object-contain"
                 alt="Central illustration"
-                src="/clip-path-group-2.png"
+                src="/clip-path-group.png"
               />
             </div>
 
-            {/* Right side - 2 text blocks */}
-            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[360px]">
+            {/* Right side - text block */}
+            <div className="flex flex-col gap-10 sm:gap-14 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[420px] -mt-[20px] lg:ml[-20px]" >
               {featureItems.slice(1, 2).map((item, index) => (
                 <div
                   key={index + 1}
-                  className="flex flex-col items-center gap-4 sm:gap-5 max-w-[360px] w-full bg-[#1b1b1a]/70 border border-[#2a2a28] rounded-xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:-translate-y-1"
+                  className="flex flex-col items-start gap-3 sm:gap-4 max-w-[420px] w-full"
                 >
-                  <img className="w-6 h-6 sm:w-8 sm:h-8" alt={item.title} src={item.icon} />
-                  <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-lg sm:text-xl md:text-2xl lg:text-[20px] tracking-[-0.50px] leading-tight">
+                  <img className="w-5 h-5 sm:w-6 sm:h-6" alt={item.title} src={item.icon} />
+                  <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-xl sm:text-2xl tracking-[-0.50px] leading-tight">
                     {item.title}
                   </div>
 
-                  <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[-0.40px] leading-relaxed ">
+                  <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-base sm:text-lg md:text-[18px] tracking-[-0px] leading-relaxed lg:text-[18px] max-w-[320px] sm:max-w-[340px] md:max-w-[360px] whitespace-nowrap">
                     {item.description.split("\n").map((line, i) => (
                       <React.Fragment key={i}>
                         {line}
@@ -126,12 +131,8 @@ export const MacbookPro = (): JSX.Element => {
                 Hollanda FairFoods LTD
               </div>
               <div className="[font-family:'Barlow',Helvetica] font-normal text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
-                Warehouse: KG 173 st, Kigali- Remera <br></br>
-                Opposite Grand Legacy Hotel Main office: KG 622 st, House 3 <br></br>
-                Factory: Musanze Gyanika Road
-                <br></br>
-                Tel: +250780050540 <br></br>
-                Email: customerservice@hollandafairfoods.com
+                Kigali- Rwanda <br></br>
+                KN 09 ST
               </div>
             </div>
           </div>
