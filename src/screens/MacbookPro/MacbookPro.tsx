@@ -53,7 +53,7 @@ export const MacbookPro = (): JSX.Element => {
             <div className="[font-family:'Barlow',Helvetica] font-semibold text-white text-sm sm:text-base tracking-[0] uppercase lg:text-[22px]">WHY WHEELIEZ</div>
             <h2 className="[font-family:'Barlow',Helvetica] font-bold text-[#fcc809] text-2xl sm:text-3xl md:text-4xl lg:text-[43px] leading-tight mt-2">CHANGE THE WAY YOU CHIP</h2>
           </div>
-          <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:gap-4">
+          <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:gap-4 ">
             {/* Left side - text block */}
             <div className="flex flex-col gap-10 sm:gap-14 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[420px]">
               {featureItems.slice(0, 1).map((item, index) => (
@@ -81,14 +81,14 @@ export const MacbookPro = (): JSX.Element => {
             {/* Center - Image */}
             <div className="flex-shrink-0 mx-0 md:mx-8">
               <img
-                className="w-full max-w-[320px] sm:max-w-[420px] md:max-w-[460px] lg:w-auto lg:h-[420px] object-contain"
+                className="w-full max-w-[320px] sm:max-w-[420px] md:max-w-[460px] lg:w-auto lg:h-[420px] object-contain lg:mr-[50px]"
                 alt="Central illustration"
                 src="/clip-path-group.png"
               />
             </div>
 
             {/* Right side - text block */}
-            <div className="flex flex-col gap-10 sm:gap-14 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[420px] -mt-[20px] lg:ml[-20px]" >
+            <div className="flex flex-col gap-10 sm:gap-14 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[420px] -mt-[20px] " >
               {featureItems.slice(1, 2).map((item, index) => (
                 <div
                   key={index + 1}
