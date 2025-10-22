@@ -37,6 +37,15 @@
   backface-visibility: hidden;
 }
 
+/* Improve perceived sharpness for raster images under transform */
+.img-hq {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  filter: none;
+}
+
 @keyframes spin {
   to {
     transform: rotate(1turn);
@@ -46,37 +55,36 @@
 /* Car Animation: Realistic mountain path following with scaling */
 @keyframes car-entrance {
   0% {
-    transform: translateX(-120vw) translateY(20px) scale(0.2) rotate(-2deg);
+    transform: translateX(-120vw) translateY(20px) scale(0.6) rotate(-2deg);
     opacity: 0;
   }
   15% {
-    transform: translateX(-80vw) translateY(15px) scale(0.4) rotate(-1deg);
+    transform: translateX(-80vw) translateY(15px) scale(0.7) rotate(-1deg);
     opacity: 0.6;
   }
   30% {
-    transform: translateX(-50vw) translateY(8px) scale(0.6) rotate(0deg);
+    transform: translateX(-50vw) translateY(8px) scale(0.85) rotate(0deg);
     opacity: 0.8;
   }
   45% {
-    transform: translateX(-25vw) translateY(2px) scale(0.8) rotate(1deg);
+    transform: translateX(-25vw) translateY(2px) scale(0.95) rotate(1deg);
     opacity: 0.9;
   }
   60% {
-    transform: translateX(-5vw) translateY(-45px) scale(0.9) rotate(0deg);
+    transform: translateX(-5vw) translateY(-45px) scale(1.0) rotate(0deg);
     opacity: 1;
   }
   80% {
-    transform: translateX(15vw) translateY(-90px) scale(1.1) rotate(0deg);
+    transform: translateX(15vw) translateY(-90px) scale(1.05) rotate(0deg);
     opacity: 1;
   }
   90% {
-    transform: translateX(25vw) translateY(-140px) scale(1.6) rotate(0deg);
+    transform: translateX(25vw) translateY(-140px) scale(1.08) rotate(0deg);
     opacity: 1;
     filter: none;
   }
   100% {
-    transform: translateX(35vw) translateY(-120px) scale(1.9) rotate(0deg);
-    opacity: 1;
+    transform: translateX(33vw) translateY(-120px) scaleY(1.7) scaleX(1.3) rotate(0deg);
     filter: none;
   }
 }
