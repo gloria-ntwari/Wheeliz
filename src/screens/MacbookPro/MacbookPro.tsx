@@ -19,18 +19,6 @@ const featureItems = [
   },
   {
     icon: "/emojione-monotone-potato.svg",
-    title: "MADE IN RWANDA",
-    description:
-      "Proudly crafting snacks in British Columbia's one and only chip making facility.",
-  },
-  {
-    icon: "/emojione-monotone-potato.svg",
-    title: "IRRESISTABLE FLAVOUR",
-    description:
-      "Proudly crafting snacks in British Columbia's one and only chip making facility.",
-  },
-  {
-    icon: "/emojione-monotone-potato.svg",
     title: "IRRESISTABLE FLAVOUR",
     description:
       "Proudly crafting snacks in British Columbia's one and only chip making facility.",
@@ -62,11 +50,11 @@ export const MacbookPro = (): JSX.Element => {
         <div className="max-w-[1490px] mx-auto">
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:gap-4">
             {/* Left side - 2 text blocks */}
-            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[308px]">
-              {featureItems.slice(0, 2).map((item, index) => (
+            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[360px]">
+              {featureItems.slice(0, 1).map((item, index) => (
                 <div
                   key={index}
-                  className="flex flex-col items-center gap-4 sm:gap-5 max-w-[308px] w-full"
+                  className="flex flex-col items-center gap-4 sm:gap-5 max-w-[360px] w-full bg-[#1b1b1a]/70 border border-[#2a2a28] rounded-xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:-translate-y-1"
                 >
                   <img className="w-6 h-6 sm:w-8 sm:h-8" alt={item.title} src={item.icon} />
                   <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-lg sm:text-xl md:text-2xl lg:text-[20px] tracking-[-0.50px] leading-tight">
@@ -95,11 +83,11 @@ export const MacbookPro = (): JSX.Element => {
             </div>
 
             {/* Right side - 2 text blocks */}
-            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[308px]">
-              {featureItems.slice(2, 4).map((item, index) => (
+            <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[360px]">
+              {featureItems.slice(1, 2).map((item, index) => (
                 <div
-                  key={index + 2}
-                  className="flex flex-col items-center gap-4 sm:gap-5 max-w-[308px] w-full"
+                  key={index + 1}
+                  className="flex flex-col items-center gap-4 sm:gap-5 max-w-[360px] w-full bg-[#1b1b1a]/70 border border-[#2a2a28] rounded-xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:-translate-y-1"
                 >
                   <img className="w-6 h-6 sm:w-8 sm:h-8" alt={item.title} src={item.icon} />
                   <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-lg sm:text-xl md:text-2xl lg:text-[20px] tracking-[-0.50px] leading-tight">
