@@ -13,12 +13,11 @@ import { SecondSection } from "./sections/SecondSection.tsx";
 const featureItems = [
   {
     title: "MADE IN RWANDA",
-    description:"Wheeliez is proudly made in Rwanda by Hollanda\nFairFoods,a homegrown brand with a passion for \nquality and community.Every pack supports local\n farmers and workers, celebrating Rwanda’s \nvibrant spirit of creativity and growth. When you\nsnack on Wheeliez, you’re not just enjoying great \nflavor — you’re also supporting local talent and \nhelping build a stronger, more \nself-sustaining Rwanda.",
+    description:"Wheeliez, proudly made in Rwanda by\n Hollanda FairFoods,supports local farmers\n and celebrates Rwanda’s creativity.\nWhen you snack on them,you enjoy\n great flavor.",
   },
   {
     title: "IRRESISTABLE FLAVOUR",
-    description:
-      "From the very first crunch, Wheeliez delivers \na burst of flavor that’s impossible to resist!\n Carefully seasoned and perfectly crisped,\n each bite brings joy, excitement, and that\n signature Wheeliez fun. Whether it’s the\n creamy Sweet Cheese or the tangy Sweet\n Tomato, our unique flavor blend is crafted\n to make every moment a delicious adventure.",
+    description:"From the first crunch, Wheeliez\n bursts with flavor that’s hard to resist.\n Carefully seasoned and crisped, each\n taste brings joy and a taste of\n adventure.",
   },
 ];
 
@@ -85,7 +84,7 @@ export const MacbookPro = (): JSX.Element => {
             </div>
 
             {/* Right side - text block */}
-            <div className="flex flex-col gap-10 sm:gap-14 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[420px] mt-[5px] " >
+            <div className="flex flex-col gap-10 sm:gap-14 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[420px] -mt-[25px] " >
               {featureItems.slice(1, 2).map((item, index) => (
                 <div
                   key={index + 1}
