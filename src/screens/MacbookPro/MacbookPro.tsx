@@ -12,12 +12,10 @@ import { SecondSection } from "./sections/SecondSection.tsx";
 
 const featureItems = [
   {
-    icon: "/material-symbols-light-off.svg",
     title: "MADE IN RWANDA",
     description:"Wheeliez is proudly made in Rwanda by Hollanda\nFairFoods,a homegrown brand with a passion for \nquality and community.Every pack supports local\n farmers and workers, celebrating Rwanda’s \nvibrant spirit of creativity and growth. When you\nsnack on Wheeliez, you’re not just enjoying great \nflavor — you’re also supporting local talent and \nhelping build a stronger, more \nself-sustaining Rwanda.",
   },
   {
-    icon: "/token-rwn.svg",
     title: "IRRESISTABLE FLAVOUR",
     description:
       "From the very first crunch, Wheeliez delivers \na burst of flavor that’s impossible to resist!\n Carefully seasoned and perfectly crisped,\n each bite brings joy, excitement, and that\n signature Wheeliez fun. Whether it’s the\n creamy Sweet Cheese or the tangy Sweet\n Tomato, our unique flavor blend is crafted\n to make every moment a delicious adventure.",
@@ -60,7 +58,7 @@ export const MacbookPro = (): JSX.Element => {
                   key={index}
                   className="flex flex-col items-start gap-3 sm:gap-4 max-w-[420px] w-full"
                 >
-                  <img className="w-5 h-5 sm:w-6 sm:h-6" alt={item.title} src={item.icon} />
+
                   <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-xl sm:text-2xl tracking-[-0.50px] leading-tight">
                     {item.title}
                   </div>
@@ -93,7 +91,6 @@ export const MacbookPro = (): JSX.Element => {
                   key={index + 1}
                   className="flex flex-col items-start gap-3 sm:gap-4 max-w-[420px] w-full"
                 >
-                  <img className="w-5 h-5 sm:w-6 sm:h-6" alt={item.title} src={item.icon} />
                   <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-xl sm:text-2xl tracking-[-0.50px] leading-tight">
                     {item.title}
                   </div>
