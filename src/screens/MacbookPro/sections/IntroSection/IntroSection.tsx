@@ -2,7 +2,7 @@ import React from "react";
 
 const contentData = [
   {
-    imageSrc: "/sweet-cheese.png",
+    imageSrc: "/cheese.svg",
     imageAlt: "Rectangle",
     label: "CHEESE",
     title: "Sweet Cheese",
@@ -13,7 +13,7 @@ const contentData = [
     imagePosition: "left",
   },
   {
-    imageSrc: "/sweet-tomato.png ",
+    imageSrc: "/tomato.svg",
     imageAlt: "Rectangle",
     label: "TOMATO",
     title: "Sweet Tomato",
