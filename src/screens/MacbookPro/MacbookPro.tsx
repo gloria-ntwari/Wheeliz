@@ -75,7 +75,7 @@ export const MacbookPro = (): JSX.Element => {
             </div>
 
             {/* Center - Image */}
-            <div className="flex-shrink-0 mx-0 lg:py-16 md:mx-8">
+            <div className="flex-shrink-0 mx-0 lg:py-20 md:mx-8">
               <img
                 className="w-full max-w-[320px] sm:max-w-[420px] md:max-w-[460px] lg:w-auto object-contain lg:scale-125"
                 alt="Central illustration"
