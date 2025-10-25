@@ -84,7 +84,7 @@
     filter: none;
   }
   100% {
-    transform: translateX(33vw) translateY(-120px) scale(1.5) rotate(0deg);
+    transform: translateX(35vw) translateY(-120px) scale(1.5) rotate(0deg);
     filter: none;
   }
 }
