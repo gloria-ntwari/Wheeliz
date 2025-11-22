@@ -22,7 +22,7 @@ export const HeroSection = (): JSX.Element => {
         <img
           className="object-contain mx-auto max-h-[460px] sm:max-h-[520px] md:max-h-[580px] lg:max-h-[940px] xl:max-h-[700px] lg:max-w-[538px]"
           alt="Group"
-          src="/Group 37406.svg"
+          src="Group 37406.png"
         />
       </div>
     </section>
