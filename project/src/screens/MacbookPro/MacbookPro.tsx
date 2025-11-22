@@ -72,7 +72,7 @@ export const MacbookPro = (): JSX.Element => {
                   <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-lg sm:text-xl md:text-2xl lg:text-[25px] tracking-[-0.50px] leading-tight text-center">
                     {item.title}
                   </div>
-                  
+
                   <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-xl tracking-[-0.40px] leading-relaxed text-center">
                     {item.description.split("\n").map((line, i) => (
                       <React.Fragment key={i}>
@@ -87,10 +87,10 @@ export const MacbookPro = (): JSX.Element => {
 
             {/* Center - Image */}
             <div className="flex-shrink-0 mx-0 md:mx-8 order-first md:order-none">
-              <img 
-                className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] lg:w-auto lg:h-[400px] object-contain" 
-                alt="Central illustration" 
-                src="/clip-path-group-2.png" 
+              <img
+                className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] lg:w-auto lg:h-[400px] object-contain"
+                alt="Central illustration"
+                src="/clip-path-group-2.png"
               />
             </div>
 
@@ -105,7 +105,7 @@ export const MacbookPro = (): JSX.Element => {
                   <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-lg sm:text-xl md:text-2xl lg:text-[25px] tracking-[-0.50px] leading-tight">
                     {item.title}
                   </div>
-                  
+
                   <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-sm sm:text-base md:text-lg lg:text-xl tracking-[-0.40px] leading-relaxed">
                     {item.description.split("\n").map((line, i) => (
                       <React.Fragment key={i}>
@@ -129,7 +129,7 @@ export const MacbookPro = (): JSX.Element => {
               <ProductShowcaseSection />
               <ContactFormSection />
             </div>
-            
+
             {/* Right column - Wheeliez info */}
             <div className="flex flex-col items-center lg:items-start gap-2 sm:gap-3 w-full lg:w-auto">
               <div className="[font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[45px] tracking-[-0.90px] leading-tight text-center lg:text-left">
@@ -150,7 +150,7 @@ export const MacbookPro = (): JSX.Element => {
         <img
           className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[620px] object-cover"
           alt="Rectangle"
-          src="/rectangle-342.png"
+          src="/wheeliz.jpeg"
         />
         <div className="absolute inset-0 bg-black opacity-50"></div>
         <div className="absolute inset-0">
@@ -164,7 +164,7 @@ export const MacbookPro = (): JSX.Element => {
 
       <FooterSection />
 
-    
+
     </div>
   );
 };

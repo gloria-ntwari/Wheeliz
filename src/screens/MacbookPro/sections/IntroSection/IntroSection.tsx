@@ -2,7 +2,7 @@ import React from "react";
 
 const contentData = [
   {
-    imageSrc: "/cheese.svg",
+    imageSrc: "/cheese.png",
     imageAlt: "Rectangle",
     label: "CHEESE",
     title: "Sweet Cheese",
@@ -13,7 +13,7 @@ const contentData = [
     imagePosition: "left",
   },
   {
-    imageSrc: "/tomato.svg",
+    imageSrc: "/tomato.png",
     imageAlt: "Rectangle",
     label: "TOMATO",
     title: "Sweet Tomato",
@@ -30,15 +30,15 @@ export const IntroSection = (): JSX.Element => {
     <section className="flex flex-col items-start w-full gap-16 px-4 lg:gap-8 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
       {contentData.map((item, index) => (
         <div key={index} className="flex flex-col items-center w-full gap-0 lg:flex-row lg:gap-8">
-          <div className={`flex flex-col w-full lg:w-1/2 items-start gap-2.5 ${index === 1 ? 'order-2 lg:order-2 lg:pr-24' : 'order-1 lg:order-1 lg:-ml-12'}`}>
+          <div className={`flex flex-col w-full lg:w-1/2 gap-2.5 ${index === 1 ? 'items-start order-2 lg:order-2 lg:pr-24' : 'items-center mx-auto lg:mx-0 lg:items-start order-1 lg:order-1 lg:-ml-36 lg:mr-44'}`}>
             <img
-              className="h-[360px] sm:h-[440px] md:h-[540px] lg:h-[640px] xl:h-[700px] object-contain"
+              className="h-[500px] object-contain w-full"
               alt={item.imageAlt}
               src={item.imageSrc}
             />
           </div>
 
-          <div className={`flex flex-col w-full lg:w-1/2 items-center lg:items-start justify-center gap-6 sm:gap-8 md:gap-10 lg:gap-[30px] px-4 sm:px-6 md:px-8 ${index === 1 ? 'lg:pr-24 lg:pl-0' : 'lg:pl-[60px] lg:pr-0'} py-8 sm:py-12 md:py-16 lg:py-0 ${index === 1 ? 'order-1 lg:order-1 lg:mr-20' : 'order-2 lg:order-2 '}`}>
+          <div className={`flex flex-col w-full lg:w-1/2 items-center lg:items-start justify-center gap-6 sm:gap-8 md:gap-10 lg:gap-[30px] px-4 sm:px-6 md:px-8 ${index === 1 ? 'lg:pr-24 lg:pl-0' : 'lg:pl-0 lg:pr-0'} py-8 sm:py-12 md:py-16 lg:py-0 ${index === 1 ? 'order-1 lg:order-1 lg:mr-20' : 'order-2 lg:order-2'}`}>
             <div className="flex flex-col items-center lg:items-start gap-6 sm:gap-8 md:gap-10 lg:gap-[38px] w-full">
               <div className="w-full font-normal text-black text-base sm:text-lg md:text-xl [font-family:'Barlow',Helvetica] tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
                 {item.label}

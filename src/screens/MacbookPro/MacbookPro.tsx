@@ -13,11 +13,11 @@ import { SecondSection } from "./sections/SecondSection.tsx";
 const featureItems = [
   {
     title: "MADE IN RWANDA",
-    description:"Wheeliez, proudly made in Rwanda by\n Hollanda FairFoods,supports local farmers\n and celebrates Rwanda’s creativity.\nWhen you snack on them,you enjoy\n great flavor.",
+    description: "Wheeliez, proudly made in Rwanda by\n Hollanda FairFoods,supports local farmers\n and celebrates Rwanda’s creativity.\nWhen you snack on them,you enjoy\n great flavor.",
   },
   {
     title: "IRRESISTABLE FLAVOUR",
-    description:"From the first crunch, Wheeliez\n bursts with flavor that’s hard to resist.\n Carefully seasoned and crisped, each\n taste brings joy and a taste of\n adventure.",
+    description: "From the first crunch, Wheeliez\n bursts with flavor that’s hard to resist.\n Carefully seasoned and crisped, each\n taste brings joy and a taste of\n adventure.",
   },
 ];
 
@@ -141,9 +141,9 @@ export const MacbookPro = (): JSX.Element => {
 
       <section id="newsletter-section" className="relative w-full">
         <img
-          className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[620px] object-cover"
+          className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[620px] object-center"
           alt="Rectangle"
-          src="/rectangle-342.png"
+          src="/wheeliz.jpeg"
         />
         <div className="absolute inset-0 bg-black opacity-50"></div>
         <div className="absolute inset-0">
