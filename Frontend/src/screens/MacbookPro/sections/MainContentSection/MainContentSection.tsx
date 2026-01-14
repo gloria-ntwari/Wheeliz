@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "../../../../components/ui/button";
 
 const navigationItems = [
@@ -64,6 +65,18 @@ export const MainContentSection = (): JSX.Element => {
               {navigationItems[3].label}
             </span>
           </a>
+        </Button>
+
+        <Button
+          variant="outline"
+          className="h-auto px-6 py-2 bg-white border border-gray-800 rounded-lg hover:bg-gray-50"
+          asChild
+        >
+          <Link to="/login">
+            <span className="[font-family:'Barlow',Helvetica] font-medium text-black text-[18px] tracking-[0] leading-[normal]">
+              Log in
+            </span>
+          </Link>
         </Button>
       </div>
     </nav>

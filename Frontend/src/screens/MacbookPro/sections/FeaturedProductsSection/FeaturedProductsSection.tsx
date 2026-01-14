@@ -1,5 +1,6 @@
 import { ArrowRightIcon, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "../../../../components/ui/button";
 
 const navigationItems = [
@@ -301,6 +302,18 @@ export const FeaturedProductsSection = (): JSX.Element => {
               {navigationItems[3].label}
             </span>
           </Button>
+
+          <Button
+            variant="outline"
+            className="h-auto px-5 py-2 bg-white border border-gray-800 hover:bg-gray-50"
+            asChild
+          >
+            <Link to="/login">
+              <span className="[font-family:'Barlow',Helvetica] font-normal text-base lg:text-[18px] text-black tracking-[0] leading-[normal]">
+                Log in
+              </span>
+            </Link>
+          </Button>
         </div>
 
         {/* Mobile Menu Dropdown */}
@@ -315,6 +328,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
                   onClick={() => {
                     const sectionIds = ['about-section', 'hero-section', 'newsletter-section', 'contact-section'];
                     smoothScrollTo(sectionIds[index]);
+                    setIsMenuOpen(false);
                   }}
                 >
                   <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-lg tracking-[0] leading-[normal]">
@@ -322,6 +336,19 @@ export const FeaturedProductsSection = (): JSX.Element => {
                   </span>
                 </Button>
               ))}
+              <div className="px-4 pt-2">
+                <Button
+                  variant="outline"
+                  className="w-full h-auto px-5 py-2 bg-white border border-gray-800 hover:bg-gray-50"
+                  asChild
+                >
+                  <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                    <span className="[font-family:'Barlow',Helvetica] font-normal text-black text-[16px] tracking-[0] leading-[normal]">
+                      Log in
+                    </span>
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         )}
