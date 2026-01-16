@@ -4,11 +4,19 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import kidRoutes from './routes/kidRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
-
+import cors from 'cors';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+)
 
 const swaggerOptions = {
   definition: {

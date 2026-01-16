@@ -1,0 +1,3 @@
+export { AdminDashboard } from "./AdminDashboard";
+export { Kids } from "./Kids";
+export { KidDetail } from "./KidDetail";
