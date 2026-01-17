@@ -13,13 +13,14 @@ interface DocumentItem {
 const navItems = [
     { icon: Home, label: "Dashboard", path: "/admin/dashboard" },
     { icon: Users, label: "Kids", path: "/admin/kids" },
+    { icon: Puzzle, label: "Comics", path: "/admin/comics" },
     { icon: Grid3X3, label: "Submissions", path: "/admin/submissions" },
 ];
 
 export const Comics: React.FC = () => {
     const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [comicsExpanded, setComicsExpanded] = useState(true);
+    const [comicsExpanded, setComicsExpanded] = useState(false);
     const [showChallengePage, setShowChallengePage] = useState(false);
     const [showAddDocument, setShowAddDocument] = useState(false);
 
@@ -37,9 +38,9 @@ export const Comics: React.FC = () => {
     ];
 
     const getFileIcon = (type: string) => {
-        if (type === 'word') return '📘';
-        if (type === 'pdf') return '📕';
-        return '📄';
+        if (type === 'word') return '';
+        if (type === 'pdf') return '';
+        return '';
     };
 
     return (
@@ -49,8 +50,8 @@ export const Comics: React.FC = () => {
                     <img src="/clip-path-group-16.png" alt="Wheeliez" className="object-contain w-auto h-20" />
                 </div>
 
-                <nav className="flex-1 px-5 mt-4 space-y-4">
-                    {navItems.map((item) => (
+                <nav className="flex-1 px-5 mt-4 space-y-12">
+                    {navItems.slice(0, 2).map((item) => (
                         <button
                             key={item.label}
                             onClick={() => navigate(item.path)}
@@ -61,35 +62,45 @@ export const Comics: React.FC = () => {
                         </button>
                     ))}
 
-                    <div>
-                        <button
-                            onClick={() => setComicsExpanded(!comicsExpanded)}
-                            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl font-medium transition-colors text-white hover:bg-[#2a2a2a]"
-                        >
-                            <div className="flex items-center gap-3">
-                                <Puzzle className="w-5 h-5 text-white" />
-                                <span>Comics</span>
-                            </div>
-                            {comicsExpanded ? (
-                                <ChevronDown className="w-5 h-5 text-white" />
-                            ) : (
-                                <ChevronRight className="w-5 h-5 text-white" />
-                            )}
-                        </button>
-
-                        {comicsExpanded && (
-                            <div className="ml-8 mt-2">
-                                <button
-                                    onClick={() => setShowChallengePage(true)}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${showChallengePage ? "bg-white text-black" : "text-white hover:bg-[#2a2a2a]"
-                                        }`}
-                                >
-                                    <FolderOpen className={`w-5 h-5 ${showChallengePage ? "text-black" : "text-white"}`} />
-                                    <span>Challenge</span>
-                                </button>
-                            </div>
+                    <button
+                        onClick={() => setComicsExpanded(!comicsExpanded)}
+                        className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl font-medium transition-colors text-white hover:bg-[#2a2a2a]"
+                    >
+                        <div className="flex items-center gap-3">
+                            <Puzzle className="w-5 h-5 text-white" />
+                            <span>Comics</span>
+                        </div>
+                        {/* Right chevron by default, looks up when expanded */}
+                        {comicsExpanded ? (
+                            <ChevronDown className="flex-shrink-0 w-5 h-5 text-white rotate-180" />
+                        ) : (
+                            <ChevronRight className="flex-shrink-0 w-5 h-5 text-white" />
                         )}
-                    </div>
+                    </button>
+
+                    {comicsExpanded && (
+                        <button
+                            onClick={() => setShowChallengePage(true)}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${showChallengePage ? "bg-white text-black" : "text-white hover:bg-[#2a2a2a]"}`}
+                        >
+                            {/* Indent to show Challenge is within Comics */}
+                            <div className="flex items-center gap-3 ml-6">
+                                <FolderOpen className={`w-5 h-5 ${showChallengePage ? "text-black" : "text-white"}`} />
+                                <span>Challenge</span>
+                            </div>
+                        </button>
+                    )}
+
+                    {navItems.slice(3).map((item) => (
+                        <button
+                            key={item.label}
+                            onClick={() => navigate(item.path)}
+                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors text-white hover:bg-[#2a2a2a]"
+                        >
+                            <item.icon className="w-5 h-5 text-white" />
+                            <span>{item.label}</span>
+                        </button>
+                    ))}
                 </nav>
             </aside>
 
@@ -137,13 +148,13 @@ export const Comics: React.FC = () => {
                     </div>
                 </header>
 
-                <main className="flex-1 p-8 bg-white overflow-y-auto">
+                <main className="flex-1 p-10 overflow-y-auto bg-white">
                     {showAddDocument ? (
                         <AddDocumentForm onBack={() => setShowAddDocument(false)} />
                     ) : showChallengePage ? (
                         <div>
                             <div className="mb-8">
-                                <div className="flex justify-between items-center mb-4">
+                                <div className="flex items-center justify-between mb-4">
                                     <h2 className="text-lg font-semibold text-gray-900">Recent Files</h2>
                                     <Button
                                         onClick={() => setShowAddDocument(true)}
@@ -156,10 +167,10 @@ export const Comics: React.FC = () => {
                                     {documents.slice(0, 4).map((doc) => (
                                         <div
                                             key={doc.id}
-                                            className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer bg-white"
+                                            className="p-4 transition-shadow bg-white border border-gray-200 rounded-lg cursor-pointer hover:shadow-md"
                                         >
                                             <div className="flex flex-col items-center">
-                                                <div className="text-4xl mb-2">{getFileIcon(doc.type)}</div>
+                                                <div className="mb-2 text-4xl">{getFileIcon(doc.type)}</div>
                                                 <p className="text-sm font-medium text-center text-gray-900">{doc.title}</p>
                                                 <p className="text-xs text-gray-500">{doc.date}</p>
                                             </div>
@@ -169,15 +180,15 @@ export const Comics: React.FC = () => {
                             </div>
 
                             <div>
-                                <h2 className="text-lg font-semibold mb-4 text-gray-900">Files</h2>
+                                <h2 className="mb-4 text-lg font-semibold text-gray-900">Files</h2>
                                 <div className="grid grid-cols-4 gap-4">
                                     {documents.map((doc) => (
                                         <div
                                             key={doc.id}
-                                            className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer bg-white"
+                                            className="p-4 transition-shadow bg-white border border-gray-200 rounded-lg cursor-pointer hover:shadow-md"
                                         >
                                             <div className="flex flex-col items-center">
-                                                <div className="text-4xl mb-2">{getFileIcon(doc.type)}</div>
+                                                <div className="mb-2 text-4xl">{getFileIcon(doc.type)}</div>
                                                 <p className="text-sm font-medium text-center text-gray-900">{doc.title}</p>
                                                 <p className="text-xs text-gray-500">{doc.date}</p>
                                             </div>
@@ -187,9 +198,7 @@ export const Comics: React.FC = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="flex items-center justify-center h-full">
-                            <p className="text-gray-500">Select Challenge from the sidebar to view documents</p>
-                        </div>
+                        <div />
                     )}
                 </main>
             </div>
@@ -219,15 +228,15 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({ onBack }) => {
     };
 
     return (
-        <div>
-            <button onClick={onBack} className="mb-6 text-gray-600 hover:text-gray-800 flex items-center gap-2">
+        <div className="p-3">
+            <button onClick={onBack} className="flex items-center gap-2 mb-6 text-gray-600 hover:text-gray-800">
                 <span>←</span> Back
             </button>
 
-            <div className="max-w-2xl">
-                <div className="mb-6">
-                    <label className="block text-sm font-medium mb-2 text-gray-900">Cover Image</label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-white">
+            <div className="max-w-5xl">
+                <div className="mb-12 max-w-52">
+                    <label className="block mb-2 text-lg font-medium text-gray-900">Cover Image</label>
+                    <div className="p-10 text-center bg-white border-2 border-black border-dashed rounded-lg">
                         <input
                             type="file"
                             accept="image/*"
@@ -236,8 +245,8 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({ onBack }) => {
                             id="cover-upload"
                         />
                         <label htmlFor="cover-upload" className="cursor-pointer">
-                            <div className="text-gray-400 mb-2">
-                                <svg className="mx-auto h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="mb-2 text-black">
+                                <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                             </div>
@@ -248,44 +257,44 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({ onBack }) => {
                     </div>
                 </div>
 
-                <div className="border-t border-gray-200 my-6"></div>
+                <div className="my-6 border-t border-black"></div>
 
-                <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="grid max-w-[930px] grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-900">Title</label>
+                        <label className="block mb-2 text-lg font-medium text-gray-900">Title</label>
                         <input
                             type="text"
                             placeholder="Enter title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-900"
+                            className="w-full p-[9px] text-gray-900 bg-[#c8c7c71d] border border-[#4D4D4D]/10 rounded-lg"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-900">Document</label>
+                        <label className="block mb-2 text-lg font-medium text-gray-900">Document</label>
                         <input
                             type="text"
                             placeholder="Enter title"
                             value={document}
                             onChange={(e) => setDocument(e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-900"
+                            className="w-full p-[9px] text-gray-900 bg-[#c8c7c71d] border-[#4D4D4D]/10 border rounded-lg"
                         />
                     </div>
                 </div>
 
-                <div className="mb-6">
-                    <label className="block text-sm font-medium mb-2 text-gray-900">Description</label>
+                <div className="max-w-3xl mb-6">
+                    <label className="block mb-2 text-lg font-medium text-gray-900">Description</label>
                     <textarea
                         placeholder="Description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg h-32 resize-none bg-white text-gray-900"
+                        className="w-full h-32 p-3 text-gray-900 bg-[#c8c7c71d] border border-[#4D4D4D]/10 rounded-lg resize-none"
                     />
                 </div>
 
                 <Button
                     onClick={handlePublish}
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-12 py-3 rounded-lg text-lg font-medium"
+                    className="px-12 py-6 text-sm font-normal text-black bg-[#F7941C] hover:bg-orange-600"
                 >
                     Publish
                 </Button>
