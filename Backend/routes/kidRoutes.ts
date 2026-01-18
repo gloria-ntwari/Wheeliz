@@ -1,5 +1,5 @@
 import express from 'express';
-import { kidLogin, createKid } from '../controllers/kidController.js';
+import { kidLogin, createKid } from '../controllers/kidController';
 
 const router = express.Router();
 

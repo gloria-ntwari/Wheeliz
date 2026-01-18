@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import prisma from '../config/prisma.js';
+import prisma from '../config/prisma';
 
 
 export const kidLogin = async (req: Request, res: Response) => {

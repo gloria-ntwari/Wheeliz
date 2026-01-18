@@ -10,7 +10,7 @@ RUN npm install
 COPY . .
 
 # Build TypeScript to JavaScript so Node can run it without ts-node
-RUN npx tsc server.ts --module commonjs --outDir dist
+RUN npx tsc
 
 # Expose the API port
 EXPOSE 5000
