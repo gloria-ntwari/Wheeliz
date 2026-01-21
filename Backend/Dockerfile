@@ -1,29 +1,29 @@
 FROM node:20-alpine
 
+# Set working directory
 WORKDIR /app
 
-# Install dependencies first (better layer caching)
+# Install dependencies first (better caching)
 COPY package*.json ./
 RUN npm ci && npm cache clean --force
 
-# Copy Prisma schema
-COPY models/schema.prisma ./models/
-COPY prisma ./prisma/ 2>/dev/null || true
+# Copy Prisma schema & migrations (your actual location)
+COPY models ./models
 
 # Generate Prisma Client
-RUN npx prisma generate
+RUN npx prisma generate --schema=models/schema.prisma
 
-# Copy the rest of the backend source code
+# Copy the rest of the source code
 COPY . .
 
-# Build TypeScript to JavaScript
+# Build TypeScript → JavaScript (server.ts → dist/)
 RUN npm run build
 
-# Remove dev dependencies to reduce image size
+# Remove dev dependencies (optional but recommended)
 RUN npm prune --production
 
-# Expose the API port
+# Expose API port (make sure this matches server.ts)
 EXPOSE 5000
 
-# Run the compiled JavaScript entrypoint
-CMD ["npm", "start"]
+# Start compiled app
+CMD
