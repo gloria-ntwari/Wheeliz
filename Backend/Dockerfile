@@ -26,4 +26,4 @@ RUN npm prune --production
 EXPOSE 5000
 
 # Start compiled app
-CMD
+CMD ["npm", "start"]
