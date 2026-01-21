@@ -48,7 +48,7 @@ const swaggerOptions = {
       url: process.env.API_URL || `http://localhost:${PORT}`
     }],
   },
-  apis: ['./routes/*.ts', './dist/routes/*.js'],
+  apis: ['dist/routes/*.js'],
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);

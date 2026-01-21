@@ -1,47 +1,20 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // File Layout
     "rootDir": ".",
     "outDir": "dist",
-    // Environment Settings
-    // See also https://aka.ms/tsconfig/module
-    "module": "commonjs",
-    "target": "es2020",
+    "module": "CommonJS",
+    "target": "ES2020",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    // For nodejs:
-    "lib": [
-      "es2020"
-    ],
-    "types": [
-      "node"
-    ],
-    // and npm install -D @types/node
-    // Other Outputs
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    // Style Options
-    // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
-    // Recommended Options
     "strict": true,
-    "jsx": "react-jsx",
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
   "include": [
-    "**/*.ts"
+    "server.ts",
+    "routes/**/*.ts",
+    "controllers/**/*.ts",
+    "middlewares/**/*.ts",
+    "config/**/*.ts"
   ],
   "exclude": [
     "node_modules",
