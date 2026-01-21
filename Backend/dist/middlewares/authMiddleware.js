@@ -32,4 +32,3 @@ const verifyAdmin = (req, res, next) => {
     }
 };
 exports.verifyAdmin = verifyAdmin;
-//# sourceMappingURL=authMiddleware.js.map

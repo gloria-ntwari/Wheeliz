@@ -29,4 +29,3 @@ const router = express_1.default.Router();
  */
 router.post('/login', adminController_1.adminLogin);
 exports.default = router;
-//# sourceMappingURL=adminRoutes.js.map

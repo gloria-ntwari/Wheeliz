@@ -106,4 +106,3 @@ const createKid = async (req, res) => {
     }
 };
 exports.createKid = createKid;
-//# sourceMappingURL=kidController.js.map

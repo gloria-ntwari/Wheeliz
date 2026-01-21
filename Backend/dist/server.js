@@ -46,7 +46,7 @@ const swaggerOptions = {
                 url: process.env.API_URL || `http://localhost:${PORT}`
             }],
     },
-    apis: ['./routes/*.ts', './dist/routes/*.js'],
+    apis: ['dist/routes/*.js'],
 };
 const swaggerDocs = (0, swagger_jsdoc_1.default)(swaggerOptions);
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocs));
@@ -56,4 +56,3 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`API documentation available at http://localhost:${PORT}/api-docs`);
 });
-//# sourceMappingURL=server.js.map

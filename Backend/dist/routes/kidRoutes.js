@@ -56,4 +56,3 @@ router.post('/check', kidController_1.kidLogin);
  */
 router.post('/create', kidController_1.createKid);
 exports.default = router;
-//# sourceMappingURL=kidRoutes.js.map

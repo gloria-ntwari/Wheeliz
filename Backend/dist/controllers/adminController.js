@@ -59,4 +59,3 @@ const adminLogin = async (req, res) => {
     }
 };
 exports.adminLogin = adminLogin;
-//# sourceMappingURL=adminController.js.map
