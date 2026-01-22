@@ -5,26 +5,35 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import kidRoutes from './routes/kidRoutes';
 import adminRoutes from './routes/adminRoutes';
 import cors from 'cors';
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
-// CORS configuration - allow frontend URL from environment or default to localhost
 const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(',')
+  ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
   : ['http://localhost:5173'];
 
 app.use(
   cors({
-    origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  })
-)
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
 
-// Root route to prevent 404
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked: ${origin}`));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+
+app.options('*', cors());
+
 app.get('/', (req, res) => {
   res.json({
     message: 'Wheeliz API Server',
@@ -44,9 +53,11 @@ const swaggerOptions = {
       title: 'Wheeliz Dashboard Squad API',
       version: '1.0.0',
     },
-    servers: [{
-      url: process.env.API_URL || `http://localhost:${PORT}`
-    }],
+    servers: [
+      {
+        url: process.env.API_URL || `http://localhost:${PORT}`
+      }
+    ],
   },
   apis: ['dist/routes/*.js'],
 };
@@ -58,6 +69,5 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/kid', kidRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`API documentation available at http://localhost:${PORT}/api-docs`);
-});   
+  console.log(`Server running on port ${PORT}`);
+});
