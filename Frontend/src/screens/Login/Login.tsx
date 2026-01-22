@@ -4,8 +4,7 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
-
-const API_BASE_URL = "http://localhost:5000/api";
+import { API_BASE_URL } from "../../config/api";
 
 const descriptions = [
   "From quick snacks on the go to full party packs, our irresistible flavors bring joy and adventure to every moment.",
@@ -70,7 +69,7 @@ export const Login = (): JSX.Element => {
   };
 
   return (
-    <div className="relative flex w-full min-h-screen">
+    <div className="flex relative w-full min-h-screen">
       {/* Full Screen Background Image */}
       <div
         className="absolute inset-0 bg-no-repeat bg-cover"
@@ -85,10 +84,10 @@ export const Login = (): JSX.Element => {
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 flex w-full min-h-screen">
+      <div className="flex relative z-10 w-full min-h-screen">
         {/* Left Panel - Content */}
-        <div className="relative hidden lg:flex lg:w-2/3">
-          <div className="flex flex-col justify-between w-full p-8 lg:p-12">
+        <div className="hidden relative lg:flex lg:w-2/3">
+          <div className="flex flex-col justify-between p-8 w-full lg:p-12">
             {/* Top - Logo and Back Link */}
             <div className="flex flex-col gap-6">
               <a
@@ -100,7 +99,7 @@ export const Login = (): JSX.Element => {
             </div>
 
             {/* Bottom - Headline and Description */}
-            <div className="flex flex-col max-w-lg gap-4">
+            <div className="flex flex-col gap-4 max-w-lg">
               <h1 className="text-4xl leading-normal text-white  font-semibold sm:text-3xl md:text-4xl lg:text-[43px] tracking-[-0.10px] max-w-screen-2xl">
                 Snack Smarter. Explore Anywhere.
               </h1>
@@ -111,8 +110,8 @@ export const Login = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="flex items-center justify-start w-full px-6 lg:w-1/2 xl:w-5/12">
-          <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl lg:rounded-lg lg:py-24 lg:px-14">
+        <div className="flex justify-start items-center px-6 w-full lg:w-1/2 xl:w-5/12">
+          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl lg:rounded-lg lg:py-24 lg:px-14">
 
             <div className="flex flex-col gap-2 mb-8">
               <h2 className="[font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[43px]">Admin Login</h2>
@@ -133,7 +132,7 @@ export const Login = (): JSX.Element => {
                   placeholder="Input your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 border-gray-300 rounded-lg"
+                  className="h-12 rounded-lg border-gray-300"
                   required
                 />
               </div>
@@ -150,13 +149,13 @@ export const Login = (): JSX.Element => {
                     placeholder="Input your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 pr-10 border-gray-300 rounded-lg"
+                    className="pr-10 h-12 rounded-lg border-gray-300"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute text-gray-500 -translate-y-1/2 right-3 top-1/2 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 text-gray-500 -translate-y-1/2 hover:text-gray-700"
                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -175,7 +174,7 @@ export const Login = (): JSX.Element => {
               )}
 
               {/* Remember Me and Forgot Password */}
-              <div className="flex items-center justify-between">
+              <div className="flex justify-between items-center">
                 <a
                   href="/forgot-password"
                   className="text-sm text-black hover:underline [font-family:'Barlow',Helvetica]"
