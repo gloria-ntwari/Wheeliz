@@ -6,12 +6,6 @@ import { Label } from "../../components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { API_BASE_URL } from "../../config/api";
 
-const descriptions = [
-  "From quick snacks on the go to full party packs, our irresistible flavors bring joy and adventure to every moment.",
-  "We craft great tasting natural snacks that inspire people to go beyond.",
-  "Every bite is a burst of flavor that makes snacking feel like an adventure.",
-  "From our kitchen to yours, we're all about spreading joy and flavor, one crunchy bite at a time!",
-];
 
 export const Login = (): JSX.Element => {
   const navigate = useNavigate();
@@ -20,20 +14,7 @@ export const Login = (): JSX.Element => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [currentDescriptionIndex, setCurrentDescriptionIndex] = useState(0);
-  const [fadeClass, setFadeClass] = useState("opacity-100");
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFadeClass("opacity-0");
-      setTimeout(() => {
-        setCurrentDescriptionIndex((prev) => (prev + 1) % descriptions.length);
-        setFadeClass("opacity-100");
-      }, 500);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,49 +50,235 @@ export const Login = (): JSX.Element => {
   };
 
   return (
-    <div className="flex relative w-full min-h-screen">
-      {/* Full Screen Background Image */}
-      <div
-        className="absolute inset-0 bg-no-repeat bg-cover"
-        style={{
-          backgroundImage: "url(/wheeliz.jpeg)",
-          backgroundSize: "100% 100%",
-          backgroundPosition: "top center",
-        }}
-      >
+    <section className="relative w-full min-h-screen overflow-hidden bg-[#f57e14]">
+      {/* Hero-style Illustrated Background (copied from FeaturedProductsSection) */}
+      <div className="absolute inset-0 w-full h-full">
+        {/* Base orange vectors */}
+        <img
+          className="absolute w-[120%] h-[120%] top-[-10%] left-[-10%]"
+          alt="Vector"
+          src="/vector-1.svg"
+        />
 
-        <div className="absolute inset-0 bg-black/70"></div>
+        <img
+          className="absolute w-[120%] h-[120%] top-[-10%] left-[-10%]"
+          alt="Vector overlay"
+          src="/vector-1.svg"
+        />
+
+        {/* Main illustration scene */}
+        <img
+          className="absolute top-0 left-0 w-full h-full"
+          alt="Group"
+          src="/group.png"
+        />
+
+        {/* Ground / hill at the bottom */}
+        <img
+          className="absolute w-full h-[37.13%] top-[62.86%] left-0"
+          alt="Clip path group"
+          src="/clip-path-group-1.png"
+        />
+
+        {/* Animated car entering the scene on large screens */}
+        <img
+          className="absolute h-[35.13%] top-[65%] left-[calc(50%-864px)] w-[562px] hidden lg:block animate-car-entrance img-hq"
+          alt="Moving Car"
+          src="/car_group.svg"
+          loading="eager"
+          decoding="sync"
+        />
+        <img
+          className="absolute w-[180px] sm:w-[220px] lg:w-[260px] h-auto top-[66px] left-[6%] z-10"
+          src="/clip-path-group-16.png"
+          alt="Wheeliez Logo"
+        />
+
+        {/* Decorative elements - clouds, coins, wheels, etc. */}
+        <img
+          className="absolute w-[6.60%] h-[2.05%] top-[30px] left-[10.76%] -rotate-12"
+          alt="Clip path group"
+          src="/clip-path-group-3.png"
+        />
+
+        <img
+          className="absolute w-[4.86%] h-0 top-0 left-[14.24%]"
+          alt="Clip path group"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[calc(7.51%+30px)] left-[13.22%]"
+          alt="Vector"
+          src="/vector-5.svg"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[calc(8.87%+30px)] left-[10.58%]"
+          alt="Vector"
+          src="/vector-2.svg"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[calc(10.18%+30px)] left-[12.84%]"
+          alt="Vector"
+          src="/vector-4.svg"
+        />
+
+        <img
+          className="absolute w-[9.80%] h-[6.21%] top-[calc(8.97%+30px)] left-[2.04%]"
+          alt="Vector"
+          src="/vector-11.svg"
+        />
+
+        <img
+          className="absolute w-[9.8%] h-[6.4%] top-[calc(9.53%+25px)] left-8"
+          alt="Clip path group"
+          src="/clip-path-group-4.png"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[calc(9.67%+30px)] left-[6.13%]"
+          alt="Vector"
+          src="/vector-10.svg"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[calc(11.95%+30px)] left-[10.09%]"
+          alt="Vector"
+          src="/vector-12.svg"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[calc(13.66%+30px)] left-[9.42%]"
+          alt="Vector"
+          src="/vector-13.svg"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[calc(14.08%+30px)] left-[5.85%]"
+          alt="Vector"
+          src="/vector-13.svg"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[calc(12.83%+30px)] left-[2.98%]"
+          alt="Vector"
+          src="/vector-8.svg"
+        />
+
+        {/* Wheels near logo area */}
+        <img
+          className="absolute w-[7.15%] h-[1.80%] top-[18.85%] left-[12.15%] -rotate-3"
+          alt="Clip path group"
+          src="/clip-path-group-5.png"
+        />
+
+        <img
+          className="absolute w-[7.22%] h-[1.2%] top-[16.95%] left-[16.68%] -rotate-14"
+          alt="Clip path group"
+          src="/clip-path-group-6.png"
+        />
+
+        <img
+          className="absolute w-[10.21%] h-[6.56%] top-0 left-0"
+          alt="Vector"
+          src="/vector-6.svg"
+        />
+
+        <img
+          className="absolute w-[10.32%] h-[6.8%] top-0 left-0"
+          alt="Clip path group"
+          src="/clip-path-group-7.png"
+        />
+
+        <img
+          className="absolute w-0 h-[2.81%] top-0 left-[3.75%]"
+          alt="Clip path group"
+          src="/clip-path-group-8.png"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[3.92%] left-[6.99%]"
+          alt="Vector"
+          src="/vector-7.svg"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[4.99%] left-[9.68%]"
+          alt="Vector"
+          src="/vector-15.svg"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[6.38%] left-[7.37%]"
+          alt="Vector"
+          src="/vector-9.svg"
+        />
+
+        <img
+          className="absolute w-0 h-0 top-[6.91%] left-[4.19%]"
+          alt="Vector"
+          src="/vector.svg"
+        />
+
+        <img
+          className="absolute w-[13.44%] h-[28.30%] top-[15.56%] left-[13.64%]"
+          alt="Clip path group"
+          src="/clip-path-group-9.png"
+        />
+
+        {/* Floating wheels */}
+        <img
+          className="absolute w-[6.46%] h-[13.43%] top-[28.73%] left-[71.90%]"
+          alt="Clip path group"
+          src="/clip-path-group-10.png"
+        />
+
+        <img
+          className="absolute w-[6.46%] h-[13.43%] top-[67.78%] left-[16.41%]"
+          alt="Clip path group"
+          src="/clip-path-group-11.png"
+        />
+
+        <img
+          className="absolute w-[6.46%] h-[13.43%] top-[26.94%] left-[2.41%]"
+          alt="Clip path group"
+          src="/clip-path-group-12.png"
+        />
+
+        <img
+          className="absolute w-[6.09%] h-[12.78%] top-[64.20%] left-[82.34%]"
+          alt="Clip path group"
+          src="/clip-path-group-13.png"
+        />
+
+        <img
+          className="absolute w-[6.09%] h-[12.72%] top-[61.73%] left-[3.27%]"
+          alt="Clip path group"
+          src="/clip-path-group-14.png"
+        />
       </div>
 
       {/* Content Container */}
-      <div className="flex relative z-10 w-full min-h-screen">
+      <div className="relative z-10 flex w-full min-h-screen">
         {/* Left Panel - Content */}
-        <div className="hidden relative lg:flex lg:w-2/3">
-          <div className="flex flex-col justify-between p-8 w-full lg:p-12">
+        <div className="relative hidden lg:flex lg:w-2/3">
+          <div className="flex flex-col justify-between w-full p-8 lg:p-12">
             {/* Top - Logo and Back Link */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col items-center gap-6 mt-10 ml-96">
               <a
                 href="/"
-                className="text-sm text-white w-fit hover:text-gray-100 [font-family:'Barlow',Helvetica] font-normal sm:text-lg md:text-xl"
+                className="text-sm text-[#68161c] w-fit hover:text-[#4d1216] [font-family:'Barlow',Helvetica] font-normal sm:text-lg md:text-xl text-bold"
               >
                 ← Back to Website
               </a>
             </div>
 
-            {/* Bottom - Headline and Description */}
-            <div className="flex flex-col gap-4 max-w-lg">
-              <h1 className="text-4xl leading-normal text-white  font-semibold sm:text-3xl md:text-4xl lg:text-[43px] tracking-[-0.10px] max-w-screen-2xl">
-                Snack Smarter. Explore Anywhere.
-              </h1>
-              <p className={`text-lg leading-relaxed text-white transition-opacity duration-500 ${fadeClass} [font-family:'Barlow',Helvetica]`}>
-                {descriptions[currentDescriptionIndex]}
-              </p>
-            </div>
           </div>
         </div>
 
-        <div className="flex justify-start items-center px-6 w-full lg:w-1/2 xl:w-5/12">
-          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl lg:rounded-lg lg:py-24 lg:px-14">
+        <div className="flex items-center justify-start w-full px-6 lg:w-1/2">
+          <div className="w-full max-w-4xl bg-white shadow-xl rounded-3xl lg:rounded-xl lg:py-24 lg:px-14">
 
             <div className="flex flex-col gap-2 mb-8">
               <h2 className="[font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[43px]">Admin Login</h2>
@@ -132,7 +299,7 @@ export const Login = (): JSX.Element => {
                   placeholder="Input your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 rounded-lg border-gray-300"
+                  className="h-12 border-gray-300 rounded-lg"
                   required
                 />
               </div>
@@ -149,13 +316,13 @@ export const Login = (): JSX.Element => {
                     placeholder="Input your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pr-10 h-12 rounded-lg border-gray-300"
+                    className="h-12 pr-10 border-gray-300 rounded-lg"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 text-gray-500 -translate-y-1/2 hover:text-gray-700"
+                    className="absolute text-gray-500 -translate-y-1/2 right-3 top-1/2 hover:text-gray-700"
                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -174,7 +341,7 @@ export const Login = (): JSX.Element => {
               )}
 
               {/* Remember Me and Forgot Password */}
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <a
                   href="/forgot-password"
                   className="text-sm text-black hover:underline [font-family:'Barlow',Helvetica]"
@@ -187,7 +354,7 @@ export const Login = (): JSX.Element => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 font-medium text-white bg-black rounded-lg hover:bg-black/90 disabled:opacity-50 disabled:cursor-not-allowed [font-family:'Barlow',Helvetica]"
+                className="w-full h-12 font-medium text-white bg-[#68161c] rounded-2xl hover:bg-[#4d1216] disabled:opacity-50 disabled:cursor-not-allowed [font-family:'Barlow',Helvetica]"
               >
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
@@ -205,7 +372,7 @@ export const Login = (): JSX.Element => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
