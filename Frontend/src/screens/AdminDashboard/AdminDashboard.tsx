@@ -116,7 +116,7 @@ export const AdminDashboard = (): JSX.Element => {
 
       {/* Sidebar */}
       <aside
-        className={`bg-[#1f1f1f] flex flex-col overflow-hidden shrink-0
+        className={`bg-[#181817] flex flex-col overflow-hidden shrink-0
         fixed inset-y-0 left-0 z-50 w-80 transform transition-transform duration-300
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         lg:static lg:translate-x-0`}
