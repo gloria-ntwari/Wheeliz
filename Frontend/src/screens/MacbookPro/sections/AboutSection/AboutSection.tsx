@@ -20,12 +20,12 @@ export const AboutSection = (): JSX.Element => {
       </div>
 
       <div className="relative w-full max-w-[453px] h-[300px] sm:h-[350px] md:h-[400px] lg:h-[451px] flex-shrink-0 order-1 lg:order-2">
-        <div className="absolute top-0 left-1/2 lg:left-[245px] w-32 sm:w-40 md:w-48 lg:w-52 h-full bg-[#68161c] transform -translate-x-1/2 lg:translate-x-0" />
+        <div className="absolute top-0 left-1/2 lg:left-[245px] w-32 sm:w-40 md:w-48 lg:w-52 h-full bg-[#f9ce34] transform -translate-x-1/2 lg:translate-x-0 bg-opacity-95" />
 
         <img
-          className="absolute top-4 sm:top-6 md:top-8 lg:top-[41px] left-0 w-full max-w-[368px] h-[250px] sm:h-[300px] md:h-[350px] lg:h-[382px] object-cover"
+          className="absolute top-4 sm:top-6 md:top-8 lg:top-[41px] left-0 w-full max-w-[420px] h-[250px] sm:h-[300px] md:h-[350px] lg:h-[382px] object-cover"
           alt="Rectangle"
-          src="/rectangle-337.svg"
+          src="/wheeliz.jpeg"
         />
       </div>
     </section>

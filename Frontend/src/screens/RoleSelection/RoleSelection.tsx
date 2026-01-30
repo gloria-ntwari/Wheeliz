@@ -239,7 +239,7 @@ export const RoleSelection = (): JSX.Element => {
         <div className="flex items-center justify-start w-full px-6 lg:w-1/2 xl:w-5/12">
           <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl lg:rounded-lg lg:py-24 lg:px-14">
             <div className="flex flex-col gap-2 mb-8">
-              <h2 className="[font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[43px]">Welcome!</h2>
+              <h2 className="[font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[30px]">Welcome!</h2>
               <p className="text-base text-black/70 [font-family:'Barlow',Helvetica] font-normal text-black sm:text-lg md:text-xl tracking-[0] leading-relaxed lg:text-[18px]">
                 Please select your role to continue.
               </p>

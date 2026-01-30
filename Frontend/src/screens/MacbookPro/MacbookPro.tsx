@@ -47,7 +47,7 @@ export const MacbookPro = (): JSX.Element => {
           {/* Section header */}
           <div className="flex flex-col items-center mb-8 text-center sm:mb-10 md:mb-12 lg:gap-4">
             <div className="[font-family:'Barlow',Helvetica] font-semibold text-white text-sm sm:text-base tracking-[0] uppercase lg:text-[22px]">WHY WHEELIEZ</div>
-            <h2 className="[font-family:'Barlow',Helvetica] font-bold text-[#fcc809] text-2xl sm:text-3xl md:text-4xl lg:text-[43px] leading-tight mt-2">CHANGE THE WAY YOU CHIP</h2>
+            <h2 className="[font-family:'Barlow',Helvetica] font-bold text-[#fcc809] text-2xl sm:text-3xl md:text-4xl lg:text-[43px] leading-tight mt-2">A FUN WAY TO SNACK</h2>
           </div>
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:gap-4 ">
             {/* Left side - text block */}
@@ -126,10 +126,9 @@ export const MacbookPro = (): JSX.Element => {
                 Hollanda FairFoods LTD
               </div>
               <div className="[font-family:'Barlow',Helvetica] font-normal text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
-                Warehouse: KG 173 st, Kigali- Remera
+                Kigali Office:KK 261 St-Kigali
                 <br></br>
-                Opposite Grand Legacy Hotel Main office: KG 622 st, House 3<br></br>
-                Factory: Musanze Gyanika Road
+                Factory: Musanze-Cyanika Road
                 <br></br><br></br>
                 Tel: +250780050540<br></br>
                 Email: customerservice@hollandafairfoods.com
@@ -141,7 +140,7 @@ export const MacbookPro = (): JSX.Element => {
 
       <section id="newsletter-section" className="relative w-full">
         <img
-          className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[620px] object-center"
+          className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[620px] object-cover"
           alt="Rectangle"
           src="/wheeliz.jpeg"
         />

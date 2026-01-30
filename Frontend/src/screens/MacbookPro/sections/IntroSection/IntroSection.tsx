@@ -8,8 +8,6 @@ const contentData = [
     title: "Sweet Cheese",
     description:
       "Wheeliez Sweet Cheese combines the irresistible crunch of golden potato and wheat with a smooth, cheesy sweetness that keeps you rolling back for more. It’s the perfect balance of fun, flavor, and crunch ;  a cheesy joyride in every bite!",
-    bestSellingLabel: "BEST SELLING",
-    bestSellingText: "ALL NATURE",
     imagePosition: "left",
   },
   {
@@ -19,8 +17,6 @@ const contentData = [
     title: "Sweet Tomato",
     description:
       "Buckle up for a tangy twist! Wheeliez Sweet Tomato brings together the bright, zesty flavor of ripe tomatoes with a hint of sweetness,  full of energy and excitement. Every bite is a burst of flavor that makes snacking feel like an adventure.",
-    bestSellingLabel: "BEST SELLING",
-    bestSellingText: "ALL NATURE",
     imagePosition: "left",
   },
 ];
@@ -50,16 +46,6 @@ export const IntroSection = (): JSX.Element => {
 
               <div className="w-full [font-family:'Barlow',Helvetica] font-normal text-black text-base sm:text-lg md:text-xl tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
                 {item.description}
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center lg:items-start gap-2 sm:gap-3 md:gap-4 lg:gap-1.5">
-              <div className="font-normal text-black text-base sm:text-lg md:text-xl [font-family:'Barlow',Helvetica] tracking-[0] leading-relaxed text-center lg:text-left lg:text-[18px]">
-                {item.bestSellingLabel}
-              </div>
-
-              <div className="font-semibold text-black text-lg sm:text-xl md:text-2xl lg:text-[23px] [font-family:'Barlow',Helvetica] tracking-[0] leading-relaxed text-center lg:text-left ">
-                {item.bestSellingText}
               </div>
             </div>
           </div>

@@ -268,7 +268,7 @@ export const Login = (): JSX.Element => {
             <div className="flex flex-col items-center gap-6 mt-10 ml-96">
               <a
                 href="/"
-                className="text-sm text-[#68161c] w-fit hover:text-[#4d1216] [font-family:'Barlow',Helvetica] font-normal sm:text-lg md:text-xl text-bold"
+                className="text-sm text-[#68161c] w-fit hover:text-[#4d1216] [font-family:'Barlow',Helvetica] sm:text-lg md:text-xl lg:text-[17px] font-semibold"
               >
                 ← Back to Website
               </a>
@@ -277,12 +277,13 @@ export const Login = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="flex items-center justify-start w-full px-6 lg:w-1/2">
-          <div className="w-full max-w-4xl bg-white shadow-xl rounded-3xl lg:rounded-xl lg:py-24 lg:px-14">
+        {/* Right Panel - Admin Login Card */}
+        <div className="flex items-center justify-center w-full px-4 py-10 sm:px-6 sm:py-12 md:py-16 lg:py-0 lg:justify-start lg:w-1/2">
+          <div className="w-full max-w-xl md:max-w-2xl lg:max-w-4xl bg-white shadow-xl rounded-2xl lg:rounded-xl py-8 px-5 sm:py-10 sm:px-8 md:py-12 md:px-10 lg:py-24 lg:px-14">
 
             <div className="flex flex-col gap-2 mb-8">
-              <h2 className="[font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[43px]">Admin Login</h2>
-              <p className="text-base text-black/70 [font-family:'Barlow',Helvetica] font-normal text-black sm:text-lg md:text-xl tracking-[0] leading-relaxed  lg:text-[18px]">
+              <h2 className="[font-family:'Barlow',Helvetica] font-semibold text-black text-2xl sm:text-3xl md:text-4xl lg:text-[30px]">Admin Login</h2>
+              <p className="text-base text-black/70 [font-family:'Barlow',Helvetica] font-normal text-black sm:text-lg md:text-xl lg:text-[17px]">
                 Log in with your email and password to access the admin dashboard.
               </p>
             </div>

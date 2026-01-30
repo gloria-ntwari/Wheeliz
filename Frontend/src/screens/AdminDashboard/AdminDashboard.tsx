@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Home, Users, Puzzle, Grid3X3, Search, Bell, ChevronDown, Menu, Download } from "lucide-react";
 
 const summaryCards = [
-  { title: "Total Kids", value: "23,000", change: "+13%", colorClass: "bg-gradient-to-br from-[#89C349] to-[#415D23]" },
-  { title: "Total Kids", value: "23,000", change: "+13%", colorClass: "bg-gradient-to-br from-[#FB4246] to-[#F71B1B]" },
-  { title: "Total Kids", value: "23,000", change: "+13%", colorClass: "bg-gradient-to-br from-[#1E9EE5] to-[#1E89E5]" },
-  { title: "Total Kids", value: "23,000", change: "+13%", colorClass: "bg-gradient-to-br from-[#F2A528] to-[#DB982B]" },
+  { colorClass: "bg-[#F5D27B]", underlineClass: "bg-[#F5D27B]" },
+  { colorClass: "bg-[#D8431E]", underlineClass: "bg-[#D8431E]" },
+  { colorClass: "bg-[#4CAF7A]", underlineClass: "bg-[#4CAF7A]" },
+  { colorClass: "bg-[#1E73BE]", underlineClass: "bg-[#1E73BE]" },
 ];
+
+
 
 const months = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -44,8 +46,8 @@ export const AdminDashboard = (): JSX.Element => {
     <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
       {/* Sidebar */}
       <aside
-        className={`${sidebarOpen ? "w-72" : "w-0"
-          } transition-all duration-300 bg-[#1f1f1f] flex flex-col overflow-hidden shrink-0 `}
+        className={`${sidebarOpen ? "w-80" : "w-0"
+          } transition-all duration-300 bg-[#1f1f1f] flex flex-col overflow-hidden shrink-0`}
       >
         {/* Logo */}
         <div className="flex items-center justify-center p-8">
@@ -53,17 +55,17 @@ export const AdminDashboard = (): JSX.Element => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-5 mt-4 space-y-12">
+        <nav className="flex-1 px-8 mt-16 space-y-8">
           {navItems.map((item) => (
             <button
               key={item.label}
               onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${item.active
-                ? "bg-white text-black"
+              className={`w-full flex items-center gap-3 px-10 py-5 rounded-full font-medium transition-colors ${item.active
+                ? "bg-[#68161c] text-white"
                 : "text-white hover:bg-[#2a2a2a]"
                 }`}
             >
-              <item.icon className={`w-5 h-5 ${item.active ? "text-black" : "text-white"}`} />
+              <item.icon className={`w-5 h-5 ${item.active ? "text-white" : "text-white"}`} />
               <span>{item.label}</span>
             </button>
           ))}
@@ -71,81 +73,99 @@ export const AdminDashboard = (): JSX.Element => {
       </aside>
 
       {/* Main Content */}
-      <div className="flex flex-col flex-1 min-w-0 bg-white rounded-tl-3xl">
+      <div className="flex flex-col flex-1 overflow-x-hidden bg-white rounded-tl-3xl">
         {/* Header */}
-        <header className="flex items-center px-8 py-4 bg-white border-b-[1.7px] border-gray-500 rounded-tl-3xl mt-7">
-          <div className="flex items-center gap-4">
+        <header className="flex flex-col items-stretch gap-4 px-4 py-4 mt-6 bg-white rounded-tl-3xl sm:px-6 lg:px-10 lg:flex-row lg:items-center lg:justify-between">
+          {/* Left: menu + search */}
+          <div className="flex items-center w-full gap-3 lg:w-auto">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 transition-colors rounded-lg hover:bg-[#1f2937]"
+              className="flex items-center justify-center text-gray-700 border border-gray-300 rounded-full w-9 h-9 hover:bg-gray-100 lg:hidden"
             >
-              <Menu className="w-5 h-5 text-foreground" />
-            </button>
-            <h1 className="text-xl font-semibold text-black text-foreground">Dashboard</h1>
-          </div>
-
-          {/* Centered Search Bar */}
-          <div className="flex justify-center flex-1 px-8">
-            <div className="hidden md:flex items-center bg-[#8fb1e116] rounded-full px-5 py-2.5 gap-3 min-w-[400px] max-w-[400px]">
-              <Search className="w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search for something"
-                className="flex-1 text-sm text-white bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {/* Notifications */}
-            <button className="relative p-2 transition-colors rounded-full hover:bg-[#1f2937]">
-              <Bell className="w-5 h-5 text-black" />
-              <span className="absolute w-2 h-2 bg-red-500 rounded-full top-1 right-1"></span>
+              <Menu className="w-5 h-5" />
             </button>
 
-            {/* User Profile */}
-            <div className="flex items-center gap-1 cursor-pointer">
-              <div className="w-10 h-10 overflow-hidden rounded-full bg-muted">
+<div className="flex items-center w-[515px] h-[45px] px-5 bg-[#f4f6fb] rounded-full gap-3">
+  <Search className="w-5 h-5 text-[#0f2a5f] shrink-0 ml-4" />
+  <input
+    type="text"
+    placeholder="Search for something"
+    className="flex-1 bg-transparent text-[15px] leading-none text-[#0f2a5f] placeholder:text-[#0f2a5f] outline-none text-left"
+  />
+</div>
+
+
+          </div>
+
+          {/* Right: notifications + profile */}
+          <div className="flex items-center justify-end w-full gap-4 lg:w-auto">
+            <button className="relative flex items-center justify-center transition-colors bg-white rounded-full w-9 h-9 ">
+              <Bell className="w-5 h-5 text-[#111827]" />
+              <span className="absolute w-1.5 h-1.5 bg-red-500 rounded-full top-1.5 right-2.5"></span>
+            </button>
+
+            <div className="flex items-center gap-2 cursor-pointer">
+              <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
                 <img
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
                   alt="Profile"
                   className="object-cover w-full h-full"
                 />
               </div>
-              <span className="hidden font-medium text-foreground sm:block">
+              <span className="hidden text-sm font-medium text-gray-900 sm:block">
                 {adminData.name || "Admin"}
               </span>
-              <ChevronDown className="h-5 w-7 text-muted-foreground" />
+              <ChevronDown className="w-5 h-5 text-gray-500" />
             </div>
           </div>
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 p-10 overflow-y-auto bg-white">
-          {/* Summary Cards */}
-          <div className="grid max-w-6xl grid-cols-1 gap-5 mb-8 sm:grid-cols-2 lg:grid-cols-4">
-            {summaryCards.map((card, index) => (
-              <div
-                key={index}
-                className={`${card.colorClass} p-5 text-white shadow-lg`}
-              >
-                <h3 className="mb-1 text-sm opacity-90">
-                  {card.title}
-                </h3>
-                <p className="mb-3 text-lg text-right">
-                  {card.value}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm opacity-90">
-                    Since last month
-                  </span>
-                  <span className="px-3 py-0.5 text-xs text-blue-400 bg-white">
-                    {card.change}
-                  </span>
-                </div>
+        <main className="flex-1 w-full px-4 pt-6 pb-10 overflow-y-auto bg-white sm:px-6 lg:px-10">
+          {/* Greeting Hero Card */}
+          <section className="w-full mb-8">
+            <div className="flex flex-col items-start justify-between w-full gap-4 px-6 py-6 text-white rounded-3xl bg-gradient-to-l from-[#CD535C] to-[#68161C] sm:px-8 sm:py-7 md:flex-row md:items-center md:px-10 lg:px-16">
+              <div className="space-y-2">
+                <h2 className="lg:text-[25px] font-semibold ">Hello Admin 👋</h2>
+                <p className="text-sm sm:text-base  [font-family:'Poppins'] font-normal lg:text-[16px]">Wishing you a happy morning and happy day</p>
               </div>
-            ))}
+
+              <button className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-[#68161c] rounded-full shadow-md hover:bg-[#4d1216] transition-colors whitespace-nowrap mt-2 md:mt-0">
+                Add New Comics
+              </button>
+            </div>
+          </section>
+
+          {/* Top Stats Row */}
+<section className="w-full mt-16 mb-10 ml-2">
+  <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+    {summaryCards.map((card, index) => (
+      <div key={index} className="flex flex-col space-y-3">
+        
+        {/* Top row: square + text */}
+        <div className="flex items-center gap-3">
+          <div className={`flex items-center justify-center w-7 h-7 rounded-lg ${card.colorClass}`}>
+            <div className="w-3.5 h-3.5 bg-white rounded" />
           </div>
+
+          <p className="text-[15px] text-gray-500 [font-family:'Poppins',sans-serif] font-normal">
+            Total kids in the system
+          </p>
+        </div>
+
+        <div className="">
+          <p className="text-[25px] font-extrabold text-black [font-family:'Poppins',sans-serif] ">
+            118
+          </p>
+        </div>
+        <span className={`mt-2 block h-[1px] w-10 rounded-full ${card.underlineClass}`} />
+
+      </div>
+    ))}
+  </div>
+</section>
+
+
 
           {/* Chart Section */}
           <div className="max-w-6xl p-6 mt-1 mt-20 border shadow-lg bg-card rounded-2xl border-border">

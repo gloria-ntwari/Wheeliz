@@ -6,7 +6,7 @@ const commonAnswer = "To ensure our products remain non-GMO, sometimes sourcing 
 const faqDataColumn1 = [
   {
     id: "item-1",
-    question: "What are Wheeliez made from",
+    question: "What are Wheeliez made of?",
     answer: "Wheeliez are made from a delicious blend of high-quality potatoes and wheat for that perfect crispy crunch.",
   },
   {
@@ -26,7 +26,7 @@ const faqDataColumn2 = [
     id: "item-4",
     question:
       "Where is Wheeliez from?",
-    answer: "Wheeliez are proudly made in Rwanda by Hollanda FairFoods.",
+    answer: "Wheeliez are produced in Musanze by Hollanda Fairfoods. The producers of winnaz",
   },
   {
     id: "item-5",
