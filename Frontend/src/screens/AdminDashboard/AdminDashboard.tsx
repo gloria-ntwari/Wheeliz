@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Home, Users, Puzzle, Grid3X3, Search, Bell, ChevronDown, Menu, Download } from "lucide-react";
 
@@ -11,9 +11,9 @@ const summaryCards = [
 
 
 
-const months = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-const chartData = [
+const CHART_DATA = [
   { month: "Jan", active: 35, offline: 25 },
   { month: "Feb", active: 40, offline: 30 },
   { month: "Mar", active: 25, offline: 20 },
@@ -28,6 +28,58 @@ const chartData = [
   { month: "Dec", active: 70, offline: 60 },
 ];
 
+const clampPct = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
+
+type ChartPoint = { label: string; active: number; offline: number };
+
+function buildChartView(selectedPeriod: string, now: Date): { labels: string[]; data: ChartPoint[] } {
+  const currentMonthIndex = now.getMonth(); // 0..11
+  const currentMonth = CHART_DATA[currentMonthIndex] ?? CHART_DATA[0];
+
+  if (selectedPeriod === "6 month") {
+    // Per request: early-year → Jan-Jun, late-year → Jul-Dec (so the view depends on the current date)
+    const start = currentMonthIndex <= 5 ? 0 : 6;
+    const slice = CHART_DATA.slice(start, start + 6);
+    return {
+      labels: slice.map((d) => d.month),
+      data: slice.map((d) => ({ label: d.month, active: d.active, offline: d.offline })),
+    };
+  }
+
+  if (selectedPeriod === "30 days") {
+    const labels = ["Week 1", "Week 2", "Week 3", "Week 4"];
+    const multipliers = [0.9, 1.05, 0.95, 1.1];
+    return {
+      labels,
+      data: labels.map((label, i) => ({
+        label,
+        active: clampPct(currentMonth.active * multipliers[i]),
+        offline: clampPct(currentMonth.offline * multipliers[(i + 1) % multipliers.length]),
+      })),
+    };
+  }
+
+  if (selectedPeriod === "7 days") {
+    const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const activeWave = [0.95, 1.02, 0.98, 1.05, 1.1, 0.92, 0.9];
+    const offlineWave = [0.9, 0.95, 1.0, 0.92, 0.98, 1.05, 1.08];
+    return {
+      labels,
+      data: labels.map((label, i) => ({
+        label,
+        active: clampPct(currentMonth.active * activeWave[i]),
+        offline: clampPct(currentMonth.offline * offlineWave[i]),
+      })),
+    };
+  }
+
+  // Default: 12 months
+  return {
+    labels: MONTHS,
+    data: CHART_DATA.map((d) => ({ label: d.month, active: d.active, offline: d.offline })),
+  };
+}
+
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: true },
   { icon: Users, label: "Kids", path: "/admin/kids", active: false },
@@ -38,16 +90,35 @@ const navItems = [
 export const AdminDashboard = (): JSX.Element => {
   const navigate = useNavigate();
   const [selectedPeriod, setSelectedPeriod] = useState("12 month");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.innerWidth >= 1024; // open on lg+, drawer on mobile
+  });
 
   const adminData = JSON.parse(localStorage.getItem("adminData") || '{"name": "Ange Nadette"}');
+  const { labels, data: viewData } = useMemo(
+    () => buildChartView(selectedPeriod, new Date()),
+    [selectedPeriod],
+  );
 
   return (
     <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
+      {/* Mobile backdrop */}
+      {sidebarOpen && (
+        <button
+          type="button"
+          aria-label="Close sidebar"
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+        />
+      )}
+
       {/* Sidebar */}
       <aside
-        className={`${sidebarOpen ? "w-80" : "w-0"
-          } transition-all duration-300 bg-[#1f1f1f] flex flex-col overflow-hidden shrink-0`}
+        className={`bg-[#1f1f1f] flex flex-col overflow-hidden shrink-0
+        fixed inset-y-0 left-0 z-50 w-80 transform transition-transform duration-300
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        lg:static lg:translate-x-0`}
       >
         {/* Logo */}
         <div className="flex items-center justify-center p-8">
@@ -85,14 +156,14 @@ export const AdminDashboard = (): JSX.Element => {
               <Menu className="w-5 h-5" />
             </button>
 
-<div className="flex items-center w-[515px] h-[45px] px-5 bg-[#f4f6fb] rounded-full gap-3">
-  <Search className="w-5 h-5 text-[#0f2a5f] shrink-0 ml-4" />
-  <input
-    type="text"
-    placeholder="Search for something"
-    className="flex-1 bg-transparent text-[15px] leading-none text-[#0f2a5f] placeholder:text-[#0f2a5f] outline-none text-left"
-  />
-</div>
+            <div className="flex items-center w-full max-w-[515px] h-[45px] px-5 bg-[#f4f6fb] rounded-full gap-3">
+              <Search className="w-5 h-5 text-[#0f2a5f] shrink-0 ml-2 sm:ml-4" />
+              <input
+                type="text"
+                placeholder="Search for something"
+                className="flex-1 w-full bg-transparent text-[15px] leading-none text-[#0f2a5f] placeholder:text-[#0f2a5f] outline-none text-left"
+              />
+            </div>
 
 
           </div>
@@ -121,7 +192,7 @@ export const AdminDashboard = (): JSX.Element => {
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 w-full px-4 pt-6 pb-10 overflow-y-auto bg-white sm:px-6 lg:px-10">
+        <main className="flex-1 w-full px-4 pt-6 pb-10 overflow-x-hidden overflow-y-auto bg-white sm:px-6 lg:px-10">
           {/* Greeting Hero Card */}
           <section className="w-full mb-8">
             <div className="flex flex-col items-start justify-between w-full gap-4 px-6 py-6 text-white rounded-3xl bg-gradient-to-l from-[#CD535C] to-[#68161C] sm:px-8 sm:py-7 md:flex-row md:items-center md:px-10 lg:px-16">
@@ -170,13 +241,13 @@ export const AdminDashboard = (): JSX.Element => {
           {/* Chart Section */}
           <div className="max-w-6xl p-6 mt-1 mt-20 border shadow-lg bg-card rounded-2xl border-border">
             <div className="flex flex-col gap-4 mb-8 md:flex-row md:items-start md:justify-between">
-              <div className="ml-9">
-                <div className="flex items-center gap-4 mb-2">
+              <div className="ml-0 sm:ml-9">
+                <div className="flex flex-col gap-4 mb-2 sm:flex-row sm:items-center">
                   <h2 className="text-lg font-semibold text-black">
                     Total Participant
                   </h2>
                   {/* Time Period Filters */}
-                  <div className="flex gap-2">
+                  <div className="flex flex-col gap-2 sm:flex-row">
                     {["12 month", "6 month", "30 days", "7 days"].map((period) => (
                       <button
                         key={period}
@@ -208,36 +279,36 @@ export const AdminDashboard = (): JSX.Element => {
             </div>
 
             {/* Chart */}
-            <div className="ml-9 lg:w-[1000px]">
+            <div className="w-full max-w-[95%] lg:max-w-[1000px] ml-0 sm:ml-9">
 
               {/* CHART BODY */}
               <div className="relative flex h-52">
 
                 {/* Y AXIS */}
-                <div className="flex flex-col justify-between pr-3 text-xs text-muted-foreground">
+                <div className="flex flex-col justify-between pr-1 sm:pr-3 text-[10px] sm:text-xs text-muted-foreground">
                   {[10, 8.75, 7.5, 6.25, 5, 3.75, 2.5, 1.25, 0].map((val) => (
                     <span key={val}>{val}</span>
                   ))}
                 </div>
 
                 {/* GRID + BARS */}
-                <div className="relative flex-1">
+                <div className="relative flex-1 border-l border-r border-b border-dashed border-[#F2A528]/70 rounded-xl overflow-hidden">
 
                   {/* GRID */}
                   <div
                     className="absolute inset-0 grid pointer-events-none"
                     style={{
-                      gridTemplateColumns: `repeat(${months.length}, 1fr)`,
+                      gridTemplateColumns: `repeat(${labels.length}, 1fr)`,
                       gridTemplateRows: "repeat(8, 1fr)",
                     }}
                   >
                     {/* vertical - separating months */}
-                    {months.slice(1).map((_, i) => (
+                    {labels.slice(1).map((_, i) => (
                       <div
                         key={i}
                         className="border-l border-dashed border-[#F2A528]/40 h-full absolute"
                         style={{
-                          left: `${((i + 1) / months.length) * 100}%`,
+                          left: `${((i + 1) / labels.length) * 100}%`,
                           top: 0,
                           bottom: 0
                         }}
@@ -256,19 +327,19 @@ export const AdminDashboard = (): JSX.Element => {
                   {/* BARS */}
                   <div
                     className="relative z-10 grid h-full"
-                    style={{ gridTemplateColumns: `repeat(${months.length}, 1fr)` }}
+                    style={{ gridTemplateColumns: `repeat(${labels.length}, 1fr)` }}
                   >
-                    {chartData.map((data, index) => (
+                    {viewData.map((data, index) => (
                       <div
                         key={index}
-                        className="flex items-end justify-center h-full gap-2"
+                        className="flex items-end justify-center h-full gap-1 sm:gap-2 lg:gap-4"
                       >
                         <div
-                          className="w-3 rounded-t-sm bg-[#CB3E21]"
+                          className="w-2 lg:w-[15px] rounded-t-md bg-[#CB3E21]"
                           style={{ height: `${data.active}%` }}
                         />
                         <div
-                          className="w-3 rounded-t-sm bg-[#F2A528]"
+                          className="w-2 lg:w-[15px] rounded-t-md bg-[#F2A528]"
                           style={{ height: `${data.offline}%` }}
                         />
                       </div>
@@ -279,12 +350,12 @@ export const AdminDashboard = (): JSX.Element => {
 
               {/* MONTHS (ALIGNED TO BARS) */}
               <div
-                className="grid ml-[3.5rem] mt-2 text-xs text-muted-foreground"
-                style={{ gridTemplateColumns: `repeat(${months.length}, 1fr)` }}
+                className="grid ml-[2.75rem] sm:ml-[3.5rem] mt-2 text-[10px] sm:text-xs text-muted-foreground"
+                style={{ gridTemplateColumns: `repeat(${labels.length}, 1fr)` }}
               >
-                {months.map((month) => (
-                  <span key={month} className="text-center">
-                    {month}
+                {labels.map((label) => (
+                  <span key={label} className="text-center">
+                    {label}
                   </span>
                 ))}
               </div>
