@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Home, Users, Puzzle, Grid3X3, Search, Bell, ChevronDown, Menu, Download } from "lucide-react";
+import { PaginationDots } from './../../components/ui/pagination-dots';
 
 const summaryCards = [
   { colorClass: "bg-[#F5D27B]", underlineClass: "bg-[#F5D27B]" },
@@ -131,7 +132,7 @@ export const AdminDashboard = (): JSX.Element => {
             <button
               key={item.label}
               onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 px-10 py-5 rounded-full font-medium transition-colors ${item.active
+              className={`w-full flex items-center gap-3 px-10 py-5 rounded-full font-medium transition-colors [font-family:'Poppins'] text-[15px] ${item.active
                 ? "bg-[#68161c] text-white"
                 : "text-white hover:bg-[#2a2a2a]"
                 }`}
@@ -156,12 +157,12 @@ export const AdminDashboard = (): JSX.Element => {
               <Menu className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center w-full max-w-[515px] h-[45px] px-5 bg-[#f4f6fb] rounded-full gap-3">
-              <Search className="w-5 h-5 text-[#0f2a5f] shrink-0 ml-2 sm:ml-4" />
+            <div className="flex items-center  max-w-[515px] h-[45px] px-5 bg-[#f4f6fb] rounded-full gap-3 lg:w-[800px] sm:w-full">
+              <Search className="w-4 h-4 text-[#0f2a5f] shrink-0 ml-2 sm:ml-4" />
               <input
                 type="text"
                 placeholder="Search for something"
-                className="flex-1 w-full bg-transparent text-[15px] leading-none text-[#0f2a5f] placeholder:text-[#0f2a5f] outline-none text-left"
+                className="flex-1 w-full bg-transparent text-[13px] leading-none text-[#0f2a5f] placeholder:text-[#0f2a5f] outline-none text-left [font-family:'Poppins']"
               />
             </div>
 
@@ -201,7 +202,7 @@ export const AdminDashboard = (): JSX.Element => {
                 <p className="text-sm sm:text-base  [font-family:'Poppins'] font-normal lg:text-[16px]">Wishing you a happy morning and happy day</p>
               </div>
 
-              <button className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-[#68161c] rounded-full shadow-md hover:bg-[#4d1216] transition-colors whitespace-nowrap mt-2 md:mt-0">
+              <button className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-[#68161c] rounded-full shadow-md hover:bg-[#4d1216] transition-colors whitespace-nowrap mt-2 md:mt-0 [font-family:'Poppins']">
                 Add New Comics
               </button>
             </div>
@@ -243,18 +244,18 @@ export const AdminDashboard = (): JSX.Element => {
             <div className="flex flex-col gap-4 mb-8 md:flex-row md:items-start md:justify-between">
               <div className="ml-0 sm:ml-9">
                 <div className="flex flex-col gap-4 mb-2 sm:flex-row sm:items-center">
-                  <h2 className="text-lg font-semibold text-black">
+                  <h2 className="font-semibold text-black [font-family:'Poppins',Helvetica] lg:text-[16px]">
                     Total Participant
                   </h2>
                   {/* Time Period Filters */}
                   <div className="flex flex-col gap-2 sm:flex-row">
-                    {["12 month", "6 month", "30 days", "7 days"].map((period) => (
+                    {["12 month", "6 month", "1 month", "7 days"].map((period) => (
                       <button
                         key={period}
                         onClick={() => setSelectedPeriod(period)}
-                        className={`px-4 py-1.5 rounded-lg text-sm border transition-colors ${selectedPeriod === period
-                          ? "bg-[#1f1f1f] border-[#1f1f1f] text-background"
-                          : "bg-background border-border text-muted-foreground hover:bg-accent"
+                        className={`px-4 py-2.5 rounded-md text-[12px] transition-colors [font-family:'Poppins',sans-serif] ${selectedPeriod === period
+                          ? "bg-white text-background text-black border-white shadow-lg hover:shadow-lg "
+                          : "bg-[#f2f1f1] text-muted-foreground "
                           }`}
                       >
                         {period}
@@ -263,10 +264,10 @@ export const AdminDashboard = (): JSX.Element => {
                   </div>
                 </div>
                 <div className="flex items-baseline gap-8 mt-6">
-                  <span className="text-sm text-muted-foreground">
+                  <span className="lg:text-[14px] text-muted-foreground [font-family:'Poppins',Helvetica]">
                     Average per month
                   </span>
-                  <span className="text-black ">
+                  <span className="text-black  [font-family:'Poppins',Helvetica] lg:text-[14px]">
                     12,000
                   </span>
                 </div>
@@ -285,7 +286,7 @@ export const AdminDashboard = (): JSX.Element => {
               <div className="relative flex h-52">
 
                 {/* Y AXIS */}
-                <div className="flex flex-col justify-between pr-1 sm:pr-3 text-[10px] sm:text-xs text-muted-foreground">
+                <div className="flex flex-col justify-between pr-1 sm:pr-3 text-[10px] sm:text-xs text-muted-foreground [font-family:'Poppins']">
                   {[10, 8.75, 7.5, 6.25, 5, 3.75, 2.5, 1.25, 0].map((val) => (
                     <span key={val}>{val}</span>
                   ))}
@@ -350,7 +351,7 @@ export const AdminDashboard = (): JSX.Element => {
 
               {/* MONTHS (ALIGNED TO BARS) */}
               <div
-                className="grid ml-[2.75rem] sm:ml-[3.5rem] mt-2 text-[10px] sm:text-xs text-muted-foreground"
+                className="grid ml-[2.75rem] sm:ml-[3.5rem] mt-2 text-[10px] sm:text-xs text-muted-foreground [font-family:'Poppins']"
                 style={{ gridTemplateColumns: `repeat(${labels.length}, 1fr)` }}
               >
                 {labels.map((label) => (
@@ -366,11 +367,11 @@ export const AdminDashboard = (): JSX.Element => {
             <div className="flex items-center justify-center gap-8 mt-6">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-[#CB3E21]"></div>
-                <span className="text-sm text-muted-foreground">Active</span>
+                <span className="text-sm text-muted-foreground [font-family:'Poppins']">Active</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-[#F2A528]"></div>
-                <span className="text-sm text-muted-foreground">Offline</span>
+                <span className="text-sm text-muted-foreground [font-family:'Poppins']">Offline</span>
               </div>
             </div>
           </div>
