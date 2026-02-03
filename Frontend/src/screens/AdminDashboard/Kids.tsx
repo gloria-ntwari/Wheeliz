@@ -375,7 +375,7 @@ export const Kids = (): JSX.Element => {
               className="fixed inset-0 z-0 bg-black/40"
             />
 
-            <div className="relative z-10 flex flex-col items-center justify-center p-4 mt-24 mb-20">
+            <div className="relative z-10 flex flex-col items-center justify-center p-4 mt-16 mb-20">
 
               <div className="w-full max-w-lg px-28 py-16 bg-white rounded-2xl shadow-2xl min-h-[740px] flex flex-col items-center">
                 <div className="flex flex-col items-center mt-2 mb-8 text-center">
