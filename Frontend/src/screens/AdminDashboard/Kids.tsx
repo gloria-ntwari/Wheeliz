@@ -250,7 +250,7 @@ export const Kids = (): JSX.Element => {
           </section>
 
           {/* Kids cards grid */}
-          <section className="w-full mb-10 border-b">
+          <section className="w-full mb-10">
             <div className="grid grid-cols-1 gap-4 mb-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {kidsData.map((kid) => {
                 const isActive =
@@ -328,12 +328,12 @@ export const Kids = (): JSX.Element => {
 
 
           {/* Pagination */}
-          <section className="flex flex-col items-center w-full gap-4 mt-8 sm:flex-row sm:justify-between sm:gap-0">
+          <section className="flex flex-col items-center w-full gap-4 pt-8 mt-12 border-t border-gray-200 sm:flex-row sm:justify-between sm:gap-0">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="flex items-center gap-1 px-4 py-3 text-sm font-normal text-black bg-[#f0f0f0] rounded-full hover:bg-[#e5e5e5] transition-colors [font-family:'Poppins']"
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-normal text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
             >
-              <ArrowLeft className="w-3 h-3" />
+              <ArrowLeft className="w-4 h-4" />
               Previous
             </button>
 
@@ -345,10 +345,11 @@ export const Kids = (): JSX.Element => {
                   )}
                   <button
                     onClick={() => setCurrentPage(num)}
-                    className={`min-w-[36px] px-3 py-2 text-sm font-medium rounded-lg transition-colors ${currentPage === num
-                      ? "bg-gray-900 text-white"
-                      : "bg-[#f0f0f0] text-gray-700 hover:bg-[#e5e5e5]"
-                      }`}
+                    className={`min-w-[32px] h-8 flex items-center justify-center text-xs font-medium rounded-lg transition-colors ${
+                      currentPage === num
+                        ? "bg-[#1f1f1f] text-white"
+                        : "bg-transparent text-gray-600 hover:bg-gray-100"
+                    }`}
                   >
                     {num}
                   </button>
@@ -358,10 +359,10 @@ export const Kids = (): JSX.Element => {
 
             <button
               onClick={() => setCurrentPage((p) => Math.min(TOTAL_PAGES, p + 1))}
-              className="flex items-center gap-1 px-4 py-2.5 text-sm font-medium text-black bg-[#f0f0f0] rounded-full hover:bg-[#e5e5e5] transition-colors [font-family:'Poppins']"
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
             >
               Next
-              <ArrowRight className="w-4 h-3" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </section>
         </main>
