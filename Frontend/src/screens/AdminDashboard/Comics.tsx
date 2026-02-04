@@ -229,78 +229,103 @@ export const Comics = (): JSX.Element => {
               </div>
             </div>
 
-            <h2 className="pb-4 mb-8 text-xl font-bold text-black border-b-2 border-gray-300">Comics Details</h2>
-
-            <div className="max-w-5xl space-y-8">
-              {/* Title */}
-              <div className="grid grid-cols-[180px_1fr] items-center gap-8 border-b-2 border-gray-300 pb-8">
-                <label className="text-sm font-bold text-black">Title</label>
-                <input 
-                  type="text" 
-                  placeholder="Enter the title of your comics"
-                  className="w-[90%] px-4 py-3 text-sm border-2 border-gray-300 rounded-xl outline-none focus:border-[#681618] transition-colors "
-                />
+            <div className="max-w-6xl space-y-8">
+              {/* Comics Details Section */}
+              <div className="overflow-hidden shadow-md rounded-3xl ">
+                <div className="px-8 py-3 bg-[#181817]">
+                  <h2 className="text-[16px] font-bold text-white">Comics Details</h2>
+                </div>
+                <div className="p-8 bg-white border-white">
+                  <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                    {/* Title */}
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold text-black">Title*</label>
+                      <input 
+                        type="text" 
+                        placeholder="Title"
+                        className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
+                      />
+                    </div>
+                    {/* Sub-Title */}
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold text-black">Sub-Title*</label>
+                      <input 
+                        type="text" 
+                        placeholder="Subtitle"
+                        className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
+                      />
+                    </div>
+                  </div>
+                  {/* Description */}
+                  <div className="mt-8 space-y-3">
+                    <label className="text-sm font-bold text-black">Description*</label>
+                    <textarea 
+                      placeholder="Description"
+                      className="w-full h-32 px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors resize-none"
+                    />
+                  </div>
+                </div>
               </div>
 
-               {/* Sub-Title */}
-               <div className="grid grid-cols-[180px_1fr] items-center gap-8 border-b-2 border-gray-300 pb-8">
-                <label className="text-sm font-bold text-black">Sub-Title</label>
-                <input 
-                  type="text" 
-                  placeholder="Enter the sub-title of your comics"
-                  className="w-[90%] px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors text-gray-700"
-                />
-              </div>
+              {/* Comics Documents Section */}
+              <div className="overflow-hidden shadow-md rounded-3xl">
+                <div className="px-8 py-3 bg-[#181817]">
+                  <h2 className="text-[16px] font-bold text-white">Comics Documents</h2>
+                </div>
+                <div className="p-8 bg-white">
+                  <div className="grid grid-cols-1 gap-8 mb-8 md:grid-cols-2">
+                    {/* Maz Uploads */}
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold text-black">Maz Uploads *</label>
+                      <input 
+                        type="text" 
+                        placeholder="Number"
+                        className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
+                      />
+                    </div>
+                    {/* Submission Deadline */}
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold text-black">Submission Deadline*</label>
+                      <input 
+                        type="text" 
+                        placeholder="Date format"
+                        className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
+                      />
+                    </div>
+                  </div>
 
-               {/* Description */}
-               <div className="grid grid-cols-[180px_1fr] items-start gap-8 border-b-2 border-gray-300 pb-8">
-                <label className="pt-3 text-sm font-bold text-black">Description</label>
-                <textarea 
-                  placeholder="Enter the sub-title of your comics"
-                  className="w-[90%] h-32 px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors resize-none text-gray-700"
-                />
-              </div>
-
-              {/* Submission Deadline */}
-              <div className="grid grid-cols-[180px_1fr] items-center gap-8 border-b-2 border-gray-300 pb-8">
-                <label className="text-sm font-bold text-black">Submission Deadline</label>
-                <input 
-                  type="date"
-                  className="w-[90%] px-4 py-3 text-sm text-gray-700 border-2 border-gray-300 rounded-xl outline-none focus:border-[#681618] transition-colors"
-                />
-              </div>
-
-              {/* Upload Files */}
-               <div className="grid grid-cols-[180px_1fr] items-start gap-8">
-                <label className="pt-3 text-sm font-bold text-black">Upload Files</label>
-                <div className="flex flex-col w-full gap-4">
-                    <div className="flex flex-col items-center justify-center w-[90%] gap-2 p-8 border-2 border-gray-300 rounded-xl">
+                  {/* Upload Files */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold text-black">Upload Files *</label>
+                    <div className="flex flex-col items-center justify-center w-full gap-2 p-12 border-2 border-gray-200 rounded-xl">
                         <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
                             <span className="text-xl">☁️</span>
                         </div>
-                        <p className="text-sm text-center">
-                            <span className="font-semibold text-[#681618]">Click to upload</span> or drag and drop
+                        <p className="text-sm text-center text-gray-500">
+                            <span className="font-semibold text-[#8B1A1A]">Click to upload</span> or drag and drop
                         </p>
                     </div>
+                  </div>
 
-                    {/* File List Item */}
-                    <div className="flex items-center justify-between w-full"> 
-                        <div className="flex items-center gap-3">
-                             <div className="flex items-center justify-center w-10 h-10 bg-red-100 rounded-lg">
-                                {/* Simple red PDF icon representation */}
-                                <svg className="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
-                                </svg>
-                             </div>
-                             <div>
-                                 <p className="text-sm font-bold text-black">How To Forgive Through Art</p>
-                                 <p className="text-xs text-gray-500">200KB - 100% Uploaded</p>
-                             </div>
-                        </div>
-                        <button className="text-red-800 hover:text-red-900">
-                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-2.005-1.958L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        </button>
-                    </div>
+                  {/* File List Item */}
+                  <div className="flex items-center justify-center mt-6 gap-36"> 
+                      <div className="flex items-center gap-3">
+                            <div className="flex items-center justify-center w-10 h-10 bg-red-100 rounded-lg">
+                              <svg className="w-6 h-6 text-[#ef4444]" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                            <div>
+                                <p className="text-sm font-bold text-black">How To Forgive Through Art</p>
+                                <p className="text-xs text-gray-500">200KB - 100% Uploaded</p>
+                            </div>
+                      </div>
+                      <button className="text-[#8B1A1A] hover:text-red-900">
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                      </button>
+                  </div>
                 </div>
               </div>
             </div>
