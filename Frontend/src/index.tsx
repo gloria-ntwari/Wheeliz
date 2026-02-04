@@ -9,6 +9,8 @@ import { AdminDashboard } from "./screens/AdminDashboard";
 import { Kids } from "./screens/AdminDashboard/Kids";
 import { KidDetail } from "./screens/AdminDashboard/KidDetail";
 import { Comics } from "./screens/AdminDashboard/Comics";
+import { AddComics } from "./screens/AdminDashboard/AddComics";
+import { Submissions } from "./screens/AdminDashboard/Submissions";
 
 // Protected Route Component for Admin
 const ProtectedAdminRoute = ({ children }: { children: React.ReactElement }) => {
@@ -53,6 +55,22 @@ createRoot(document.getElementById("app") as HTMLElement).render(
           element={
             <ProtectedAdminRoute>
               <Comics />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/add-comics"
+          element={
+            <ProtectedAdminRoute>
+              <AddComics />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/submissions"
+          element={
+            <ProtectedAdminRoute>
+              <Submissions />
             </ProtectedAdminRoute>
           }
         />

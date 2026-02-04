@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Smile } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import {
   Home,
-  Clock,
+
   Puzzle,
   Grid3X3,
   Search,
@@ -105,7 +105,7 @@ const kidsData = [
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
-  { icon: Clock, label: "Kids", path: "/admin/kids", active: true },
+  { icon: Smile, label: "Kids", path: "/admin/kids", active: true },
   { icon: Puzzle, label: "Comics", path: "/admin/comics", active: false },
   { icon: Grid3X3, label: "Submissions", path: "/admin/submissions", active: false },
 ];

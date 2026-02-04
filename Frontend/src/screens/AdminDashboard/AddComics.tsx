@@ -1,21 +1,70 @@
-import React from "react";
-import { ArrowLeft, Menu, Search, Bell, ChevronDown } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowLeft, Menu, Search, Bell, ChevronDown, Home, Smile, Puzzle, Grid3X3, CloudUpload, FileText } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-interface AddComicsProps {
-  onBack: () => void;
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
-  adminData: any;
-}
+const navItems = [
+  { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
+  { icon: Smile, label: "Kids", path: "/admin/kids", active: false },
+  { icon: Puzzle, label: "Comics", path: "/admin/comics", active: true }, // Keep Comics active or maybe none? User is in Add Comics, which is sub-page of Comics.
+  { icon: Grid3X3, label: "Submissions", path: "/admin/submissions", active: false },
+];
 
-export const AddComics = ({
-  onBack,
-  sidebarOpen,
-  setSidebarOpen,
-  adminData,
-}: AddComicsProps): JSX.Element => {
+export const AddComics = (): JSX.Element => {
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth >= 1024 : true
+  );
+
+  const adminData = JSON.parse(
+    localStorage.getItem("adminData") || '{"name": "Ange Nadette"}'
+  );
+
   return (
-    <div className="flex flex-col flex-1 min-w-0 overflow-x-hidden bg-white rounded-tl-3xl">
+    <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
+      {/* Mobile backdrop */}
+      {sidebarOpen && (
+        <button
+          type="button"
+          aria-label="Close sidebar"
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`bg-[#181817] flex flex-col overflow-hidden shrink-0
+                fixed inset-y-0 left-0 z-50 w-80 transform transition-transform duration-300
+                ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+                lg:static lg:translate-x-0`}
+      >
+        <div className="flex items-center justify-center p-8">
+          <img
+            src="/clip-path-group-16.png"
+            alt="Wheeliez"
+            className="object-contain w-auto h-20"
+          />
+        </div>
+
+        <nav className="flex-1 px-8 mt-16 space-y-8">
+          {navItems.map((item) => (
+            <button
+              key={item.label}
+              onClick={() => navigate(item.path)}
+              className={`w-full flex items-center gap-3 px-10 py-5 rounded-full font-medium transition-colors [font-family:'Poppins'] text-[15px] ${
+                item.active
+                  ? "bg-[#68161c] text-white"
+                  : "text-white hover:bg-[#2a2a2a]"
+              }`}
+            >
+              <item.icon className="w-5 h-5" />
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </nav>
+      </aside>
+
+      <div className="flex flex-col flex-1 min-w-0 overflow-x-hidden bg-white rounded-tl-3xl">
       {/* Header */}
       <header className="flex flex-col items-stretch gap-4 px-4 py-4 mt-6 bg-white rounded-tl-3xl sm:px-6 lg:px-10 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center w-full gap-3 lg:w-auto">
@@ -62,7 +111,7 @@ export const AddComics = ({
         {/* Top Navigation Row */}
         <div className="flex items-center justify-between mb-8">
           <button
-            onClick={onBack}
+            onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-gray-500 hover:text-black"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -110,6 +159,40 @@ export const AddComics = ({
                   />
                 </div>
               </div>
+
+              {/* Cover Image */}
+              <div className="mt-8 space-y-3">
+                 <label className="text-sm font-bold text-black">Cover Image*</label>
+                 <div className="flex flex-col gap-8 md:flex-row items-end">
+                    {/* Upload Box */}
+                    <div className="flex flex-col items-center justify-center w-full md:w-[340px] h-[180px] gap-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
+                         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full">
+                            <CloudUpload className="w-6 h-6 text-gray-500" />
+                         </div>
+                         <p className="text-sm text-center text-gray-500">
+                            <span className="font-bold text-[#8B1A1A]">Click to upload</span> or drag and drop
+                         </p>
+                    </div>
+                    
+                    {/* Preview Image */}
+                    <div className="flex flex-col gap-2">
+                         <div className="w-[180px] h-[140px] overflow-hidden rounded-xl bg-gray-100">
+                             <img 
+                                src="https://placehold.co/600x400/png" 
+                                alt="Comics Cover" 
+                                className="object-cover w-full h-full"
+                             />
+                         </div>
+                         <div className="flex items-center justify-between px-1">
+                             <span className="text-xs text-gray-500">Comics_cover.png</span>
+                             <button className="text-red-500 hover:text-red-700">
+                                 <span className="text-lg leading-none">×</span>
+                             </button>
+                         </div>
+                    </div>
+                 </div>
+              </div>
+
               {/* Description */}
               <div className="mt-8 space-y-3">
                 <label className="text-sm font-bold text-black">
@@ -163,7 +246,7 @@ export const AddComics = ({
                 </label>
                 <div className="flex flex-col items-center justify-center w-full gap-2 p-12 border-2 border-gray-200 rounded-xl">
                   <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
-                    <span className="text-xl">☁️</span>
+                    <CloudUpload className="w-6 h-6 text-gray-500" />
                   </div>
                   <p className="text-sm text-center text-gray-500">
                     <span className="font-semibold text-[#8B1A1A]">
@@ -177,18 +260,9 @@ export const AddComics = ({
               {/* File List Item */}
               <div className="flex items-center justify-center mt-6 gap-36">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 bg-red-100 rounded-lg">
-                    <svg
-                      className="w-6 h-6 text-[#ef4444]"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                  <div className="flex items-center justify-center rounded-lg">
+                    {/* Replaced generic SVG with FileText styled as red document */}
+                    <FileText className="w-10 h-10 text-[#ef4444] fill-current" />
                   </div>
                   <div>
                     <p className="text-sm font-bold text-black">
@@ -217,6 +291,8 @@ export const AddComics = ({
           </div>
         </div>
       </main>
+      </div>
     </div>
   );
 };
+

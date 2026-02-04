@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Home,
-  Clock,
+  Smile,
   Puzzle,
   Grid3X3,
   Search,
@@ -15,7 +15,6 @@ import {
   LayoutGrid,
   FileText,
 } from "lucide-react";
-import { AddComics } from "./AddComics";
 
 const detailedComics = [
   {
@@ -28,7 +27,7 @@ const detailedComics = [
     fileSize: "200KB - 100% Uploaded",
     borderColor: "border-[#F9DE90]",
     progressColor: "bg-[#F9DE90]",
-    image: "https://images.unsplash.com/photo-1612036782180-6f0b6e87f16f?w=800&q=80",
+    image: "https://placehold.co/600x400/png",
   },
   {
     id: 2,
@@ -40,7 +39,7 @@ const detailedComics = [
     fileSize: "200KB - 100% Uploaded",
     borderColor: "border-[#D94528]",
     progressColor: "bg-[#D94528]",
-    image: "https://images.unsplash.com/photo-1612036782180-6f0b6e87f16f?w=800&q=80",
+    image: "https://placehold.co/600x400/png",
   },
   {
     id: 3,
@@ -52,7 +51,7 @@ const detailedComics = [
     fileSize: "200KB - 100% Uploaded",
     borderColor: "border-[#2D9CDB]",
     progressColor: "bg-[#2D9CDB]",
-    image: "https://images.unsplash.com/photo-1612036782180-6f0b6e87f16f?w=800&q=80",
+    image: "https://placehold.co/600x400/png",
   },
   {
     id: 4,
@@ -64,7 +63,7 @@ const detailedComics = [
     fileSize: "200KB - 100% Uploaded",
     borderColor: "border-[#27AE60]",
     progressColor: "bg-[#27AE60]",
-    image: "https://images.unsplash.com/photo-1612036782180-6f0b6e87f16f?w=800&q=80",
+    image: "https://placehold.co/600x400/png",
   },
   {
       id: 5,
@@ -76,7 +75,7 @@ const detailedComics = [
       fileSize: "200KB - 100% Uploaded",
       borderColor: "border-[#F2994A]",
       progressColor: "bg-[#F2994A]",
-      image: "https://images.unsplash.com/photo-1612036782180-6f0b6e87f16f?w=800&q=80",
+      image: "https://placehold.co/600x400/png",
   },
   {
       id: 6,
@@ -88,88 +87,30 @@ const detailedComics = [
       fileSize: "200KB - 100% Uploaded",
       borderColor: "border-[#2D9CDB]",
       progressColor: "bg-[#2D9CDB]",
-      image: "https://images.unsplash.com/photo-1612036782180-6f0b6e87f16f?w=800&q=80",
+      image: "https://placehold.co/600x400/png",
   }
 ];
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
-  { icon: Clock, label: "Kids", path: "/admin/kids", active: false },
+  { icon: Smile, label: "Kids", path: "/admin/kids", active: false },
   { icon: Puzzle, label: "Comics", path: "/admin/comics", active: true },
   { icon: Grid3X3, label: "Submissions", path: "/admin/submissions", active: false },
 ];
 
-const TOTAL_PAGES = 10;
-const PAGE_NUMBERS = [1, 2, 3, 8, 9, 10];
+
 
 export const Comics = (): JSX.Element => {
   const navigate = useNavigate();
-  const [isAddingComics, setIsAddingComics] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth >= 1024 : true
   );
-  const [currentPage, setCurrentPage] = useState(1);
+  
   const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
 
   const adminData = JSON.parse(
     localStorage.getItem("adminData") || '{"name": "Ange Nadette"}'
   );
-
-  if (isAddingComics) {
-      return (
-          <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
-              {/* Mobile backdrop */}
-              {sidebarOpen && (
-                <button
-                  type="button"
-                  aria-label="Close sidebar"
-                  onClick={() => setSidebarOpen(false)}
-                  className="fixed inset-0 z-40 bg-black/40 lg:hidden"
-                />
-              )}
-
-               {/* Sidebar */}
-              <aside
-                className={`bg-[#181817] flex flex-col overflow-hidden shrink-0
-                        fixed inset-y-0 left-0 z-50 w-80 transform transition-transform duration-300
-                        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-                        lg:static lg:translate-x-0`}
-              >
-                <div className="flex items-center justify-center p-8">
-                  <img
-                    src="/clip-path-group-16.png"
-                    alt="Wheeliez"
-                    className="object-contain w-auto h-20"
-                  />
-                </div>
-
-                <nav className="flex-1 px-8 mt-16 space-y-8">
-                  {navItems.map((item) => (
-                    <button
-                      key={item.label}
-                      onClick={() => navigate(item.path)}
-                      className={`w-full flex items-center gap-3 px-10 py-5 rounded-full font-medium transition-colors [font-family:'Poppins'] text-[15px] ${
-                        item.active
-                          ? "bg-[#68161c] text-white"
-                          : "text-white hover:bg-[#2a2a2a]"
-                      }`}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      <span>{item.label}</span>
-                    </button>
-                  ))}
-                </nav>
-              </aside>
-
-             <AddComics 
-                onBack={() => setIsAddingComics(false)}
-                sidebarOpen={sidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-                adminData={adminData}
-             />
-          </div>
-      );
-  }
 
   return (
     <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
@@ -273,7 +214,7 @@ export const Comics = (): JSX.Element => {
                </button>
               <div>
                 <h1 className="text-[17px] font-bold font-[Poppins] text-black">
-                   Comics Details
+                   Comics 
                 </h1>
                 <p className="text-sm text-gray-500 font-[Poppins]">
                    You have 324 Comics
@@ -298,8 +239,8 @@ export const Comics = (): JSX.Element => {
                    </div>
                    
                    <button 
-                    onClick={() => setIsAddingComics(true)}
-                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-[#8B1A1A] bg-white border border-[#E5E7EB] rounded-full hover:bg-gray-50 transition-colors"
+                    onClick={() => navigate("/admin/add-comics")}
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-[#681618] rounded-full hover:bg-[#8a1322] transition-colors"
                    >
                      <Plus className="w-4 h-4" />
                      Add Comic
@@ -367,44 +308,6 @@ export const Comics = (): JSX.Element => {
             ))}
             </section>
 
-          {/* Pagination */}
-            <section className="flex flex-col items-center w-full gap-4 pt-8 mt-12 border-t border-gray-200 sm:flex-row sm:justify-between sm:gap-0">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-normal text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Previous
-              </button>
-
-              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
-                {PAGE_NUMBERS.map((num, idx) => (
-                  <React.Fragment key={num}>
-                    {idx === 3 && (
-                      <span className="px-2 py-1 text-sm text-gray-500">...</span>
-                    )}
-                    <button
-                      onClick={() => setCurrentPage(num)}
-                      className={`min-w-[32px] h-8 flex items-center justify-center text-xs font-medium rounded-lg transition-colors ${
-                        currentPage === num
-                          ? "bg-[#1f1f1f] text-white"
-                          : "bg-transparent text-gray-600 hover:bg-gray-100"
-                      }`}
-                    >
-                      {num}
-                    </button>
-                  </React.Fragment>
-                ))}
-              </div>
-
-              <button
-                onClick={() => setCurrentPage((p) => Math.min(TOTAL_PAGES, p + 1))}
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-normal text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
-              >
-                Next
-                <ArrowLeft className="w-4 h-4 rotate-180" />
-              </button>
-            </section>
         </main>
       </div>
     </div>

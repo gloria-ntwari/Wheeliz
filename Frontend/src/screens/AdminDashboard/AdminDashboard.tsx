@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
+import { Smile } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Home, Users, Puzzle, Grid3X3, Search, Bell, ChevronDown, Menu, Download } from "lucide-react";
+import { Home, Puzzle, Grid3X3, Search, Bell, ChevronDown, Menu, Download } from "lucide-react";
 import { PaginationDots } from './../../components/ui/pagination-dots';
 
 const summaryCards = [
@@ -83,7 +84,7 @@ function buildChartView(selectedPeriod: string, now: Date): { labels: string[]; 
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: true },
-  { icon: Users, label: "Kids", path: "/admin/kids", active: false },
+  { icon: Smile, label: "Kids", path: "/admin/kids", active: false },
   { icon: Puzzle, label: "Comics", path: "/admin/comics", active: false },
   { icon: Grid3X3, label: "Submissions", path: "/admin/submissions", active: false },
 ];
