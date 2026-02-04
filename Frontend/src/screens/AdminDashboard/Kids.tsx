@@ -212,7 +212,7 @@ export const Kids = (): JSX.Element => {
         <main className="flex-1 w-full px-4 pt-6 pb-10 bg-white sm:px-6 lg:px-10">
           {/* Top row: title, filters, Add Kid */}
           <section className="flex flex-col items-stretch gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between sm:flex-wrap">
-            <h2 className="font-semibold text-black sm:text-2xl [font-family:'Poppins'] lg:text-[20px]">
+            <h2 className="font-semibold text-black sm:text-2xl [font-family:'Poppins'] lg:text-[17px]">
               Kids <span className="font-semibold text-black ">(28)</span>
             </h2>
 
@@ -277,7 +277,7 @@ export const Kids = (): JSX.Element => {
                         />
                       </div>
 
-                      <p className="text-base font-bold text-black sm:text-lg">
+                      <p className="text-[15px] font-bold text-black tracking-wide">
                         {kid.name}
                       </p>
 
@@ -387,7 +387,7 @@ export const Kids = (): JSX.Element => {
                       className="object-cover w-full h-full"
                     />
                   </div>
-                  <h3 className="mb-1 text-xl font-semibold text-black [font-family:'Poppins']">
+                  <h3 className="mb-1 text-[17px] font-bold text-black tracking-wide [font-family:'Poppins']">
                     {selectedKid.name}
                   </h3>
                   <p className="text-sm text-gray-500 [font-family:'Poppins']">{selectedKid.email}</p>

@@ -12,6 +12,10 @@ import {
   Plus,
   ArrowLeft,
   ArrowRight,
+  List,
+  Filter,
+  FileText,
+  LayoutGrid,
 } from "lucide-react";
 
 // Mock data for the 3 colored cards
@@ -97,6 +101,75 @@ const recentComics = [
   },
 ];
 
+const detailedComics = [
+  {
+    id: 1,
+    title: "Learn Forgiveness through Jesus",
+    subtitle: "Do as Jesus did John C Maxwell",
+    date: "2d ago",
+    progress: 34,
+    fileName: "How To Forgive Through Art",
+    fileSize: "200KB - 100% Uploaded",
+    borderColor: "border-[#F9DE90]", // Yellow
+    progressColor: "bg-[#F9DE90]",
+  },
+  {
+    id: 2,
+    title: "Learn Forgiveness through Jesus",
+    subtitle: "Do as Jesus did John C Maxwell",
+    date: "2d ago",
+    progress: 34,
+    fileName: "How To Forgive Through Art",
+    fileSize: "200KB - 100% Uploaded",
+    borderColor: "border-[#D94528]", // Red
+    progressColor: "bg-[#D94528]",
+  },
+  {
+    id: 3,
+    title: "Learn Forgiveness through Jesus",
+    subtitle: "Do as Jesus did John C Maxwell",
+    date: "2d ago",
+    progress: 34,
+    fileName: "How To Forgive Through Art",
+    fileSize: "200KB - 100% Uploaded",
+    borderColor: "border-[#2D9CDB]", // Blue/Greenish
+    progressColor: "bg-[#2D9CDB]",
+  },
+  {
+    id: 4,
+    title: "Learn Forgiveness through Jesus",
+    subtitle: "Do as Jesus did John C Maxwell",
+    date: "2d ago",
+    progress: 34,
+    fileName: "How To Forgive Through Art",
+    fileSize: "200KB - 100% Uploaded",
+    borderColor: "border-[#27AE60]", // Green
+    progressColor: "bg-[#27AE60]",
+  },
+  {
+      id: 5,
+      title: "Learn Forgiveness through Jesus",
+      subtitle: "Do as Jesus did John C Maxwell", 
+      date: "2d ago",
+      progress: 34,
+      fileName: "How To Forgive Through Art",
+      fileSize: "200KB - 100% Uploaded",
+      borderColor: "border-[#F2994A]", // Orange
+      progressColor: "bg-[#F2994A]",
+  },
+  {
+      id: 6,
+      title: "Learn Forgiveness through Jesus",
+      subtitle: "Do as Jesus did John C Maxwell",
+      date: "2d ago",
+      progress: 34,
+      fileName: "How To Forgive Through Art",
+      fileSize: "200KB - 100% Uploaded",
+      borderColor: "border-[#2D9CDB]", // Blue
+      progressColor: "bg-[#2D9CDB]",
+  }
+];
+
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
   { icon: Clock, label: "Kids", path: "/admin/kids", active: false },
@@ -114,6 +187,8 @@ export const Comics = (): JSX.Element => {
     typeof window !== "undefined" ? window.innerWidth >= 1024 : true
   );
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewState, setViewState] = useState<"dashboard" | "details">("dashboard");
+  const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
 
   const adminData = JSON.parse(
     localStorage.getItem("adminData") || '{"name": "Ange Nadette"}'
@@ -427,198 +502,318 @@ export const Comics = (): JSX.Element => {
         {/* Main Content Area */}
         <main className="flex-1 w-full px-4 pt-6 pb-10 bg-white sm:px-6 lg:px-10">
           <div className="flex flex-col items-start justify-between gap-4 mb-8 sm:flex-row sm:items-center">
-            <div>
-              <h1 className="text-[19px] font-bold font-[Poppins] text-black">Comics</h1>
-              <p className="text-sm text-gray-500 font-[Poppins]">
-                You can edit all the stuff as you wish
-              </p>
+            <div className="flex items-center gap-3">
+               {/* Back Arrow for Details View */}
+              {viewState === "details" && (
+                 <button 
+                  onClick={() => setViewState("dashboard")}
+                  className="flex items-center justify-center text-black hover:bg-gray-100 rounded-full transition-colors"
+               >
+                  <ArrowLeft className="w-6 h-6" />
+               </button>
+              )}
+              <div>
+                <h1 className="text-[17px] font-bold font-[Poppins] text-black">
+                  {viewState === "dashboard" ? "Comics" : "Comics Details"}
+                </h1>
+                <p className="text-sm text-gray-500 font-[Poppins]">
+                  {viewState === "dashboard" 
+                    ? "You can edit all the stuff as you wish" 
+                    : "You have 324 Comics"
+                  }
+                </p>
+              </div>
             </div>
-            <button 
-                onClick={() => setIsAddingComics(true)}
-                className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              Add Comics
-            </button>
+            <div className="flex items-center gap-4">
+              {viewState === "details" && (
+                <div className="flex  items-center gap-3">
+                   <div className="flex bg-[#F4F6FB] p-1 rounded-lg">
+                      <button 
+                        onClick={() => setLayoutMode("grid")}
+                        className={`p-2 rounded-md transition-colors ${layoutMode === "grid" ? "bg-white shadow-sm text-[#8B1A1A]" : "text-gray-400"}`}
+                      >
+                        <LayoutGrid className="w-5 h-5 fill-current" />
+                      </button>
+                      <button 
+                        onClick={() => setLayoutMode("list")}
+                        className={`p-2 rounded-md transition-colors ${layoutMode === "list" ? "bg-white shadow-sm text-[#8B1A1A]" : "text-gray-400"}`}
+                      >
+                         <List className="w-5 h-5" />
+                      </button>
+                   </div>
+                   
+                   <button className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-[#8B1A1A] bg-white border border-[#E5E7EB] rounded-full hover:bg-gray-50 transition-colors">
+                     <Filter className="w-4 h-4" />
+                     Filter
+                   </button>
+                </div>
+              )}
+
+              {viewState === "dashboard" && (
+                <button 
+                    onClick={() => setIsAddingComics(true)}
+                    className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Comics
+                </button>
+              )}
+            </div>
           </div>
 
-          
-           {/* Let's fix the above loop in a cleaner way. */}
-           {/* Top Cards Section */}
-           <section className="grid grid-cols-1 gap-6 mb-12 md:grid-cols-2 lg:grid-cols-3">
-            {comicsSummary.map((card) => (
-              <div
-                key={card.id}
-                className="flex flex-col justify-between p-3 transition-shadow bg-white border-t-0 border-b border-l border-r border-gray-100 shadow-sm rounded-xl hover:shadow-md"
-              >
-                {/* Colored Card Header */}
-                <div
-                  className={`flex flex-col p-6 rounded-3xl text-white ${card.bgColor} h-[200px] relative mt-[-1px] gap-5`}
-                >
-                  <div className="flex items-center justify-center w-8 h-8 mb4 bg-white/20 rounded-xl">
-                    <div className="w-4 h-4 bg-white rounded-md opacity-80" />
+          {viewState === "dashboard" ? (
+            <>
+              {/* Top Cards Section */}
+              <section className="grid grid-cols-1 gap-6 mb-12 md:grid-cols-2 lg:grid-cols-3">
+                {comicsSummary.map((card) => (
+                  <div
+                    key={card.id}
+                    className="flex flex-col justify-between p-3 transition-shadow bg-white border-t-0 border-b border-l border-r border-gray-100 shadow-sm rounded-xl hover:shadow-md"
+                  >
+                    {/* Colored Card Header */}
+                    <div
+                      className={`flex flex-col p-6 rounded-3xl text-white ${card.bgColor} h-[200px] relative mt-[-1px] gap-5`}
+                    >
+                      <div className="flex items-center justify-center w-8 h-8 mb4 bg-white/20 rounded-xl">
+                        <div className="w-4 h-4 bg-white rounded-md opacity-80" />
+                      </div>
+                      <h3 className="mb-1 text-[15px] font-bold font-[Poppins] leading-6 tracking-wide">
+                        {card.title.split("\n").map((line, i) => (
+                          <React.Fragment key={i}>
+                            {line}
+                            <br />
+                          </React.Fragment>
+                        ))}
+                      </h3>
+                      <p className="text-sm text-white/80 font-[Poppins]">
+                        {card.subtitle}
+                      </p>
+                    </div>
+
+                    {/* Card Body (Stats & Progress) */}
+                    <div className="flex flex-col justify-end px-4 pb-4 mt-4">
+                      <div className="flex items-center justify-between mb-6">
+                        {/* Comment/Count Pill */}
+                        <div className="flex items-center gap-2 px-4 py-1.5 bg-[#EAEAEA] rounded-full text-gray-500">
+                          <div className="w-4 h-4">
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                              <line x1="9" y1="10" x2="15" y2="10" />
+                            </svg>
+                          </div>
+                          <span className="text-xs font-semibold font-[Poppins]">
+                            {card.count}
+                          </span>
+                        </div>
+
+                        {/* Avatars */}
+                        <div className="flex items-center -space-x-3">
+                          {card.avatars.slice(0, 4).map((avatar, i) => (
+                            <img
+                              key={i}
+                              src={avatar}
+                              alt="User"
+                              className="w-8 h-8 bg-gray-200 border-2 border-white rounded-full"
+                            />
+                          ))}
+                          <div className="flex items-center justify-center w-8 h-8 text-[10px] font-bold text-gray-700 bg-white border-2 border-gray-100 rounded-full shadow-sm">
+                            +7
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div className="w-full h-2 mb-3 overflow-hidden bg-gray-100 rounded-full">
+                        <div
+                          className={`h-full rounded-full ${card.progressColor}`}
+                          style={{ width: `${card.progress}%` }}
+                        ></div>
+                      </div>
+
+                      {/* Progress Text */}
+                      <div className="flex items-center justify-between text-sm text-gray-500 font-[Poppins]">
+                        <span>Progress</span>
+                        <span className="font-semibold">{card.progress}%</span>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="mb-1 text-[17px] font-bold font-[Poppins] leading-tight">
-                    {card.title.split("\n").map((line, i) => (
-                      <React.Fragment key={i}>
-                        {line}
-                        <br />
-                      </React.Fragment>
-                    ))}
-                  </h3>
-                  <p className="text-sm text-white/80 font-[Poppins]">
-                    {card.subtitle}
-                  </p>
+                ))}
+              </section>
+
+              {/* Recent Comics Section */}
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-[17px] font-bold text-black font-[Poppins]">
+                    Recent Comics
+                  </h2>
+                  <button
+                    onClick={() => setViewState("details")}
+                    className="text-sm font-medium text-[#8B1A1A] hover:underline font-[Poppins]"
+                  >
+                    See all
+                  </button>
                 </div>
 
-                {/* Card Body (Stats & Progress) */}
-                <div className="flex flex-col justify-end px-4 pb-4 mt-4">
-                  <div className="flex items-center justify-between mb-6">
-                    {/* Comment/Count Pill */}
-                    <div className="flex items-center gap-2 px-4 py-1.5 bg-[#EAEAEA] rounded-full text-gray-500">
-                      <div className="w-4 h-4">
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                          <line x1="9" y1="10" x2="15" y2="10" />
-                        </svg>
+                <div className="space-y-6">
+                  {recentComics.map((comic) => (
+                    <div key={comic.id} className="flex items-start gap-4">
+                      <div className="pt-1">
+                        <div className="w-6 h-6 border-2 border-gray-200 rounded-lg"></div>
                       </div>
-                      <span className="text-xs font-semibold font-[Poppins]">
-                        {card.count}
-                      </span>
-                    </div>
+                      <div className="flex-1">
+                        <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-start">
+                          <div className="max-w-2xl">
+                            <h3 className="text-[16px] font-bold text-gray-900 font-[Poppins] mb-1">
+                              {comic.title}
+                            </h3>
+                            <p className="text-sm text-gray-500 font-[Poppins] mb-4 leading-relaxed">
+                              {comic.description}
+                            </p>
 
-                    {/* Avatars */}
-                    <div className="flex items-center -space-x-3">
-                      {card.avatars.slice(0, 4).map((avatar, i) => (
-                        <img
-                          key={i}
-                          src={avatar}
-                          alt="User"
-                          className="w-8 h-8 bg-gray-200 border-2 border-white rounded-full"
-                        />
-                      ))}
-                      <div className="flex items-center justify-center w-8 h-8 text-[10px] font-bold text-gray-700 bg-white border-2 border-gray-100 rounded-full shadow-sm">
-                        +7
+                            <div className="flex items-center gap-4">
+                              <div className="w-48 h-2 overflow-hidden bg-gray-100 rounded-full">
+                                <div
+                                  className={`h-full rounded-full ${comic.color}`}
+                                  style={{ width: `${comic.progress}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-sm font-medium text-gray-500">
+                                {comic.progress}%
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col items-end gap-2 shrink-0">
+                            <span className="text-sm font-medium text-black font-[Poppins]">
+                              {comic.date}
+                            </span>
+                            <div className="flex items-center -space-x-2">
+                              {comic.avatars.map((avatar, i) => (
+                                <img
+                                  key={i}
+                                  src={avatar}
+                                  alt="User"
+                                  className="w-6 h-6 border-2 border-white rounded-full"
+                                />
+                              ))}
+                              <div className="flex items-center justify-center w-6 h-6 text-[10px] font-bold text-gray-700 bg-gray-100 border-2 border-white rounded-full">
+                                +7
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="w-full h-2 mb-3 overflow-hidden bg-gray-100 rounded-full">
-                    <div
-                      className={`h-full rounded-full ${card.progressColor}`}
-                      style={{ width: `${card.progress}%` }}
-                    ></div>
-                  </div>
-
-                  {/* Progress Text */}
-                  <div className="flex items-center justify-between text-sm text-gray-500 font-[Poppins]">
-                    <span>Progress</span>
-                    <span className="font-semibold">{card.progress}%</span>
-                  </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </section>
-
-
-          {/* Recent Comics Section */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-black font-[Poppins]">Recent Comics</h2>
-                <button className="text-sm font-medium text-[#8B1A1A] hover:underline font-[Poppins]">See all</button>
-            </div>
-
-            <div className="space-y-6">
-                {recentComics.map((comic) => (
-                    <div key={comic.id} className="flex items-start gap-4">
-                         <div className="pt-1">
-                             <div className="w-6 h-6 border-2 border-gray-200 rounded-lg"></div>
-                         </div>
-                         <div className="flex-1">
-                             <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-start">
-                                 <div className="max-w-2xl">
-                                     <h3 className="text-base font-bold text-gray-900 font-[Poppins] mb-1">{comic.title}</h3>
-                                     <p className="text-sm text-gray-500 font-[Poppins] mb-4 leading-relaxed">
-                                         {comic.description}
-                                     </p>
-                                     
-                                     <div className="flex items-center gap-4">
-                                         <div className="w-48 h-2 overflow-hidden bg-gray-100 rounded-full">
-                                             <div className={`h-full rounded-full ${comic.color}`} style={{ width: `${comic.progress}%` }}></div>
-                                         </div>
-                                         <span className="text-sm font-medium text-gray-500">{comic.progress}%</span>
-                                     </div>
-                                 </div>
-
-                                 <div className="flex flex-col items-end gap-2 shrink-0">
-                                     <span className="text-sm font-medium text-black font-[Poppins]">{comic.date}</span>
-                                     <div className="flex items-center -space-x-2">
-                                        {comic.avatars.map((avatar, i) => (
-                                            <img 
-                                                key={i}
-                                                src={avatar} 
-                                                alt="User" 
-                                                className="w-6 h-6 border-2 border-white rounded-full"
-                                            />
-                                        ))}
-                                         <div className="flex items-center justify-center w-6 h-6 text-[10px] font-bold text-gray-700 bg-gray-100 border-2 border-white rounded-full">
-                                            +7
-                                        </div>
-                                    </div>
-                                 </div>
-                             </div>
-                         </div>
-                    </div>
-                ))}
-            </div>
-          </div>
-
-          {/* Pagination */}
-          <section className="flex flex-col items-center w-full gap-4 pt-8 mt-12 border-t border-gray-200 sm:flex-row sm:justify-between sm:gap-0">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-normal text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Previous
-            </button>
-
-            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
-              {PAGE_NUMBERS.map((num, idx) => (
-                <React.Fragment key={num}>
-                  {idx === 3 && (
-                    <span className="px-2 py-1 text-sm text-gray-500">...</span>
-                  )}
-                  <button
-                    onClick={() => setCurrentPage(num)}
-                    className={`min-w-[32px] h-8 flex items-center justify-center text-xs font-medium rounded-lg transition-colors ${
-                      currentPage === num
-                        ? "bg-[#1f1f1f] text-white"
-                        : "bg-transparent text-gray-600 hover:bg-gray-100"
-                    }`}
+            </>
+          ) : (
+            /* Detailed View Section */
+             <section className={`grid gap-6 ${layoutMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
+                {detailedComics.map((comic) => (
+                  <div 
+                    key={comic.id} 
+                    className={`
+                      ${layoutMode === "grid" 
+                        ? "bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col" 
+                        : "bg-white overflow-hidden transition-shadow border-b border-gray-100 pb-6 mb-2"
+                      }
+                    `}
                   >
-                    {num}
-                  </button>
-                </React.Fragment>
-              ))}
-            </div>
+                     {/* Colored Top Border (Only for Grid Card per image, but let's keep it for list too but thin or as requested? Image 2 had thick top. Let's keep it consistent.) */}
+                     <div className={`w-full h-1.5 ${comic.progressColor} ${layoutMode === "list" ? "rounded-full mb-4" : ""}`}></div>
+                     
+                     <div className={`${layoutMode === "grid" ? "p-5" : "px-0"}`}>
+                        <div className="flex items-start justify-between mb-2">
+                           <h3 className="text-[15px] font-bold font-[Poppins] text-black leading-tight">
+                             {comic.title}
+                           </h3>
+                           {layoutMode === "list" && (
+                              <button className="text-gray-400 hover:text-black">•••</button>
+                           )}
+                        </div>
+                        
+                        <div className="flex items-center text-xs text-gray-500 font-[Poppins] mb-4">
+                           <span>{comic.subtitle}</span>
+                           <span className="mx-2">•</span>
+                           <span>{comic.date}</span>
+                        </div>
+                        
+                        {/* Progress */}
+                        <div className="mb-4">
+                           <div className="w-full h-1.5 bg-gray-100 rounded-full mb-1">
+                              <div className={`h-full rounded-full ${comic.progressColor}`} style={{ width: `${comic.progress}%` }}></div>
+                           </div>
+                           <div className="flex items-center justify-between mt-2">
+                              <span className="text-sm text-gray-500 font-[Poppins]">Progress</span>
+                              <span className="text-xs font-medium text-gray-500">{comic.progress}%</span>
+                           </div>
+                        </div>
 
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(TOTAL_PAGES, p + 1))}
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
-            >
-              Next
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </section>
+                        {/* File Attachment */}
+                        <div className="flex items-center gap-3 mt-2">
+                           <div className="flex items-center justify-center w-10 h-10 bg-red-50 rounded-lg shrink-0">
+                               <FileText className="w-5 h-5 text-[#D94528]" />
+                           </div>
+                           <div className="min-w-0">
+                              <p className="text-[13px] font-semibold text-black truncate">{comic.fileName}</p>
+                              <p className="text-[11px] text-gray-400">{comic.fileSize}</p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                ))}
+             </section>
+          )}
+
+          {/* Pagination - Hide in Detailed View */}
+          {viewState === "dashboard" && (
+            <section className="flex flex-col items-center w-full gap-4 pt-8 mt-12 border-t border-gray-200 sm:flex-row sm:justify-between sm:gap-0">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-normal text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Previous
+              </button>
+
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
+                {PAGE_NUMBERS.map((num, idx) => (
+                  <React.Fragment key={num}>
+                    {idx === 3 && (
+                      <span className="px-2 py-1 text-sm text-gray-500">...</span>
+                    )}
+                    <button
+                      onClick={() => setCurrentPage(num)}
+                      className={`min-w-[32px] h-8 flex items-center justify-center text-xs font-medium rounded-lg transition-colors ${
+                        currentPage === num
+                          ? "bg-[#1f1f1f] text-white"
+                          : "bg-transparent text-gray-600 hover:bg-gray-100"
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  </React.Fragment>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(TOTAL_PAGES, p + 1))}
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
+              >
+                Next
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </section>
+          )}
         </main>
       </div>
     </div>
