@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { ArrowLeft, Menu, Search, Bell, ChevronDown, Home, Smile, Puzzle, Grid3X3, CloudUpload, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -94,7 +94,7 @@ export const AddComics = (): JSX.Element => {
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full shrink-0">
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+                src="/profile2.jpg"
                 alt="Profile"
                 className="object-cover w-full h-full"
               />
@@ -178,7 +178,7 @@ export const AddComics = (): JSX.Element => {
                     <div className="flex flex-col gap-2">
                          <div className="w-[180px] h-[140px] overflow-hidden rounded-xl bg-gray-100">
                              <img 
-                                src="https://placehold.co/600x400/png" 
+                                src="/marvel1.jpg" 
                                 alt="Comics Cover" 
                                 className="object-cover w-full h-full"
                              />

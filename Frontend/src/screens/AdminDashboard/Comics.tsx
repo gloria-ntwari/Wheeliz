@@ -10,7 +10,6 @@ import {
   ChevronDown,
   Menu,
   Plus,
-  ArrowLeft,
   List,
   LayoutGrid,
   FileText,
@@ -27,7 +26,7 @@ const detailedComics = [
     fileSize: "200KB - 100% Uploaded",
     borderColor: "border-[#F9DE90]",
     progressColor: "bg-[#F9DE90]",
-    image: "https://placehold.co/600x400/png",
+    image: "/marvel1.jpg",
   },
   {
     id: 2,
@@ -39,7 +38,7 @@ const detailedComics = [
     fileSize: "200KB - 100% Uploaded",
     borderColor: "border-[#D94528]",
     progressColor: "bg-[#D94528]",
-    image: "https://placehold.co/600x400/png",
+    image: "/marvel2.jpg",
   },
   {
     id: 3,
@@ -51,7 +50,7 @@ const detailedComics = [
     fileSize: "200KB - 100% Uploaded",
     borderColor: "border-[#2D9CDB]",
     progressColor: "bg-[#2D9CDB]",
-    image: "https://placehold.co/600x400/png",
+    image: "/marvel1.jpg",
   },
   {
     id: 4,
@@ -63,7 +62,7 @@ const detailedComics = [
     fileSize: "200KB - 100% Uploaded",
     borderColor: "border-[#27AE60]",
     progressColor: "bg-[#27AE60]",
-    image: "https://placehold.co/600x400/png",
+    image: "/marvel2.jpg",
   },
   {
       id: 5,
@@ -75,7 +74,7 @@ const detailedComics = [
       fileSize: "200KB - 100% Uploaded",
       borderColor: "border-[#F2994A]",
       progressColor: "bg-[#F2994A]",
-      image: "https://placehold.co/600x400/png",
+      image: "/marvel1.jpg",
   },
   {
       id: 6,
@@ -87,7 +86,7 @@ const detailedComics = [
       fileSize: "200KB - 100% Uploaded",
       borderColor: "border-[#2D9CDB]",
       progressColor: "bg-[#2D9CDB]",
-      image: "https://placehold.co/600x400/png",
+      image: "/marvel2.jpg",
   }
 ];
 
@@ -188,7 +187,7 @@ export const Comics = (): JSX.Element => {
             <div className="flex items-center gap-2 cursor-pointer">
               <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full shrink-0">
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+                  src="/profile1.jpg"
                   alt="Profile"
                   className="object-cover w-full h-full"
                 />
@@ -206,12 +205,6 @@ export const Comics = (): JSX.Element => {
 
           <div className="flex flex-col items-start justify-between gap-4 mb-8 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3">
-              <button 
-                  onClick={() => navigate(-1)}
-                  className="flex items-center justify-center text-black hover:bg-gray-100 rounded-full transition-colors hidden"
-               >
-                  <ArrowLeft className="w-6 h-6" />
-               </button>
               <div>
                 <h1 className="text-[17px] font-bold font-[Poppins] text-black">
                    Comics 
@@ -257,7 +250,7 @@ export const Comics = (): JSX.Element => {
                 >
                     {/* Image Header */}
                     {comic.image && (
-                         <div className={`w-full overflow-hidden ${layoutMode === 'grid' ? 'h-48' : 'h-32'}`}>
+                         <div className={`w-full overflow-hidden ${layoutMode === 'grid' ? 'h-48' : 'h-36'}`}>
                              <img 
                                 src={comic.image} 
                                 alt={comic.title} 

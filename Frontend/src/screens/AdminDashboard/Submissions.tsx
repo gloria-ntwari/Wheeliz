@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Home,
@@ -9,10 +9,11 @@ import {
   Bell,
   ChevronDown,
   Menu,
-  Clock,
+  MessageCircleMore,
   ArrowLeft,
   ArrowRight,
 } from "lucide-react";
+
 
 // Mock Data
 const submissionCards = [
@@ -20,7 +21,7 @@ const submissionCards = [
     id: 1,
     title: "Find Joy in School and Home",
     subtitle: "Find Joy in School and Home",
-    image: "https://placehold.co/600x400/png",
+    image: "/marvel2.jpg",
     time: "23",
     progress: 34,
     progressColor: "bg-[#F9DE90]", // Yellow
@@ -29,7 +30,7 @@ const submissionCards = [
     id: 2,
     title: "Find Joy in School and Home",
     subtitle: "Find Joy in School and Home",
-    image: "https://placehold.co/600x400/png",
+    image: "/marvel1.jpg",
     time: "23",
     progress: 34,
     progressColor: "bg-[#2f3542]", // Dark blue/grey
@@ -38,7 +39,7 @@ const submissionCards = [
     id: 3,
     title: "Find Joy in School and Home",
     subtitle: "Find Joy in School and Home",
-    image: "https://placehold.co/600x400/png",
+    image: "/marvel2.jpg",
     time: "23",
     progress: 34,
     progressColor: "bg-[#D94528]", // Red
@@ -54,7 +55,7 @@ const submissionsTable = [
     status: "Not Verified",
     statusColor: "text-red-500",
     comicTitle: "Art of forgiveness Through love",
-    comicImage: "https://images.unsplash.com/photo-1612036782180-6f0b6e87f16f?w=800&q=80",
+    comicImage: "/marvel2.jpg",
   },
   {
     id: 2,
@@ -64,7 +65,7 @@ const submissionsTable = [
     status: "Verified",
     statusColor: "text-green-500",
     comicTitle: "Art of forgiveness Through love",
-    comicImage: "https://images.unsplash.com/photo-1612036782180-6f0b6e87f16f?w=800&q=80",
+    comicImage: "/marvel1.jpg",
   },
   {
     id: 3,
@@ -74,7 +75,7 @@ const submissionsTable = [
     status: "Verified",
     statusColor: "text-green-500",
     comicTitle: "Art of forgiveness Through love",
-    comicImage: "https://images.unsplash.com/photo-1612036782180-6f0b6e87f16f?w=800&q=80",
+    comicImage: "/marvel2.jpg",
   },
 ];
 
@@ -222,19 +223,23 @@ export const Submissions = (): JSX.Element => {
                    <p className="mb-4 text-xs text-gray-500">{card.subtitle}</p>
                    
                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-1.5 px-3 py-1 bg-gray-200 rounded-full">
-                         <div className="flex items-center justify-center w-4 h-4 border border-gray-500 rounded-full">
-                           <Clock className="w-3 h-3 text-gray-600" />
+                      <div className="flex items-center gap-1 px-2.5 py-2 bg-[#c0c0c0] rounded-full">
+                         <div className="flex items-center justify-center  ">
+                           <MessageCircleMore className="w-4 h-4 text-gray-600" />
                          </div>
                          <span className="text-xs font-medium text-gray-600">{card.time}</span>
                       </div>
                       <div className="flex -space-x-2">
-                         {[1,2,3].map((i) => (
-                             <div key={i} className="w-6 h-6 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
-                                <img src={`https://images.unsplash.com/photo-${1500000000000 + i}?w=50&h=50&fit=crop`} className="w-full h-full object-cover" />
-                             </div>
-                         ))}
-                         <div className="flex items-center justify-center w-6 h-6 text-[10px] font-bold text-gray-600 bg-white border-2 border-gray-100 rounded-full">
+                         <div className="w-10 h-10 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
+                            <img src="/profile1.jpg" className="w-full h-full object-cover" alt="Profile 1" />
+                         </div>
+                         <div className="w-10 h-10 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
+                            <img src="/profile2.jpg" className="w-full h-full object-cover" alt="Profile 2" />
+                         </div>
+                         <div className="w-10 h-10 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
+                            <img src="/profile1.jpg" className="w-full h-full object-cover" alt="Profile 3" />
+                         </div>
+                         <div className="flex items-center justify-center w-10 h-10 text-[10px] font-bold text-gray-600 bg-white border-2 border-gray-100 rounded-full">
                             +7
                          </div>
                       </div>
@@ -300,7 +305,7 @@ export const Submissions = (): JSX.Element => {
                 {recentComics.map((item) => (
                    <div key={item.id} className="flex items-start gap-4">
                       <div className="pt-1">
-                         <input type="checkbox" className="w-5 h-5 border-gray-300 rounded focus:ring-[#8B1A1A] text-[#8B1A1A]" />
+                         <input type="checkbox" className="w-5 h-5 rounded focus:ring-[#8B1A1A] text-[#8B1A1A]" />
                       </div>
                       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_200px] gap-6">
                          <div>
@@ -318,11 +323,15 @@ export const Submissions = (): JSX.Element => {
                          <div className="flex flex-col items-end justify-center gap-2">
                              <span className="text-xs font-bold text-black">{item.date}</span>
                              <div className="flex -space-x-2">
-                                {[1,2,3].map((i) => (
-                                    <div key={i} className="w-6 h-6 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
-                                        <img src={`https://images.unsplash.com/photo-${1500000000000 + i}?w=50&h=50&fit=crop`} className="w-full h-full object-cover" />
-                                    </div>
-                                ))}
+                                <div className="w-6 h-6 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
+                                    <img src="/profile1.jpg" className="w-full h-full object-cover" alt="Profile 1" />
+                                </div>
+                                <div className="w-6 h-6 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
+                                    <img src="/profile2.jpg" className="w-full h-full object-cover" alt="Profile 2" />
+                                </div>
+                                <div className="w-6 h-6 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
+                                    <img src="/profile1.jpg" className="w-full h-full object-cover" alt="Profile 3" />
+                                </div>
                                 <div className="flex items-center justify-center w-6 h-6 text-[9px] font-bold text-gray-600 bg-white border-2 border-gray-100 rounded-full shadow-sm">
                                     +7
                                 </div>
