@@ -3,8 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MacbookPro } from "./screens/MacbookPro";
 import { Login } from "./screens/Login";
-import { RoleSelection } from "./screens/RoleSelection";
-import { KidLogin } from "./screens/KidLogin";
+import { SignUp } from "./screens/SignUp";
 import { AdminDashboard } from "./screens/AdminDashboard";
 import { Kids } from "./screens/AdminDashboard/Kids";
 import { KidDetail } from "./screens/AdminDashboard/KidDetail";
@@ -23,9 +22,8 @@ createRoot(document.getElementById("app") as HTMLElement).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MacbookPro />} />
-        <Route path="/login" element={<RoleSelection />} />
-        <Route path="/login/admin" element={<Login />} />
-        <Route path="/login/kid" element={<KidLogin />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route
           path="/admin/dashboard"
           element={

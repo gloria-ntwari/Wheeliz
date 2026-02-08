@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -7,9 +7,10 @@ import { Eye, EyeOff } from "lucide-react";
 import { API_BASE_URL } from "../../config/api";
 
 
-export const Login = (): JSX.Element => {
+export const SignUp = (): JSX.Element => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -22,12 +23,12 @@ export const Login = (): JSX.Element => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/login`, {
+      const response = await fetch(`${API_BASE_URL}/admin/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ fullName, email, password }),
       });
 
       const data = await response.json();
@@ -39,11 +40,11 @@ export const Login = (): JSX.Element => {
         // Redirect to admin dashboard
         navigate("/admin/dashboard");
       } else {
-        setError(data.message || "Invalid credentials. Please try again.");
+        setError(data.message || "Registration failed. Please try again.");
       }
     } catch (err) {
       setError("Network error. Please check your connection and try again.");
-      console.error("Login error:", err);
+      console.error("Registration error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -51,7 +52,7 @@ export const Login = (): JSX.Element => {
 
   return (
     <section className="relative w-full min-h-screen overflow-hidden bg-[#f57e14]">
-      {/* Hero-style Illustrated Background (copied from FeaturedProductsSection) */}
+      {/* Hero-style Illustrated Background (same as Login) */}
       <div className="absolute inset-0 w-full h-full">
         {/* Base orange vectors */}
         <img
@@ -263,12 +264,12 @@ export const Login = (): JSX.Element => {
       <div className="relative z-10 flex w-full min-h-screen">
         {/* Left Panel - Illustration (takes ~60% on large screens) */}
         <div className="relative hidden lg:flex lg:w-[60%]">
-          <div className="flex flex-col justify-between w-full p-8 lg:p-12">
+          <div className="flex flex-col justify-between w-full p-8 lg:p-12 ">
             {/* Top - Back to Website Link */}
             <div className="flex flex-col items-start gap-6 mt-10 ml-[500px]">
               <a
                 href="/"
-                className="text-sm text-[#68161c] w-fit hover:text-[#4d1216] [font-family:'Barlow',Helvetica] sm:text-lg md:text-xl lg:text-[17px] font-semibold "
+                className="text-sm text-[#68161c] w-fit hover:text-[#4d1216] [font-family:'Barlow',Helvetica] sm:text-lg md:text-xl lg:text-[17px] font-semibold"
               >
                 ← Back to Website
               </a>
@@ -276,19 +277,34 @@ export const Login = (): JSX.Element => {
           </div>
         </div>
 
-        {/* Right Panel - Login Card (takes ~40% on large screens, full height) */}
+        {/* Right Panel - Sign Up Card (takes ~45% on large screens, full height) */}
         <div className="flex items-stretch justify-center w-full px-4 py-10 sm:px-6 sm:py-12 md:py-16 lg:py-0 lg:w-[45%] lg:px-0">
           <div className="flex items-center justify-start w-full h-full bg-white lg:bg-white lg:shadow-none rounded-2xl lg:rounded-none">
             <div className="w-full max-w-xl px-6 py-8 sm:px-8 sm:py-10 lg:px-14 lg:py-16">
-
               <div className="flex flex-col gap-2 mb-8">
-                <h2 className="font-semibold text-black text-2xl sm:text-3xl lg:text-[28px] [font-family:'Barlow',Helvetica]">Welcome Back!</h2>
+                <h2 className="font-semibold text-black text-2xl sm:text-3xl lg:text-[28px] [font-family:'Barlow',Helvetica]">Welcome!</h2>
                 <p className="text-base text-black/70 [font-family:'Barlow',Helvetica] font-medium sm:text-lg lg:text-[16px]">
-                  Log in with your email and password to access the admin dashboard.
+                  Create your account to get started with Wheeliez.
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="flex flex-col gap-6 ml-3">
+                {/* Full Name Field */}
+                <div className="flex flex-col gap-2 ml-0 lg:ml-3">
+                  <Label htmlFor="fullName" className="font-medium text-black [font-family:'Barlow',Helvetica] text-base lg:text-[16px]">
+                    Full Name
+                  </Label>
+                  <Input
+                    id="fullName"
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full h-12 border-gray-300 rounded-lg"
+                    required
+                  />
+                </div>
+
                 {/* Email Field */}
                 <div className="flex flex-col gap-2 ml-0 lg:ml-3">
                   <Label htmlFor="email" className="font-medium text-black [font-family:'Barlow',Helvetica] text-base lg:text-[16px]">
@@ -341,35 +357,25 @@ export const Login = (): JSX.Element => {
                   </div>
                 )}
 
-                {/* Forgot Password */}
-                <div className="flex items-center justify-end">
-                  <a
-                    href="/forgot-password"
-                    className="text-sm text-black hover:underline [font-family:'Barlow',Helvetica] mr-0 lg:mr-2"
-                  >
-                    Forgot Password?
-                  </a>
-                </div>
-
-                {/* Login Button */}
+                {/* Sign Up Button */}
                 <Button
                   type="submit"
                   disabled={isLoading}
                   className="w-full h-12 font-medium text-white bg-[#68161c] rounded-2xl hover:bg-[#4d1216] disabled:opacity-50 disabled:cursor-not-allowed [font-family:'Barlow',Helvetica] ml-0 lg:ml-3"
                 >
-                  {isLoading ? "Logging in..." : "Login"}
+                  {isLoading ? "Creating Account..." : "Sign Up"}
                 </Button>
 
-                {/* Don't have an account */}
+                {/* Already have an account */}
                 <div className="mt-4 text-center">
                   <span className="text-sm text-gray-600 [font-family:'Barlow',Helvetica]">
-                    Don't have an account?{" "}
+                    Already have an account?{" "}
                     <button
                       type="button"
-                      onClick={() => navigate("/signup")}
+                      onClick={() => navigate("/login")}
                       className="text-[#68161c] hover:underline font-medium"
                     >
-                      Sign up here
+                      Login here
                     </button>
                   </span>
                 </div>
@@ -381,4 +387,3 @@ export const Login = (): JSX.Element => {
     </section>
   );
 };
-
