@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Admin {
@@ -20,12 +21,15 @@ model Admin {
 }
 
 model Kid {
-  id          String   @id @default(uuid())
-  name        String
-  fatherName  String?
-  motherName  String?
-  parentPhone String   @unique
-  dateOfBirth DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String    @id @default(uuid())
+  name         String
+  email        String?   @unique
+  fatherName   String?
+  motherName   String?
+  parentPhone  String?   @unique
+  dateOfBirth  DateTime?
+  passwordHash String?
+  role         String    @default("kid")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }

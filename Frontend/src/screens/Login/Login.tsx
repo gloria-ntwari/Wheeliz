@@ -22,7 +22,7 @@ export const Login = (): JSX.Element => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/login`, {
+      const response = await fetch(`${API_BASE_URL.replace('/api', '')}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,11 +33,19 @@ export const Login = (): JSX.Element => {
       const data = await response.json();
 
       if (response.ok && data.status === "success") {
-        // Store token in localStorage
-        localStorage.setItem("adminToken", data.data.token);
-        localStorage.setItem("adminData", JSON.stringify(data.data.admin));
-        // Redirect to admin dashboard
-        navigate("/admin/dashboard");
+        // Store token and user data
+        const { token, user } = data.data;
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("userData", JSON.stringify(user));
+        
+        // Redirect based on role
+        if (user.role === "admin") {
+          navigate("/admin/dashboard");
+        } else if (user.role === "kid") {
+          navigate("/kids/dashboard");
+        } else {
+          setError("Authorized but unknown role. Contact support.");
+        }
       } else {
         setError(data.message || "Invalid credentials. Please try again.");
       }

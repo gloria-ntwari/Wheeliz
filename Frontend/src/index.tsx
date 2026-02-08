@@ -17,6 +17,12 @@ const ProtectedAdminRoute = ({ children }: { children: React.ReactElement }) => 
   return token ? children : <Navigate to="/login" replace />;
 };
 
+// Protected Route Component for Kid
+const ProtectedKidRoute = ({ children }: { children: React.ReactElement }) => {
+  const token = localStorage.getItem("kidToken");
+  return token ? children : <Navigate to="/login" replace />;
+};
+
 createRoot(document.getElementById("app") as HTMLElement).render(
   <StrictMode>
     <BrowserRouter>
@@ -70,6 +76,16 @@ createRoot(document.getElementById("app") as HTMLElement).render(
             <ProtectedAdminRoute>
               <Submissions />
             </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/kid/dashboard"
+          element={
+            <ProtectedKidRoute>
+              <div className="flex items-center justify-center min-h-screen text-2xl font-bold text-orange-600 bg-orange-50">
+                Welcome to Kid Dashboard! (Coming Soon)
+              </div>
+            </ProtectedKidRoute>
           }
         />
       </Routes>

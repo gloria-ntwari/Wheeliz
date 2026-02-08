@@ -23,7 +23,7 @@ export const SignUp = (): JSX.Element => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/register`, {
+      const response = await fetch(`${API_BASE_URL}/kid/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,10 +35,10 @@ export const SignUp = (): JSX.Element => {
 
       if (response.ok && data.status === "success") {
         // Store token in localStorage
-        localStorage.setItem("adminToken", data.data.token);
-        localStorage.setItem("adminData", JSON.stringify(data.data.admin));
-        // Redirect to admin dashboard
-        navigate("/admin/dashboard");
+        localStorage.setItem("kidToken", data.data.token);
+        localStorage.setItem("kidData", JSON.stringify(data.data.kid));
+        // Redirect to kid dashboard
+        navigate("/kid/dashboard");
       } else {
         setError(data.message || "Registration failed. Please try again.");
       }

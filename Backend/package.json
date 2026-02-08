@@ -9,7 +9,8 @@
     "start": "node dist/server.js"
   },
   "prisma": {
-    "schema": "models/schema.prisma"
+    "schema": "models/schema.prisma",
+    "seed": "ts-node models/seed.ts"
   },
   "keywords": [],
   "author": "",
