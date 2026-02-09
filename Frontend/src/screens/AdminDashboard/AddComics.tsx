@@ -239,6 +239,26 @@ export const AddComics = (): JSX.Element => {
                 </div>
               </div>
 
+              {/* New Fields: Bonus and Total Marks */}
+              <div className="grid grid-cols-1 gap-8 mb-8 md:grid-cols-2">
+                <div className="space-y-3">
+                  <label className="text-sm font-bold text-black">Bonus*</label>
+                  <input
+                    type="number"
+                    placeholder="Bonus marks"
+                    className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-sm font-bold text-black">Total Marks*</label>
+                  <input
+                    type="number"
+                    placeholder="Total marks"
+                    className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
+                  />
+                </div>
+              </div>
+
               {/* Upload Files */}
               <div className="space-y-3">
                 <label className="text-sm font-bold text-black">

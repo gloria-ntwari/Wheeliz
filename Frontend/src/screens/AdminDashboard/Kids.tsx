@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Smile } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import {
   Home,
-
+  Clock,
   Puzzle,
   Grid3X3,
   Search,
@@ -12,100 +12,15 @@ import {
   ChevronDown,
   Menu,
   UserPlus,
-  ChevronLeft,
-  ChevronRight,
   Pencil,
   Download,
   Printer,
   Share2,
 } from "lucide-react";
 
-const kidsData = [
-  {
-    id: 1,
-    name: "Ange Nadette",
-    email: "bateteangenadette@gmail.com",
-    status: "Active",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
-    comicsRead: 23,
-    rank: 1,
-    submissions: 18,
-  },
-  {
-    id: 2,
-    name: "Ange Nadette",
-    email: "bateteangenadette@gmail.com",
-    status: "Not active",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-    comicsRead: 23,
-    rank: 1,
-    submissions: 18,
-  },
-  {
-    id: 3,
-    name: "Ange Nadette",
-    email: "bateteangenadette@gmail.com",
-    status: "Active",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-    comicsRead: 23,
-    rank: 1,
-    submissions: 18,
-  },
-  {
-    id: 4,
-    name: "Ange Nadette",
-    email: "bateteangenadette@gmail.com",
-    status: "Active",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-    comicsRead: 23,
-    rank: 1,
-    submissions: 18,
-  },
-  {
-    id: 5,
-    name: "Ange Nadette",
-    email: "bateteangenadette@gmail.com",
-    status: "Active",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face",
-    comicsRead: 23,
-    rank: 1,
-    submissions: 18,
-  },
-  {
-    id: 6,
-    name: "Ange Nadette",
-    email: "bateteangenadette@gmail.com",
-    status: "Active",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
-    comicsRead: 23,
-    rank: 1,
-    submissions: 18,
-  },
-  {
-    id: 7,
-    name: "Ange Nadette",
-    email: "bateteangenadette@gmail.com",
-    status: "Active",
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face",
-    comicsRead: 23,
-    rank: 1,
-    submissions: 18,
-  },
-  {
-    id: 8,
-    name: "Ange Nadette",
-    email: "bateteangenadette@gmail.com",
-    status: "Active",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-    comicsRead: 23,
-    rank: 1,
-    submissions: 18,
-  },
-];
-
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
-  { icon: Smile, label: "Kids", path: "/admin/kids", active: true },
+  { icon: Clock, label: "Kids", path: "/admin/kids", active: true },
   { icon: Puzzle, label: "Comics", path: "/admin/comics", active: false },
   { icon: Grid3X3, label: "Submissions", path: "/admin/submissions", active: false },
 ];
@@ -114,15 +29,52 @@ const TOTAL_PAGES = 10;
 const PAGE_NUMBERS = [1, 2, 3, 8, 9, 10];
 
 export const Kids = (): JSX.Element => {
+  /* const kidsData = [...]; (Removed static data) */
+  
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth >= 1024 : true
   );
   const [filterActive, setFilterActive] = useState<"active" | "not-active">("active");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedKid, setSelectedKid] = useState<(typeof kidsData)[0] | null>(null);
+  const [selectedKid, setSelectedKid] = useState<any | null>(null);
+  const modalScrollRef = useRef<HTMLDivElement>(null);
+
+  const [kids, setKids] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchKids = async () => {
+      try {
+        const token = localStorage.getItem("adminToken");
+        const response = await fetch("http://localhost:5000/api/admin/kids", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        if (data.status === "success") {
+            // Transform if needed or use directly if backend returns compatible format
+            // Backend returns: status='Active', avatar=Generated, comicsRead=0, rank=0, submissions=0
+            setKids(data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching kids:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchKids();
+  }, []);
 
   const adminData = JSON.parse(localStorage.getItem("adminData") || '{"name": "Ange Nadette"}');
+
+  useEffect(() => {
+    if (selectedKid && modalScrollRef.current) {
+      modalScrollRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [selectedKid]);
 
   return (
     <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
@@ -212,8 +164,8 @@ export const Kids = (): JSX.Element => {
         <main className="flex-1 w-full px-4 pt-6 pb-10 bg-white sm:px-6 lg:px-10">
           {/* Top row: title, filters, Add Kid */}
           <section className="flex flex-col items-stretch gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between sm:flex-wrap">
-            <h2 className="font-semibold text-black sm:text-2xl [font-family:'Poppins'] lg:text-[17px]">
-              Kids <span className="font-semibold text-black ">(28)</span>
+            <h2 className="font-semibold text-black sm:text-2xl [font-family:'Poppins'] lg:text-[20px]">
+              Kids <span className="font-semibold text-black ">({kids.length})</span>
             </h2>
 
             <div className="inline-flex items-center p-1 px-2 bg-white border rounded-full border-gray-200/80">
@@ -250,9 +202,14 @@ export const Kids = (): JSX.Element => {
           </section>
 
           {/* Kids cards grid */}
-          <section className="w-full mb-10">
+          <section className="w-full mb-10 border-b">
             <div className="grid grid-cols-1 gap-4 mb-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {kidsData.map((kid) => {
+              {loading ? (
+                <div className="py-10 text-center col-span-full">Loading kids...</div>
+              ) : kids.length === 0 ? (
+                <div className="py-10 text-center col-span-full">No kids found.</div>
+              ) : (
+                kids.map((kid) => {
                 const isActive =
                   kid.status.toLowerCase().includes("active") &&
                   !kid.status.toLowerCase().includes("not");
@@ -277,7 +234,7 @@ export const Kids = (): JSX.Element => {
                         />
                       </div>
 
-                      <p className="text-[15px] font-bold text-black tracking-wide">
+                      <p className="text-base font-bold text-black sm:text-lg">
                         {kid.name}
                       </p>
 
@@ -321,19 +278,21 @@ export const Kids = (): JSX.Element => {
                     </div>
                   </button>
                 );
-              })}
+              })
+            )}
             </div>
           </section>
 
 
 
           {/* Pagination */}
-          <section className="flex flex-col items-center w-full gap-4 pt-8 mt-12 border-t border-gray-200 sm:flex-row sm:justify-between sm:gap-0">
+          {kids.length > 8 && (
+          <section className="flex flex-col items-center w-full gap-4 mt-8 sm:flex-row sm:justify-between sm:gap-0">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-normal text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
+              className="flex items-center gap-1 px-4 py-3 text-sm font-normal text-black bg-[#f0f0f0] rounded-full hover:bg-[#e5e5e5] transition-colors [font-family:'Poppins']"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-3 h-3" />
               Previous
             </button>
 
@@ -345,11 +304,10 @@ export const Kids = (): JSX.Element => {
                   )}
                   <button
                     onClick={() => setCurrentPage(num)}
-                    className={`min-w-[32px] h-8 flex items-center justify-center text-xs font-medium rounded-lg transition-colors ${
-                      currentPage === num
-                        ? "bg-[#1f1f1f] text-white"
-                        : "bg-transparent text-gray-600 hover:bg-gray-100"
-                    }`}
+                    className={`min-w-[36px] px-3 py-2 text-sm font-medium rounded-lg transition-colors ${currentPage === num
+                      ? "bg-gray-900 text-white"
+                      : "bg-[#f0f0f0] text-gray-700 hover:bg-[#e5e5e5]"
+                      }`}
                   >
                     {num}
                   </button>
@@ -359,116 +317,114 @@ export const Kids = (): JSX.Element => {
 
             <button
               onClick={() => setCurrentPage((p) => Math.min(TOTAL_PAGES, p + 1))}
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors [font-family:'Poppins']"
+              className="flex items-center gap-1 px-4 py-2.5 text-sm font-medium text-black bg-[#f0f0f0] rounded-full hover:bg-[#e5e5e5] transition-colors [font-family:'Poppins']"
             >
               Next
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-3" />
             </button>
           </section>
-        </main>
+          )}
 
-        {selectedKid && (
-          <div className="absolute top-0 left-0 z-[60] flex items-start justify-center w-full min-h-screen">
-            <button
-              type="button"
-              aria-label="Close kid modal"
-              onClick={() => setSelectedKid(null)}
-              className="fixed inset-0 z-0 bg-black/40"
-            />
+          {/* Kid detail modal - in page flow so backdrop and modal scroll with the page */}
+          {selectedKid && (
+            <div ref={modalScrollRef} className="w-full -mx-4 sm:-mx-6 lg:-mx-10">
+              <button
+                type="button"
+                aria-label="Close kid modal"
+                onClick={() => setSelectedKid(null)}
+                className="block w-full min-h-screen bg-black/40"
+              />
+              <div className="flex flex-col items-center justify-center p-4 -mt-[50vh]">
+                <div className="w-full max-w-lg px-6 sm:px-16 lg:px-28 py-16 bg-white rounded-2xl shadow-2xl min-h-[740px] flex flex-col items-center">
+                  <div className="flex flex-col items-center mt-2 mb-8 text-center">
+                    <div className="w-20 h-20 mb-4 overflow-hidden rounded-full border-4 border-[#FFA500]">
+                      <img
+                        src={selectedKid.avatar}
+                        alt={selectedKid.name}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                    <h3 className="mb-1 text-xl font-semibold text-black [font-family:'Poppins']">
+                      {selectedKid.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 [font-family:'Poppins']">{selectedKid.email}</p>
+                    <span className="inline-block px-4 py-1 mt-3 text-xs font-semibold tracking-wide text-gray-700 uppercase bg-gray-200">
+                      {selectedKid.status}
+                    </span>
+                    <div className="flex items-center justify-center gap-3 mt-4">
+                      <button
+                        type="button"
+                        className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
+                      >
+                        <Pencil className="w-4 h-4 text-gray-700" />
+                      </button>
+                      <button
+                        type="button"
+                        className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
+                      >
+                        <Download className="w-4 h-4 text-gray-700" />
+                      </button>
+                      <button
+                        type="button"
+                        className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
+                      >
+                        <Printer className="w-4 h-4 text-gray-700" />
+                      </button>
+                      <button
+                        type="button"
+                        className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
+                      >
+                        <Share2 className="w-4 h-4 text-gray-700" />
+                      </button>
+                    </div>
+                  </div>
 
-            <div className="relative z-10 flex flex-col items-center justify-center p-4 mt-16 mb-20">
+                  <div className="w-full max-w-[280px] mx-auto space-y-6 text-sm text-gray-800 [font-family:'Poppins']">
+                    <div className="flex justify-between gap-4">
+                      <span className="font-medium">Gender</span>
+                      <span>Ange Nadette</span>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <span className="font-medium">Father's Name</span>
+                      <span>Ange Nadette</span>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <span className="font-medium">Mother's Names</span>
+                      <span>Ange Nadette</span>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <span className="font-medium">Date of Birth</span>
+                      <span>Ange Nadette</span>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <span className="font-medium">Email</span>
+                      <span>Ange Nadette</span>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <span className="font-medium">Submission Date</span>
+                      <span>Ange Nadette</span>
+                    </div>
+                  </div>
 
-              <div className="w-full max-w-lg px-28 py-16 bg-white rounded-2xl shadow-2xl min-h-[740px] flex flex-col items-center">
-                <div className="flex flex-col items-center mt-2 mb-8 text-center">
-                  <div className="w-20 h-20 mb-4 overflow-hidden rounded-full border-4 border-[#FFA500]">
-                    <img
-                      src={selectedKid.avatar}
-                      alt={selectedKid.name}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <h3 className="mb-1 text-[17px] font-bold text-black tracking-wide [font-family:'Poppins']">
-                    {selectedKid.name}
-                  </h3>
-                  <p className="text-sm text-gray-500 [font-family:'Poppins']">{selectedKid.email}</p>
-                  <span className="inline-block px-4 py-1 mt-3 text-xs font-semibold tracking-wide text-gray-700 uppercase bg-gray-200">
-                    {selectedKid.status}
-                  </span>
-                  <div className="flex items-center justify-center gap-3 mt-4">
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      <Pencil className="w-4 h-4 text-gray-700" />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      <Download className="w-4 h-4 text-gray-700" />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      <Printer className="w-4 h-4 text-gray-700" />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      <Share2 className="w-4 h-4 text-gray-700" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="w-full max-w-[280px] mx-auto space-y-6 text-sm text-gray-800 [font-family:'Poppins']">
-                  <div className="flex justify-between gap-4">
-                    <span className="font-medium">Gender</span>
-                    <span>Ange Nadette</span>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <span className="font-medium">Father's Name</span>
-                    <span>Ange Nadette</span>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <span className="font-medium">Mother's Names</span>
-                    <span>Ange Nadette</span>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <span className="font-medium">Date of Birth</span>
-                    <span>Ange Nadette</span>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <span className="font-medium">Email</span>
-                    <span>Ange Nadette</span>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <span className="font-medium">Submission Date</span>
-                    <span>Ange Nadette</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-6 mt-auto pt-10 pb-2 text-center w-full max-w-[280px] mx-auto">
-                  <div>
-                    <p className="text-xl font-bold text-black">{selectedKid.comicsRead}</p>
-                    <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Comics</p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold text-black">{selectedKid.rank}</p>
-                    <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Rank</p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold text-black">{selectedKid.submissions}</p>
-                    <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Submissions</p>
+                  <div className="grid grid-cols-3 gap-6 mt-auto pt-10 pb-2 text-center w-full max-w-[280px] mx-auto">
+                    <div>
+                      <p className="text-xl font-bold text-black">{selectedKid.comicsRead}</p>
+                      <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Comics</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold text-black">{selectedKid.rank}</p>
+                      <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Rank</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold text-black">{selectedKid.submissions}</p>
+                      <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Submissions</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          
-        )}
+          )}
+        </main>
       </div>
     </div>
   );

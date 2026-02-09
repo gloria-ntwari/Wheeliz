@@ -41,6 +41,7 @@ export const KidLogin = (): JSX.Element => {
 
       if (response.ok && data.status === "success") {
         // Kid exists and credentials are correct
+        localStorage.setItem("kidToken", data.data.token);
         localStorage.setItem("kidData", JSON.stringify(data.data.kid));
         // Redirect to kid dashboard (you can create this later)
         navigate("/kid/dashboard");
@@ -82,6 +83,7 @@ export const KidLogin = (): JSX.Element => {
 
       if (response.ok && data.status === "success") {
         // Kid created successfully
+        if (data.data.token) localStorage.setItem("kidToken", data.data.token);
         localStorage.setItem("kidData", JSON.stringify(data.data.kid));
         // Redirect to kid dashboard
         navigate("/kid/dashboard");

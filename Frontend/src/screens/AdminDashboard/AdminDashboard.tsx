@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Smile } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Home, Puzzle, Grid3X3, Search, Bell, ChevronDown, Menu, Download } from "lucide-react";
@@ -96,6 +96,41 @@ export const AdminDashboard = (): JSX.Element => {
     if (typeof window === "undefined") return true;
     return window.innerWidth >= 1024; // open on lg+, drawer on mobile
   });
+
+  const [stats, setStats] = useState({
+    totalKids: 0,
+    totalComics: 0,
+    totalSubmissions: 0,
+    totalAdmins: 0,
+    greeting: "Morning"
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem("adminToken");
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/stats`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const result = await response.json();
+        if (result.status === 'success') {
+          setStats(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  const cardData = [
+    { label: "Total kids in the system", value: stats.totalKids, ...summaryCards[0] },
+    { label: "Total Comics", value: stats.totalComics, ...summaryCards[1] },
+    { label: "Total Submissions", value: stats.totalSubmissions, ...summaryCards[2] },
+    { label: "Total Admins", value: stats.totalAdmins, ...summaryCards[3] },
+  ];
 
   const adminData = JSON.parse(localStorage.getItem("adminData") || '{"name": "Ange Nadette"}');
   const { labels, data: viewData } = useMemo(
@@ -199,8 +234,8 @@ export const AdminDashboard = (): JSX.Element => {
           <section className="w-full mb-8">
             <div className="flex flex-col items-start justify-between w-full gap-4 px-6 py-6 text-white rounded-3xl bg-gradient-to-l from-[#CD535C] to-[#68161C] sm:px-8 sm:py-7 md:flex-row md:items-center md:px-10 lg:px-16">
               <div className="space-y-2">
-                <h2 className="lg:text-[25px] font-semibold ">Hello Admin 👋</h2>
-                <p className="text-sm sm:text-base  [font-family:'Poppins'] font-normal lg:text-[16px]">Wishing you a happy morning and happy day</p>
+                <h2 className="lg:text-[25px] font-semibold ">{stats.greeting || 'Hello'} Admin 👋</h2>
+                <p className="text-sm sm:text-base  [font-family:'Poppins'] font-normal lg:text-[16px]">Wishing you a {stats.greeting} and happy day</p>
               </div>
 
               <button className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-[#68161c] rounded-full shadow-md hover:bg-[#4d1216] transition-colors whitespace-nowrap mt-2 md:mt-0 [font-family:'Poppins']">
@@ -212,7 +247,7 @@ export const AdminDashboard = (): JSX.Element => {
           {/* Top Stats Row */}
 <section className="w-full mt-16 mb-10 ml-2">
   <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
-    {summaryCards.map((card, index) => (
+    {cardData.map((card, index) => (
       <div key={index} className="flex flex-col space-y-3">
         
         {/* Top row: square + text */}
@@ -222,13 +257,13 @@ export const AdminDashboard = (): JSX.Element => {
           </div>
 
           <p className="text-[15px] text-gray-500 [font-family:'Poppins',sans-serif] font-normal">
-            Total kids in the system
+            {card.label}
           </p>
         </div>
 
         <div className="">
           <p className="text-[25px] font-extrabold text-black [font-family:'Poppins',sans-serif] ">
-            118
+            {card.value}
           </p>
         </div>
         <span className={`mt-2 block h-[1px] w-10 rounded-full ${card.underlineClass}`} />

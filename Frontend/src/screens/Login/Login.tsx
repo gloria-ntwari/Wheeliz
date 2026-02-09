@@ -42,7 +42,7 @@ export const Login = (): JSX.Element => {
         if (user.role === "admin") {
           navigate("/admin/dashboard");
         } else if (user.role === "kid") {
-          navigate("/kids/dashboard");
+          navigate("/kid/dashboard");
         } else {
           setError("Authorized but unknown role. Contact support.");
         }

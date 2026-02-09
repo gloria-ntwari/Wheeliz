@@ -30,6 +30,36 @@ model Kid {
   dateOfBirth  DateTime?
   passwordHash String?
   role         String    @default("kid")
+  submissions  Submission[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+}
+
+model Comic {
+  id                 String       @id @default(uuid())
+  title              String
+  subtitle           String
+  description        String
+  image              String?
+  category           String?
+  submissionDeadline DateTime?
+  bonus              Int          @default(0)
+  totalMarks         Int          @default(0)
+  maxUploads        Int          @default(1)
+  submissions       Submission[]
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+}
+
+model Submission {
+  id        String   @id @default(uuid())
+  kidId     String
+  comicId   String
+  kid       Kid      @relation(fields: [kidId], references: [id])
+  comic     Comic    @relation(fields: [comicId], references: [id])
+  marks     Int?
+  fileUrl   String
+  status    String   @default("pending") // e.g., pending, graded
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

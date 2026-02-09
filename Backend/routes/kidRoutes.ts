@@ -1,5 +1,6 @@
 import express from 'express';
-import { kidLogin, createKid, kidSignup } from '../controllers/kidController';
+import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile } from '../controllers/kidController';
+import { verifyKid } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ const router = express.Router();
  *       200:
  *         description: Success or confirmation needed
  */
-router.post('/check', kidLogin);
+router.post('/check', checkKidProfile);
 
 /**
  * @swagger
@@ -78,5 +79,17 @@ router.post('/create', createKid);
  *         description: Signup successful
  */
 router.post('/signup', kidSignup);
+
+/**
+ * @swagger
+ * /api/kid/dashboard:
+ *   get:
+ *     summary: Get kid dashboard stats
+ *     tags: [Kid]
+ *     responses:
+ *       200:
+ *         description: Dashboard data retrieved
+ */
+router.get('/dashboard', verifyKid, getKidDashboardStats);
 
 export default router;
