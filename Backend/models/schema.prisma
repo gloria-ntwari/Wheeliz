@@ -30,6 +30,7 @@ model Kid {
   dateOfBirth  DateTime?
   passwordHash String?
   role         String    @default("kid")
+  lastLogin    DateTime?
   submissions  Submission[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt

@@ -6,11 +6,15 @@ import kidRoutes from './routes/kidRoutes';
 import adminRoutes from './routes/adminRoutes';
 import authRoutes from './routes/authRoutes';
 import cors from 'cors';
+import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 const allowedOrigins = process.env.FRONTEND_URL
   ? process.env.FRONTEND_URL.split(',').map(o => o.trim())

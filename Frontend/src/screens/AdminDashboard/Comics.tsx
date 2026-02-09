@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import  { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Home,
@@ -15,80 +15,14 @@ import {
   FileText,
 } from "lucide-react";
 
-const detailedComics = [
-  {
-    id: 1,
-    title: "Learn Forgiveness through Jesus",
-    subtitle: "Do as Jesus did John C Maxwell",
-    date: "2d ago",
-    progress: 34,
-    fileName: "How To Forgive Through Art",
-    fileSize: "200KB - 100% Uploaded",
-    borderColor: "border-[#F9DE90]",
-    progressColor: "bg-[#F9DE90]",
-    image: "/marvel1.jpg",
-  },
-  {
-    id: 2,
-    title: "Learn Forgiveness through Jesus",
-    subtitle: "Do as Jesus did John C Maxwell",
-    date: "2d ago",
-    progress: 34,
-    fileName: "How To Forgive Through Art",
-    fileSize: "200KB - 100% Uploaded",
-    borderColor: "border-[#D94528]",
-    progressColor: "bg-[#D94528]",
-    image: "/marvel2.jpg",
-  },
-  {
-    id: 3,
-    title: "Learn Forgiveness through Jesus",
-    subtitle: "Do as Jesus did John C Maxwell",
-    date: "2d ago",
-    progress: 34,
-    fileName: "How To Forgive Through Art",
-    fileSize: "200KB - 100% Uploaded",
-    borderColor: "border-[#2D9CDB]",
-    progressColor: "bg-[#2D9CDB]",
-    image: "/marvel1.jpg",
-  },
-  {
-    id: 4,
-    title: "Learn Forgiveness through Jesus",
-    subtitle: "Do as Jesus did John C Maxwell",
-    date: "2d ago",
-    progress: 34,
-    fileName: "How To Forgive Through Art",
-    fileSize: "200KB - 100% Uploaded",
-    borderColor: "border-[#27AE60]",
-    progressColor: "bg-[#27AE60]",
-    image: "/marvel2.jpg",
-  },
-  {
-      id: 5,
-      title: "Learn Forgiveness through Jesus",
-      subtitle: "Do as Jesus did John C Maxwell", 
-      date: "2d ago",
-      progress: 34,
-      fileName: "How To Forgive Through Art",
-      fileSize: "200KB - 100% Uploaded",
-      borderColor: "border-[#F2994A]",
-      progressColor: "bg-[#F2994A]",
-      image: "/marvel1.jpg",
-  },
-  {
-      id: 6,
-      title: "Learn Forgiveness through Jesus",
-      subtitle: "Do as Jesus did John C Maxwell",
-      date: "2d ago",
-      progress: 34,
-      fileName: "How To Forgive Through Art",
-      fileSize: "200KB - 100% Uploaded",
-      borderColor: "border-[#2D9CDB]",
-      progressColor: "bg-[#2D9CDB]",
-      image: "/marvel2.jpg",
-  }
-];
+interface Comic {
+  id: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  createdAt: string;
+  // Add other fields as needed based on API response
+}
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
@@ -97,8 +31,6 @@ const navItems = [
   { icon: Grid3X3, label: "Submissions", path: "/admin/submissions", active: false },
 ];
 
-
-
 export const Comics = (): JSX.Element => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(() =>
@@ -106,10 +38,30 @@ export const Comics = (): JSX.Element => {
   );
   
   const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
+  const [comics, setComics] = useState<Comic[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const adminData = JSON.parse(
     localStorage.getItem("adminData") || '{"name": "Ange Nadette"}'
   );
+
+  useEffect(() => {
+    const fetchComics = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/admin/comics');
+        const data = await response.json();
+        if (data.status === 'success') {
+          setComics(data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching comics:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComics();
+  }, []);
 
   return (
     <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
@@ -210,7 +162,7 @@ export const Comics = (): JSX.Element => {
                    Comics 
                 </h1>
                 <p className="text-sm text-gray-500 font-[Poppins]">
-                   You have 324 Comics
+                   You have {comics.length} Comics
                 </p>
               </div>
             </div>
@@ -242,64 +194,77 @@ export const Comics = (): JSX.Element => {
             </div>
           </div>
 
-            <section className={`grid gap-6 ${layoutMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
-            {detailedComics.map((comic) => (
-                <div 
-                key={comic.id} 
-                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col"
-                >
-                    {/* Image Header */}
-                    {comic.image && (
-                         <div className={`w-full overflow-hidden ${layoutMode === 'grid' ? 'h-48' : 'h-36'}`}>
-                             <img 
-                                src={comic.image} 
-                                alt={comic.title} 
-                                className="object-cover w-full h-full"
-                             />
-                         </div>
-                    )}
-                    
-                    <div className="p-5">
-                    <div className="flex items-start justify-between mb-2">
-                        <h3 className="text-[15px] font-bold font-[Poppins] text-black leading-tight">
-                            {comic.title}
-                        </h3>
-                        {layoutMode === "list" && (
-                            <button className="text-gray-400 hover:text-black">•••</button>
-                        )}
-                    </div>
-                    
-                    <div className="flex items-center text-xs text-gray-500 font-[Poppins] mb-4">
-                        <span>{comic.subtitle}</span>
-                        <span className="mx-2">•</span>
-                        <span>{comic.date}</span>
-                    </div>
-                    
-                    {/* Progress */}
-                    <div className="mb-4">
-                        <div className="w-full h-1.5 bg-gray-100 rounded-full mb-1">
-                            <div className={`h-full rounded-full ${comic.progressColor}`} style={{ width: `${comic.progress}%` }}></div>
-                        </div>
-                        <div className="flex items-center justify-between mt-2">
-                            <span className="text-sm text-gray-500 font-[Poppins]">Progress</span>
-                            <span className="text-xs font-medium text-gray-500">{comic.progress}%</span>
-                        </div>
-                    </div>
-
-                    {/* File Attachment */}
-                    <div className="flex items-center gap-3 mt-2">
-                        <div className="flex items-center justify-center w-10 h-10 bg-red-50 rounded-lg shrink-0">
-                            <FileText className="w-5 h-5 text-[#D94528]" />
-                        </div>
-                        <div className="min-w-0">
-                            <p className="text-[13px] font-semibold text-black truncate">{comic.fileName}</p>
-                            <p className="text-[11px] text-gray-400">{comic.fileSize}</p>
-                        </div>
-                    </div>
-                    </div>
+            {loading ? (
+                <div className="flex items-center justify-center h-64">
+                    <p className="text-gray-500">Loading comics...</p>
                 </div>
-            ))}
-            </section>
+            ) : (
+                <section className={`grid gap-6 ${layoutMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
+                {comics.map((comic) => (
+                    <div 
+                    key={comic.id} 
+                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col"
+                    >
+                        {/* Image Header */}
+                        {comic.image ? (
+                             <div className={`w-full overflow-hidden ${layoutMode === 'grid' ? 'h-48' : 'h-36'}`}>
+                                 <img 
+                                    src={comic.image.startsWith('http') ? comic.image : `http://localhost:5000${comic.image}`} 
+                                    alt={comic.title} 
+                                    className="object-cover w-full h-full"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = '/marvel1.jpg'; // Fallback image
+                                    }}
+                                 />
+                             </div>
+                        ) : (
+                            <div className={`w-full bg-gray-200 flex items-center justify-center ${layoutMode === 'grid' ? 'h-48' : 'h-36'}`}>
+                                <Puzzle className="w-12 h-12 text-gray-400" />
+                            </div>
+                        )}
+                        
+                        <div className="p-5">
+                        <div className="flex items-start justify-between mb-2">
+                            <h3 className="text-[15px] font-bold font-[Poppins] text-black leading-tight">
+                                {comic.title}
+                            </h3>
+                            {layoutMode === "list" && (
+                                <button className="text-gray-400 hover:text-black">•••</button>
+                            )}
+                        </div>
+                        
+                        <div className="flex items-center text-xs text-gray-500 font-[Poppins] mb-4">
+                            <span>{comic.subtitle}</span>
+                            <span className="mx-2">•</span>
+                            <span>{new Date(comic.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        
+                        {/* Progress - Placeholder for now as it depends on kids progress */}
+                        <div className="mb-4">
+                            <div className="w-full h-1.5 bg-gray-100 rounded-full mb-1">
+                                <div className={`h-full rounded-full bg-[#D94528]`} style={{ width: `0%` }}></div>
+                            </div>
+                            <div className="flex items-center justify-between mt-2">
+                                <span className="text-sm text-gray-500 font-[Poppins]">Progress</span>
+                                <span className="text-xs font-medium text-gray-500">0%</span>
+                            </div>
+                        </div>
+    
+                        {/* File Attachment - Placeholder or from documents if available */}
+                        <div className="flex items-center gap-3 mt-2">
+                            <div className="flex items-center justify-center w-10 h-10 bg-red-50 rounded-lg shrink-0">
+                                <FileText className="w-5 h-5 text-[#D94528]" />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-[13px] font-semibold text-black truncate">Comic Document</p>
+                                <p className="text-[11px] text-gray-400">PDF</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                ))}
+                </section>
+            )}
 
         </main>
       </div>

@@ -1,11 +1,11 @@
-import  { useState } from "react";
-import { ArrowLeft, Menu, Search, Bell, ChevronDown, Home, Smile, Puzzle, Grid3X3, CloudUpload, FileText } from "lucide-react";
+import  { useState, useRef, ChangeEvent } from "react";
+import { ArrowLeft, Menu, Search, Bell, ChevronDown, Home, Smile, Puzzle, Grid3X3, CloudUpload, FileText, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
   { icon: Smile, label: "Kids", path: "/admin/kids", active: false },
-  { icon: Puzzle, label: "Comics", path: "/admin/comics", active: true }, // Keep Comics active or maybe none? User is in Add Comics, which is sub-page of Comics.
+  { icon: Puzzle, label: "Comics", path: "/admin/comics", active: true },
   { icon: Grid3X3, label: "Submissions", path: "/admin/submissions", active: false },
 ];
 
@@ -18,6 +18,111 @@ export const AddComics = (): JSX.Element => {
   const adminData = JSON.parse(
     localStorage.getItem("adminData") || '{"name": "Ange Nadette"}'
   );
+
+  // Form State
+  const [formData, setFormData] = useState({
+    title: "",
+    subtitle: "",
+    description: "",
+    maxUploads: 1,
+    submissionDeadline: "",
+    bonus: 0,
+    totalMarks: 0,
+  });
+
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
+  const [documents, setDocuments] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const coverInputRef = useRef<HTMLInputElement>(null);
+  const documentInputRef = useRef<HTMLInputElement>(null);
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCoverImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setCoverImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDocumentChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setDocuments(prev => [...prev, ...filesArray]);
+    }
+  };
+
+  const removeDocument = (index: number) => {
+    setDocuments(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Validate required fields
+      if (!formData.title || !formData.subtitle || !formData.description) {
+        setError("Please fill in all required fields (Title, Subtitle, Description)");
+        return;
+      }
+
+      if (!coverImage) {
+        setError("Please upload a cover image");
+        return;
+      }
+
+      const data = new FormData();
+      data.append('title', formData.title);
+      data.append('subtitle', formData.subtitle);
+      data.append('description', formData.description);
+      data.append('maxUploads', formData.maxUploads.toString());
+      if (formData.submissionDeadline) {
+          data.append('submissionDeadline', formData.submissionDeadline);
+      }
+      data.append('bonus', formData.bonus.toString());
+      data.append('totalMarks', formData.totalMarks.toString());
+      
+      data.append('coverImage', coverImage);
+      
+      documents.forEach(doc => {
+        data.append('documents', doc);
+      });
+
+      const response = await fetch('http://localhost:5000/api/admin/comics', {
+        method: 'POST',
+        body: data,
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.status === 'success') {
+        navigate('/admin/comics');
+      } else {
+        setError(result.message || 'Failed to create comic');
+      }
+
+    } catch (err) {
+      console.error("Error creating comic:", err);
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
@@ -119,14 +224,21 @@ export const AddComics = (): JSX.Element => {
           </button>
 
           <div className="flex gap-4">
-            <button className="px-8 py-2 text-sm font-medium text-[#681618] bg-white border border-[#681618] rounded-xl hover:bg-gray-50 transition-colors">
-              Save
-            </button>
-            <button className="px-8 py-2 text-sm font-medium text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] transition-colors">
-              Save
+            <button 
+                onClick={handleSubmit} 
+                className="px-8 py-2 text-sm font-medium text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] transition-colors disabled:opacity-50"
+                disabled={loading}
+            >
+              {loading ? "Saving..." : "Save"}
             </button>
           </div>
         </div>
+
+        {error && (
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
+                <p>{error}</p>
+            </div>
+        )}
 
         <div className="max-w-6xl space-y-8">
           {/* Comics Details Section */}
@@ -143,6 +255,9 @@ export const AddComics = (): JSX.Element => {
                   <label className="text-sm font-bold text-black">Title*</label>
                   <input
                     type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
                     placeholder="Title"
                     className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
                   />
@@ -154,6 +269,9 @@ export const AddComics = (): JSX.Element => {
                   </label>
                   <input
                     type="text"
+                    name="subtitle"
+                    value={formData.subtitle}
+                    onChange={handleInputChange}
                     placeholder="Subtitle"
                     className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
                   />
@@ -165,31 +283,49 @@ export const AddComics = (): JSX.Element => {
                  <label className="text-sm font-bold text-black">Cover Image*</label>
                  <div className="flex flex-col gap-8 md:flex-row items-end">
                     {/* Upload Box */}
-                    <div className="flex flex-col items-center justify-center w-full md:w-[340px] h-[180px] gap-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
+                    <div 
+                        onClick={() => coverInputRef.current?.click()}
+                        className="flex flex-col items-center justify-center w-full md:w-[340px] h-[180px] gap-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+                    >
                          <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full">
                             <CloudUpload className="w-6 h-6 text-gray-500" />
                          </div>
                          <p className="text-sm text-center text-gray-500">
                             <span className="font-bold text-[#8B1A1A]">Click to upload</span> or drag and drop
                          </p>
+                         <input 
+                            type="file" 
+                            ref={coverInputRef} 
+                            onChange={handleCoverImageChange} 
+                            accept="image/*" 
+                            className="hidden" 
+                         />
                     </div>
                     
                     {/* Preview Image */}
-                    <div className="flex flex-col gap-2">
-                         <div className="w-[180px] h-[140px] overflow-hidden rounded-xl bg-gray-100">
-                             <img 
-                                src="/marvel1.jpg" 
-                                alt="Comics Cover" 
-                                className="object-cover w-full h-full"
-                             />
-                         </div>
-                         <div className="flex items-center justify-between px-1">
-                             <span className="text-xs text-gray-500">Comics_cover.png</span>
-                             <button className="text-red-500 hover:text-red-700">
-                                 <span className="text-lg leading-none">×</span>
-                             </button>
-                         </div>
-                    </div>
+                    {coverImagePreview && (
+                        <div className="flex flex-col gap-2">
+                             <div className="w-[180px] h-[140px] overflow-hidden rounded-xl bg-gray-100">
+                                 <img 
+                                    src={coverImagePreview} 
+                                    alt="Comics Cover" 
+                                    className="object-cover w-full h-full"
+                                 />
+                             </div>
+                             <div className="flex items-center justify-between px-1">
+                                 <span className="text-xs text-gray-500 truncate max-w-[120px]">{coverImage?.name}</span>
+                                 <button 
+                                    onClick={() => {
+                                        setCoverImage(null);
+                                        setCoverImagePreview(null);
+                                    }}
+                                    className="text-red-500 hover:text-red-700"
+                                 >
+                                     <span className="text-lg leading-none">×</span>
+                                 </button>
+                             </div>
+                        </div>
+                    )}
                  </div>
               </div>
 
@@ -199,6 +335,9 @@ export const AddComics = (): JSX.Element => {
                   Description*
                 </label>
                 <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
                   placeholder="Description"
                   className="w-full h-32 px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors resize-none"
                 />
@@ -221,7 +360,10 @@ export const AddComics = (): JSX.Element => {
                     Maz Uploads *
                   </label>
                   <input
-                    type="text"
+                    type="number"
+                    name="maxUploads"
+                    value={formData.maxUploads}
+                    onChange={handleInputChange}
                     placeholder="Number"
                     className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
                   />
@@ -232,8 +374,10 @@ export const AddComics = (): JSX.Element => {
                     Submission Deadline*
                   </label>
                   <input
-                    type="text"
-                    placeholder="Date format"
+                    type="date"
+                    name="submissionDeadline"
+                    value={formData.submissionDeadline}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
                   />
                 </div>
@@ -245,6 +389,9 @@ export const AddComics = (): JSX.Element => {
                   <label className="text-sm font-bold text-black">Bonus*</label>
                   <input
                     type="number"
+                    name="bonus"
+                    value={formData.bonus}
+                    onChange={handleInputChange}
                     placeholder="Bonus marks"
                     className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
                   />
@@ -253,6 +400,9 @@ export const AddComics = (): JSX.Element => {
                   <label className="text-sm font-bold text-black">Total Marks*</label>
                   <input
                     type="number"
+                    name="totalMarks"
+                    value={formData.totalMarks}
+                    onChange={handleInputChange}
                     placeholder="Total marks"
                     className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl outline-none focus:border-[#681618] transition-colors"
                   />
@@ -264,7 +414,10 @@ export const AddComics = (): JSX.Element => {
                 <label className="text-sm font-bold text-black">
                   Upload Files *
                 </label>
-                <div className="flex flex-col items-center justify-center w-full gap-2 p-12 border-2 border-gray-200 rounded-xl">
+                <div 
+                    onClick={() => documentInputRef.current?.click()}
+                    className="flex flex-col items-center justify-center w-full gap-2 p-12 border-2 border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
                     <CloudUpload className="w-6 h-6 text-gray-500" />
                   </div>
@@ -274,38 +427,41 @@ export const AddComics = (): JSX.Element => {
                     </span>{" "}
                     or drag and drop
                   </p>
+                  <input 
+                    type="file" 
+                    ref={documentInputRef} 
+                    onChange={handleDocumentChange} 
+                    multiple 
+                    className="hidden" 
+                  />
                 </div>
               </div>
 
               {/* File List Item */}
-              <div className="flex items-center justify-center mt-6 gap-36">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center rounded-lg">
-                    {/* Replaced generic SVG with FileText styled as red document */}
-                    <FileText className="w-10 h-10 text-[#ef4444] fill-current" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-black">
-                      How To Forgive Through Art
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      200KB - 100% Uploaded
-                    </p>
-                  </div>
-                </div>
-                <button className="text-[#8B1A1A] hover:text-red-900">
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
+              <div className="space-y-4 mt-6">
+                {documents.map((doc, index) => (
+                    <div key={index} className="flex items-center justify-between gap-4 p-4 border border-gray-100 rounded-lg">
+                        <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center rounded-lg">
+                            <FileText className="w-10 h-10 text-[#ef4444] fill-current" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold text-black">
+                            {doc.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                            {(doc.size / 1024).toFixed(2)} KB
+                            </p>
+                        </div>
+                        </div>
+                        <button 
+                            onClick={() => removeDocument(index)}
+                            className="text-[#8B1A1A] hover:text-red-900"
+                        >
+                        <X className="w-5 h-5" />
+                        </button>
+                    </div>
+                ))}
               </div>
             </div>
           </div>

@@ -36,6 +36,12 @@ export const checkKidProfile = async (req: Request, res: Response) => {
         
         const token = jwt.sign({ id: kid.id, role: 'kid' }, process.env.JWT_SECRET as string, { expiresIn: '1d' });
 
+        // Update last login
+        await (prisma.kid as any).update({
+            where: { id: kid.id },
+            data: { lastLogin: new Date() }
+        });
+
         res.json({
             status: 'success',
             data: {
@@ -84,6 +90,12 @@ export const kidLogin = async (req: Request, res: Response) => {
                 message: 'Invalid credentials'
             });
         }
+
+        // Update last login
+        await (prisma.kid as any).update({
+            where: { id: kid.id },
+            data: { lastLogin: new Date() }
+        });
 
         const token = jwt.sign(
             { id: kid.id, email: kid.email, role: kid.role },

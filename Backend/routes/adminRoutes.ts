@@ -57,8 +57,10 @@ router.get('/stats', getDashboardStats);
  *     summary: Create a new comic
  *     tags: [Comics]
  */
+import { uploadComicFiles } from '../middlewares/upload';
+
 router.get('/comics', getComics);
-router.post('/comics', createComic);
+router.post('/comics', uploadComicFiles, createComic);
 
 /**
  * @swagger
