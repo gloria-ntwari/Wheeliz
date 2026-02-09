@@ -1,4 +1,5 @@
 import  { useState, useRef, ChangeEvent } from "react";
+import { API_BASE_URL } from "../../config/api";
 import { ArrowLeft, Menu, Search, Bell, ChevronDown, Home, Smile, Puzzle, Grid3X3, CloudUpload, FileText, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -103,7 +104,7 @@ export const AddComics = (): JSX.Element => {
         data.append('documents', doc);
       });
 
-      const response = await fetch('http://localhost:5000/api/admin/comics', {
+      const response = await fetch(`${API_BASE_URL}/admin/comics`, {
         method: 'POST',
         body: data,
       });

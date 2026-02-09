@@ -76,7 +76,7 @@ router.post('/comics', uploadComicFiles, createComic);
  *     tags: [Comics]
  */
 router.get('/comics/:id', getComicById);
-router.put('/comics/:id', updateComic);
+router.put('/comics/:id', uploadComicFiles, updateComic);
 router.delete('/comics/:id', deleteComic);
 
 /**

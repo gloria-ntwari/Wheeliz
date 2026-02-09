@@ -1,5 +1,6 @@
 import  { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../config/api";
 import {
   Home,
   Smile,
@@ -13,14 +14,25 @@ import {
   List,
   LayoutGrid,
   FileText,
+  MoreVertical,
+  Edit,
+  Trash2,
 } from "lucide-react";
+import { EditComicModal } from "./EditComicModal";
 
-interface Comic {
+export interface Comic {
   id: string;
   title: string;
   subtitle: string;
   image: string;
+  description?: string;
+  maxUploads?: number;
+  submissionDeadline?: string;
+  bonus?: number;
+  totalMarks?: number;
+  category?: string;
   createdAt: string;
+  document?: string;
   // Add other fields as needed based on API response
 }
 
@@ -40,27 +52,66 @@ export const Comics = (): JSX.Element => {
   const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
   const [comics, setComics] = useState<Comic[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Edit/Delete State
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedComic, setSelectedComic] = useState<Comic | null>(null);
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+
+  const fetchComics = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/admin/comics?t=${new Date().getTime()}`);
+      const data = await response.json();
+      if (data.status === 'success') {
+        setComics(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching comics:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+      // Simple confirm
+      if (!window.confirm("Are you sure you want to delete this comic?")) return;
+
+      try {
+          const response = await fetch(`${API_BASE_URL}/admin/comics/${id}`, {
+              method: 'DELETE',
+          });
+          const result = await response.json();
+          if (result.status === 'success') {
+              fetchComics(); // Refresh list
+          } else {
+              alert(result.message || "Failed to delete");
+          }
+      } catch (error) {
+          console.error("Error deleting comic:", error);
+      }
+  };
+
+  const handleEdit = (comic: Comic) => {
+      setSelectedComic(comic);
+      setEditModalOpen(true);
+      setActiveMenuId(null);
+  };
+
 
   const adminData = JSON.parse(
     localStorage.getItem("adminData") || '{"name": "Ange Nadette"}'
   );
 
   useEffect(() => {
-    const fetchComics = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/admin/comics');
-        const data = await response.json();
-        if (data.status === 'success') {
-          setComics(data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching comics:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchComics();
+  }, []);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => setActiveMenuId(null);
+    window.addEventListener('click', handleClickOutside);
+    return () => window.removeEventListener('click', handleClickOutside);
   }, []);
 
   return (
@@ -167,7 +218,7 @@ export const Comics = (): JSX.Element => {
               </div>
             </div>
             <div className="flex items-center gap-4">
-                <div className="flex  items-center gap-3">
+                <div className="flex items-center gap-3">
                    <div className="flex bg-[#F4F6FB] p-1 rounded-lg">
                       <button 
                         onClick={() => setLayoutMode("grid")}
@@ -203,18 +254,52 @@ export const Comics = (): JSX.Element => {
                 {comics.map((comic) => (
                     <div 
                     key={comic.id} 
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col"
+                    className="relative flex flex-col overflow-hidden transition-shadow bg-white border border-gray-100 shadow-sm rounded-xl hover:shadow-md"
                     >
+                        {/* 3-Dots Menu */}
+                        <div className="absolute z-10 top-3 right-3">
+                            <button 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveMenuId(activeMenuId === comic.id ? null : comic.id);
+                                }}
+                                className="p-1.5 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white shadow-sm transition-all"
+                            >
+                                <MoreVertical className="w-4 h-4 text-gray-700" />
+                            </button>
+                            
+                            {activeMenuId === comic.id && (
+                                <div className="absolute right-0 z-20 w-32 py-1 mt-2 overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
+                                    <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleEdit(comic);
+                                        }}
+                                        className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-gray-700 transition-colors hover:bg-gray-50"
+                                    >
+                                        <Edit className="w-3.5 h-3.5" />
+                                        Edit
+                                    </button>
+                                    <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDelete(comic.id);
+                                        }}
+                                        className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-600 transition-colors hover:bg-red-50"
+                                    >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                        Delete
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                         {/* Image Header */}
                         {comic.image ? (
                              <div className={`w-full overflow-hidden ${layoutMode === 'grid' ? 'h-48' : 'h-36'}`}>
                                  <img 
-                                    src={comic.image.startsWith('http') ? comic.image : `http://localhost:5000${comic.image}`} 
+                                    src={comic.image.startsWith('http') ? comic.image : `${API_BASE_URL.replace('/api', '')}${comic.image}`} 
                                     alt={comic.title} 
                                     className="object-cover w-full h-full"
-                                    onError={(e) => {
-                                        (e.target as HTMLImageElement).src = '/marvel1.jpg'; // Fallback image
-                                    }}
                                  />
                              </div>
                         ) : (
@@ -229,14 +314,52 @@ export const Comics = (): JSX.Element => {
                                 {comic.title}
                             </h3>
                             {layoutMode === "list" && (
-                                <button className="text-gray-400 hover:text-black">•••</button>
+                                <div className="relative">
+                                     <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setActiveMenuId(activeMenuId === comic.id ? null : comic.id);
+                                        }}
+                                        className="p-1 text-gray-400 hover:text-black"
+                                    >
+                                        •••
+                                    </button>
+                                     {activeMenuId === comic.id && (
+                                        <div className="absolute right-0 z-20 w-32 py-1 mt-2 overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
+                                            <button 
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleEdit(comic);
+                                                }}
+                                                className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-gray-700 transition-colors hover:bg-gray-50"
+                                            >
+                                                <Edit className="w-3.5 h-3.5" />
+                                                Edit
+                                            </button>
+                                            <button 
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDelete(comic.id);
+                                                }}
+                                                className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-600 transition-colors hover:bg-red-50"
+                                            >
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                                Delete
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             )}
                         </div>
                         
                         <div className="flex items-center text-xs text-gray-500 font-[Poppins] mb-4">
                             <span>{comic.subtitle}</span>
                             <span className="mx-2">•</span>
-                            <span>{new Date(comic.createdAt).toLocaleDateString()}</span>
+                            <span>
+                                {comic.submissionDeadline 
+                                    ? new Date(comic.submissionDeadline).toLocaleDateString() 
+                                    : "No Deadline"}
+                            </span>
                         </div>
                         
                         {/* Progress - Placeholder for now as it depends on kids progress */}
@@ -250,16 +373,32 @@ export const Comics = (): JSX.Element => {
                             </div>
                         </div>
     
-                        {/* File Attachment - Placeholder or from documents if available */}
-                        <div className="flex items-center gap-3 mt-2">
-                            <div className="flex items-center justify-center w-10 h-10 bg-red-50 rounded-lg shrink-0">
-                                <FileText className="w-5 h-5 text-[#D94528]" />
+                        {/* File Attachment */}
+                        {comic.document ? (
+                             <a 
+                                href={comic.document.startsWith('http') ? comic.document : `${API_BASE_URL.replace('/api', '')}${comic.document}`} 
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 p-2 mt-2 transition-colors rounded-lg cursor-pointer hover:bg-gray-50"
+                             >
+                                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-50 shrink-0">
+                                    <FileText className="w-5 h-5 text-[#D94528]" />
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="text-[13px] font-semibold text-black truncate">Comic Document</p>
+                                    <p className="text-[11px] text-gray-400">PDF</p>
+                                </div>
+                            </a>
+                        ) : (
+                            <div className="flex items-center gap-3 mt-2 opacity-50">
+                                <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-lg shrink-0">
+                                    <FileText className="w-5 h-5 text-gray-400" />
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="text-[13px] font-semibold text-gray-500 truncate">No Document</p>
+                                </div>
                             </div>
-                            <div className="min-w-0">
-                                <p className="text-[13px] font-semibold text-black truncate">Comic Document</p>
-                                <p className="text-[11px] text-gray-400">PDF</p>
-                            </div>
-                        </div>
+                        )}
                         </div>
                     </div>
                 ))}
@@ -267,6 +406,13 @@ export const Comics = (): JSX.Element => {
             )}
 
         </main>
+        
+        <EditComicModal 
+            isOpen={editModalOpen} 
+            onClose={() => setEditModalOpen(false)} 
+            comic={selectedComic} 
+            onUpdate={fetchComics} 
+        />
       </div>
     </div>
   );

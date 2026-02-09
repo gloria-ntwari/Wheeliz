@@ -104,18 +104,19 @@ export const getDashboardStats = async (_req: Request, res: Response) => {
 export const createComic = async (req: Request, res: Response) => {
   try {
     const { title, subtitle, description, category, submissionDeadline, bonus, totalMarks, maxUploads } = req.body;
-    
+
     // Handle file uploads
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     let coverImage = '';
-    let documents: string[] = [];
+    let documentPath = '';
 
     if (files?.coverImage?.[0]) {
       coverImage = `/uploads/comics/${files.coverImage[0].filename}`;
     }
 
-    if (files?.documents) {
-      documents = files.documents.map(file => `/uploads/documents/${file.filename}`);
+    // Handle document upload (single document for now based on requirement)
+    if (files?.documents?.[0]) {
+      documentPath = `/uploads/documents/${files.documents[0].filename}`;
     }
 
     if (!title || !subtitle || !description) {
@@ -136,22 +137,7 @@ export const createComic = async (req: Request, res: Response) => {
         bonus: bonus ? parseInt(bonus) : 0,
         totalMarks: totalMarks ? parseInt(totalMarks) : 0,
         maxUploads: maxUploads ? parseInt(maxUploads) : 1,
-        // Store documents if your schema supports it, otherwise you might need to update schema or decide where to store them.
-        // For now assuming existing schema doesn't have documents field strictly typed, we might need a migration or store in description/separate table.
-        // Checking schema... Comic model has image string? but no documents array.
-        // I will assume for now we might need to add it or it wasn't in the original schema request but user wants documents.
-        // Wait, the user prompt says "even upload is possible". The frontend shows "Upload Files". 
-        // The schema I saw earlier:
-        // model Comic { ... image String? ... }
-        // It doesn't have a field for documents. I should probably add it to the schema or just ignore for now if not strictly required by db, but frontend sends it.
-        // Let's add 'documents' field to Comic model in the next step if possible, or just log it for now.
-        // Actually, I'll store it in a JSON field if I could, but I'll stick to what's available. 
-        // Let's just use 'image' for cover. The prompt implies "add the comic working like we add the comic even upload is possible".
-        // The frontend has "Upload Files" which seems to be the comic content itself (PDFs etc).
-        // I will add a 'filePath' or 'documents' field to the Comic model to support this properly.
-        // For now, I will proceed with just image, and I'll add a TODO to update schema for documents if needed, 
-        // OR I can use the 'image' field for the cover and maybe 'description' to append links? No that's hacky.
-        // I'll check schema again. 
+        document: documentPath || null,
       }
     });
 
@@ -218,31 +204,65 @@ export const getComicById = async (req: Request, res: Response) => {
 export const updateComic = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    console.log('Update Comic Request Body:', req.body);
+    // console.log('Update Comic Request Files:', req.files); // Optional logging
+
     const { title, subtitle, description, category, submissionDeadline, bonus, totalMarks, maxUploads } = req.body;
-    
+
     // Handle file uploads for update
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     let coverImage = undefined;
-    
+    let documentPath = undefined;
+
     if (files?.coverImage?.[0]) {
       coverImage = `/uploads/comics/${files.coverImage[0].filename}`;
     }
 
-    const dataToUpdate: any = {
-        title,
-        subtitle,
-        description,
-        category,
-        submissionDeadline: submissionDeadline ? new Date(submissionDeadline) : undefined,
-        bonus: bonus ? parseInt(bonus) : undefined,
-        totalMarks: totalMarks ? parseInt(totalMarks) : undefined,
-        maxUploads: maxUploads ? parseInt(maxUploads) : undefined
-    };
-
-    if (coverImage) {
-        dataToUpdate.image = coverImage;
+    if (files?.documents?.[0]) {
+      documentPath = `/uploads/documents/${files.documents[0].filename}`;
     }
 
+    const dataToUpdate: any = {};
+
+    // Update string fields if provided (allow empty strings if that's what user intends, but usually titles aren't empty)
+    if (title !== undefined) dataToUpdate.title = title;
+    if (subtitle !== undefined) dataToUpdate.subtitle = subtitle;
+    if (description !== undefined) dataToUpdate.description = description; 
+    if (category !== undefined) dataToUpdate.category = category;
+
+    // Update Date field
+    if (submissionDeadline) {
+      const parsedDate = new Date(submissionDeadline);
+      if (!isNaN(parsedDate.getTime())) {
+        dataToUpdate.submissionDeadline = parsedDate;
+      }
+    }
+
+    // Update Int fields - handle "0" correctly
+    if (bonus !== undefined && bonus !== '') {
+      const parsed = parseInt(String(bonus), 10);
+      if (!isNaN(parsed)) dataToUpdate.bonus = parsed;
+    }
+
+    if (totalMarks !== undefined && totalMarks !== '') {
+      const parsed = parseInt(String(totalMarks), 10);
+      if (!isNaN(parsed)) dataToUpdate.totalMarks = parsed;
+    }
+
+    if (maxUploads !== undefined && maxUploads !== '') {
+      const parsed = parseInt(String(maxUploads), 10);
+      if (!isNaN(parsed)) dataToUpdate.maxUploads = parsed;
+    }
+
+    if (coverImage) {
+      dataToUpdate.image = coverImage;
+    }
+
+    if (documentPath) {
+      dataToUpdate.document = documentPath;
+    }
+
+    // Use 'as any' to bypass potential type mismatch if generated client is outdated
     const comic = await (prisma.comic as any).update({
       where: { id: id as string },
       data: dataToUpdate
@@ -254,9 +274,10 @@ export const updateComic = async (req: Request, res: Response) => {
       data: comic
     });
   } catch (error) {
+    console.error('Error updating comic:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Server error'
+      message: 'Server error: ' + (error instanceof Error ? error.message : String(error))
     });
   }
 };
@@ -282,51 +303,51 @@ export const deleteComic = async (req: Request, res: Response) => {
 
 // Get All Kids
 export const getAllKids = async (req: Request, res: Response) => {
-    try {
-        const kids = await (prisma.kid as any).findMany({
-            orderBy: { name: 'asc' },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                lastLogin: true,
-                _count: {
-                    select: { 
-                         submissions: true, 
-                    }
-                }
-            }
-        });
+  try {
+    const kids = await (prisma.kid as any).findMany({
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        lastLogin: true,
+        _count: {
+          select: {
+            submissions: true,
+          }
+        }
+      }
+    });
 
-        // Calculate 7 days ago
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // Calculate 7 days ago
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-        // Transform data
-        const formattedKids = kids.map((kid: any) => {
-            // Determine active status: true if lastLogin > sevenDaysAgo
-            const isActive = kid.lastLogin ? new Date(kid.lastLogin) > sevenDaysAgo : false;
-            
-            return {
-                ...kid,
-                status: isActive ? 'Active' : 'Inactive',
-                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`,
-                comicsRead: 0, // Placeholder
-                rank: 0,       // Placeholder
-                submissions: kid._count.submissions
-            };
-        });
+    // Transform data
+    const formattedKids = kids.map((kid: any) => {
+      // Determine active status: true if lastLogin > sevenDaysAgo
+      const isActive = kid.lastLogin ? new Date(kid.lastLogin) > sevenDaysAgo : false;
 
-        res.json({
-            status: 'success',
-            data: formattedKids
-        });
-    } catch (error) {
-        console.error('Error fetching kids:', error);
-        res.status(500).json({
-            status: 'error',
-            message: 'Server error'
-        });
-    }
+      return {
+        ...kid,
+        status: isActive ? 'Active' : 'Inactive',
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`,
+        comicsRead: 0, // Placeholder
+        rank: 0,       // Placeholder
+        submissions: kid._count.submissions
+      };
+    });
+
+    res.json({
+      status: 'success',
+      data: formattedKids
+    });
+  } catch (error) {
+    console.error('Error fetching kids:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error'
+    });
+  }
 };

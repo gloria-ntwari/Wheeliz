@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { API_BASE_URL } from "../../config/api";
 import { Smile } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Home, Puzzle, Grid3X3, Search, Bell, ChevronDown, Menu, Download } from "lucide-react";
-import { PaginationDots } from './../../components/ui/pagination-dots';
 
 const summaryCards = [
   { colorClass: "bg-[#F5D27B]", underlineClass: "bg-[#F5D27B]" },
@@ -109,7 +109,7 @@ export const AdminDashboard = (): JSX.Element => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("adminToken");
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/stats`, {
+        const response = await fetch(`${API_BASE_URL}/admin/stats`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import {
   Bell,
-  LogOut,
   ChevronDown
 } from "lucide-react";
 
@@ -21,7 +21,7 @@ export const KidDashboard = (): JSX.Element => {
           return;
         }
 
-        const response = await fetch("http://localhost:5000/api/kid/dashboard", {
+        const response = await fetch(`${API_BASE_URL}/kid/dashboard`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -141,7 +141,11 @@ export const KidDashboard = (): JSX.Element => {
                 <div key={comic.id} className="flex flex-col items-center gap-4 p-4 bg-white border border-gray-100 shadow-sm md:flex-row rounded-xl">
                     <div className="w-16 h-16 overflow-hidden bg-gray-200 rounded-lg shrink-0">
                          {/* Comic Cover */}
-                         <img src={comic.cover || "/group.png"} alt={comic.title} className="object-cover w-full h-full" />
+                         <img 
+                            src={comic.cover ? (comic.cover.startsWith('http') ? comic.cover : `${API_BASE_URL.replace('/api', '')}${comic.cover}`) : "/group.png"} 
+                            alt={comic.title} 
+                            className="object-cover w-full h-full" 
+                         />
                     </div>
                     
                     <div className="flex-1 w-full">

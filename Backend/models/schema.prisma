@@ -47,6 +47,7 @@ model Comic {
   bonus              Int          @default(0)
   totalMarks         Int          @default(0)
   maxUploads        Int          @default(1)
+  document          String?
   submissions       Submission[]
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt

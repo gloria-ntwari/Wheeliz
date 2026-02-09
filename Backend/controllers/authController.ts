@@ -57,6 +57,14 @@ export const login = async (req: Request, res: Response) => {
             { expiresIn: '7d' }
         );
 
+        // Update last login if user is a kid
+        if (role === 'kid') {
+            await (prisma.kid as any).update({
+                where: { id: user.id },
+                data: { lastLogin: new Date() }
+            });
+        }
+
         // 6. Return response with user data and role
         res.json({
             status: 'success',

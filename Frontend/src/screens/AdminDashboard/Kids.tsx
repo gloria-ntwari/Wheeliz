@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { API_BASE_URL } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
@@ -47,7 +48,7 @@ export const Kids = (): JSX.Element => {
     const fetchKids = async () => {
       try {
         const token = localStorage.getItem("adminToken");
-        const response = await fetch("http://localhost:5000/api/admin/kids", {
+        const response = await fetch(`${API_BASE_URL}/admin/kids`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
