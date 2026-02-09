@@ -238,7 +238,9 @@ export const AdminDashboard = (): JSX.Element => {
                 <p className="text-sm sm:text-base  [font-family:'Poppins'] font-normal lg:text-[16px]">Wishing you a {stats.greeting} and happy day</p>
               </div>
 
-              <button className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-[#68161c] rounded-full shadow-md hover:bg-[#4d1216] transition-colors whitespace-nowrap mt-2 md:mt-0 [font-family:'Poppins']">
+              <button 
+              onClick={() => navigate("/admin/add-comics")}
+              className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-[#68161c] rounded-full shadow-md hover:bg-[#4d1216] transition-colors whitespace-nowrap mt-2 md:mt-0 [font-family:'Poppins']">
                 Add New Comics
               </button>
             </div>

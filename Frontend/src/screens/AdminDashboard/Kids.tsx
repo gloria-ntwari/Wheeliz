@@ -325,100 +325,98 @@ export const Kids = (): JSX.Element => {
           </section>
           )}
 
-          {/* Kid detail modal - in page flow so backdrop and modal scroll with the page */}
+          {/* Kid detail modal - fixed overlay centered on screen */}
           {selectedKid && (
-            <div ref={modalScrollRef} className="w-full -mx-4 sm:-mx-6 lg:-mx-10">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
               <button
                 type="button"
                 aria-label="Close kid modal"
                 onClick={() => setSelectedKid(null)}
-                className="block w-full min-h-screen bg-black/40"
+                className="absolute inset-0 w-full h-full cursor-default"
               />
-              <div className="flex flex-col items-center justify-center p-4 -mt-[50vh]">
-                <div className="w-full max-w-lg px-6 sm:px-16 lg:px-28 py-16 bg-white rounded-2xl shadow-2xl min-h-[740px] flex flex-col items-center">
-                  <div className="flex flex-col items-center mt-2 mb-8 text-center">
-                    <div className="w-20 h-20 mb-4 overflow-hidden rounded-full border-4 border-[#FFA500]">
-                      <img
-                        src={selectedKid.avatar}
-                        alt={selectedKid.name}
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                    <h3 className="mb-1 text-xl font-semibold text-black [font-family:'Poppins']">
-                      {selectedKid.name}
-                    </h3>
-                    <p className="text-sm text-gray-500 [font-family:'Poppins']">{selectedKid.email}</p>
-                    <span className="inline-block px-4 py-1 mt-3 text-xs font-semibold tracking-wide text-gray-700 uppercase bg-gray-200">
-                      {selectedKid.status}
-                    </span>
-                    <div className="flex items-center justify-center gap-3 mt-4">
-                      <button
-                        type="button"
-                        className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                      >
-                        <Pencil className="w-4 h-4 text-gray-700" />
-                      </button>
-                      <button
-                        type="button"
-                        className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                      >
-                        <Download className="w-4 h-4 text-gray-700" />
-                      </button>
-                      <button
-                        type="button"
-                        className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                      >
-                        <Printer className="w-4 h-4 text-gray-700" />
-                      </button>
-                      <button
-                        type="button"
-                        className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                      >
-                        <Share2 className="w-4 h-4 text-gray-700" />
-                      </button>
-                    </div>
+              <div className="relative w-full max-w-lg px-6 sm:px-16 lg:px-28 py-16 bg-white rounded-2xl shadow-2xl min-h-[740px] flex flex-col items-center">
+                <div className="flex flex-col items-center mt-2 mb-8 text-center">
+                  <div className="w-20 h-20 mb-4 overflow-hidden rounded-full border-4 border-[#FFA500]">
+                    <img
+                      src={selectedKid.avatar}
+                      alt={selectedKid.name}
+                      className="object-cover w-full h-full"
+                    />
                   </div>
-
-                  <div className="w-full max-w-[280px] mx-auto space-y-6 text-sm text-gray-800 [font-family:'Poppins']">
-                    <div className="flex justify-between gap-4">
-                      <span className="font-medium">Gender</span>
-                      <span>Ange Nadette</span>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <span className="font-medium">Father's Name</span>
-                      <span>Ange Nadette</span>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <span className="font-medium">Mother's Names</span>
-                      <span>Ange Nadette</span>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <span className="font-medium">Date of Birth</span>
-                      <span>Ange Nadette</span>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <span className="font-medium">Email</span>
-                      <span>Ange Nadette</span>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <span className="font-medium">Submission Date</span>
-                      <span>Ange Nadette</span>
-                    </div>
+                  <h3 className="mb-1 text-xl font-semibold text-black [font-family:'Poppins']">
+                    {selectedKid.name}
+                  </h3>
+                  <p className="text-sm text-gray-500 [font-family:'Poppins']">{selectedKid.email}</p>
+                  <span className="inline-block px-4 py-1 mt-3 text-xs font-semibold tracking-wide text-gray-700 uppercase bg-gray-200">
+                    {selectedKid.status}
+                  </span>
+                  <div className="flex items-center justify-center gap-3 mt-4">
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
+                    >
+                      <Pencil className="w-4 h-4 text-gray-700" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
+                    >
+                      <Download className="w-4 h-4 text-gray-700" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
+                    >
+                      <Printer className="w-4 h-4 text-gray-700" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
+                    >
+                      <Share2 className="w-4 h-4 text-gray-700" />
+                    </button>
                   </div>
+                </div>
 
-                  <div className="grid grid-cols-3 gap-6 mt-auto pt-10 pb-2 text-center w-full max-w-[280px] mx-auto">
-                    <div>
-                      <p className="text-xl font-bold text-black">{selectedKid.comicsRead}</p>
-                      <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Comics</p>
-                    </div>
-                    <div>
-                      <p className="text-xl font-bold text-black">{selectedKid.rank}</p>
-                      <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Rank</p>
-                    </div>
-                    <div>
-                      <p className="text-xl font-bold text-black">{selectedKid.submissions}</p>
-                      <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Submissions</p>
-                    </div>
+                <div className="w-full max-w-[280px] mx-auto space-y-6 text-sm text-gray-800 [font-family:'Poppins']">
+                  <div className="flex justify-between gap-4">
+                    <span className="font-medium">Gender</span>
+                    <span>Ange Nadette</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="font-medium">Father's Name</span>
+                    <span>Ange Nadette</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="font-medium">Mother's Names</span>
+                    <span>Ange Nadette</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="font-medium">Date of Birth</span>
+                    <span>Ange Nadette</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="font-medium">Email</span>
+                    <span>Ange Nadette</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="font-medium">Submission Date</span>
+                    <span>Ange Nadette</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-6 mt-auto pt-10 pb-2 text-center w-full max-w-[280px] mx-auto">
+                  <div>
+                    <p className="text-xl font-bold text-black">{selectedKid.comicsRead}</p>
+                    <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Comics</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-black">{selectedKid.rank}</p>
+                    <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Rank</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-black">{selectedKid.submissions}</p>
+                    <p className="mt-1 text-xs tracking-wide text-gray-500 [font-family:'Poppins']">Submissions</p>
                   </div>
                 </div>
               </div>
