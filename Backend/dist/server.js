@@ -9,21 +9,28 @@ const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const kidRoutes_1 = __importDefault(require("./routes/kidRoutes"));
 const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
+const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
 app.use(express_1.default.json());
-// CORS configuration - allow frontend URL from environment or default to localhost
 const allowedOrigins = process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(',')
+    ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
     : ['http://localhost:5173'];
 app.use((0, cors_1.default)({
-    origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: (origin, callback) => {
+        if (!origin)
+            return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error(`CORS blocked: ${origin}`));
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-// Root route to prevent 404
+app.options('*', (0, cors_1.default)());
 app.get('/', (req, res) => {
     res.json({
         message: 'Wheeliz API Server',
@@ -42,9 +49,11 @@ const swaggerOptions = {
             title: 'Wheeliz Dashboard Squad API',
             version: '1.0.0',
         },
-        servers: [{
+        servers: [
+            {
                 url: process.env.API_URL || `http://localhost:${PORT}`
-            }],
+            }
+        ],
     },
     apis: ['dist/routes/*.js'],
 };
@@ -52,7 +61,7 @@ const swaggerDocs = (0, swagger_jsdoc_1.default)(swaggerOptions);
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocs));
 app.use('/api/admin', adminRoutes_1.default);
 app.use('/api/kid', kidRoutes_1.default);
+app.use('/api/auth', authRoutes_1.default);
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log(`API documentation available at http://localhost:${PORT}/api-docs`);
+    console.log(`Server running on port ${PORT}`);
 });
