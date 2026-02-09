@@ -297,7 +297,7 @@ export const Comics = (): JSX.Element => {
                         {comic.image ? (
                              <div className={`w-full overflow-hidden ${layoutMode === 'grid' ? 'h-48' : 'h-36'}`}>
                                  <img 
-                                    src={comic.image.startsWith('http') ? comic.image : `${API_BASE_URL.replace('/api', '')}${comic.image}`} 
+                                    src={comic.image ? (comic.image.startsWith('http') ? comic.image : `${API_BASE_URL.replace(/\/api\/?$/, '')}${comic.image.startsWith('/') ? '' : '/'}${comic.image}`) : "/clip-path-group-16.png"} 
                                     alt={comic.title} 
                                     className="object-cover w-full h-full"
                                  />
@@ -376,7 +376,7 @@ export const Comics = (): JSX.Element => {
                         {/* File Attachment */}
                         {comic.document ? (
                              <a 
-                                href={comic.document.startsWith('http') ? comic.document : `${API_BASE_URL.replace('/api', '')}${comic.document}`} 
+                                href={comic.document.startsWith('http') ? comic.document : `${API_BASE_URL.replace(/\/api\/?$/, '')}${comic.document.startsWith('/') ? '' : '/'}${comic.document}`} 
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-3 p-2 mt-2 transition-colors rounded-lg cursor-pointer hover:bg-gray-50"

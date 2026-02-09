@@ -236,7 +236,7 @@ export const AddComics = (): JSX.Element => {
         </div>
 
         {error && (
-            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
+            <div className="p-4 mb-6 text-red-700 border-l-4 border-red-500 bg-red-50">
                 <p>{error}</p>
             </div>
         )}
@@ -282,7 +282,7 @@ export const AddComics = (): JSX.Element => {
               {/* Cover Image */}
               <div className="mt-8 space-y-3">
                  <label className="text-sm font-bold text-black">Cover Image*</label>
-                 <div className="flex flex-col gap-8 md:flex-row items-end">
+                 <div className="flex flex-col items-end gap-8 md:flex-row">
                     {/* Upload Box */}
                     <div 
                         onClick={() => coverInputRef.current?.click()}
@@ -358,7 +358,7 @@ export const AddComics = (): JSX.Element => {
                 {/* Maz Uploads */}
                 <div className="space-y-3">
                   <label className="text-sm font-bold text-black">
-                    Maz Uploads *
+                    Max Uploads *
                   </label>
                   <input
                     type="number"
@@ -417,7 +417,7 @@ export const AddComics = (): JSX.Element => {
                 </label>
                 <div 
                     onClick={() => documentInputRef.current?.click()}
-                    className="flex flex-col items-center justify-center w-full gap-2 p-12 border-2 border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="flex flex-col items-center justify-center w-full gap-2 p-12 transition-colors border-2 border-gray-200 cursor-pointer rounded-xl hover:bg-gray-50"
                 >
                   <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
                     <CloudUpload className="w-6 h-6 text-gray-500" />
@@ -439,7 +439,7 @@ export const AddComics = (): JSX.Element => {
               </div>
 
               {/* File List Item */}
-              <div className="space-y-4 mt-6">
+              <div className="mt-6 space-y-4">
                 {documents.map((doc, index) => (
                     <div key={index} className="flex items-center justify-between gap-4 p-4 border border-gray-100 rounded-lg">
                         <div className="flex items-center gap-3">

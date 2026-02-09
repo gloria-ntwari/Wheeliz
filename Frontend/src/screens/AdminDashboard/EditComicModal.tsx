@@ -45,7 +45,7 @@ export const EditComicModal = ({ isOpen, onClose, comic, onUpdate }: EditComicMo
       });
 
         if (comic.image) {
-             setCoverImagePreview(comic.image.startsWith('http') ? comic.image : `${API_BASE_URL.replace('/api', '')}${comic.image}`);
+             setCoverImagePreview(comic.image.startsWith('http') ? comic.image : `${API_BASE_URL.replace(/\/api\/?$/, '')}${comic.image.startsWith('/') ? '' : '/'}${comic.image}`);
         } else {
              setCoverImagePreview(null);
         }

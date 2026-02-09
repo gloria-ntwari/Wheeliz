@@ -13,9 +13,6 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
-// Serve uploaded files statically
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-
 const allowedOrigins = process.env.FRONTEND_URL
   ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
   : ['http://localhost:5173', 'https://wheeliz-web.vercel.app', 'https://wheeliz-production.up.railway.app'];
@@ -38,6 +35,9 @@ app.use(
 );
 
 app.options('*', cors());
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 app.get('/', (req, res) => {
   res.json({
