@@ -361,7 +361,20 @@ export const updateAdminProfile = async (req: Request, res: Response) => {
       return res.status(401).json({ status: 'error', message: 'Unauthorized' });
     }
 
+    console.log(`Attempting to update admin profile for ID: ${adminId}`);
+
     const { name, email, oldPassword, newPassword } = req.body;
+    
+    // Check if admin exists
+    const existingAdmin = await prisma.admin.findUnique({ where: { id: adminId } });
+    if (!existingAdmin) {
+      console.error(`Admin with ID ${adminId} not found in database.`);
+      return res.status(404).json({ 
+        status: 'error', 
+        message: 'Admin record not found. Please log out and log back in to refresh your session.' 
+      });
+    }
+
     const dataToUpdate: any = {};
 
     if (name) dataToUpdate.name = name;
@@ -372,12 +385,7 @@ export const updateAdminProfile = async (req: Request, res: Response) => {
         return res.status(400).json({ status: 'error', message: 'Old password is required to set a new one' });
       }
 
-      const admin = await prisma.admin.findUnique({ where: { id: adminId } });
-      if (!admin) {
-        return res.status(404).json({ status: 'error', message: 'Admin not found' });
-      }
-
-      const isPasswordValid = await bcrypt.compare(oldPassword, admin.passwordHash);
+      const isPasswordValid = await bcrypt.compare(oldPassword, existingAdmin.passwordHash);
       if (!isPasswordValid) {
         return res.status(401).json({ status: 'error', message: 'Invalid old password' });
       }

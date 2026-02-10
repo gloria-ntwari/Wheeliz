@@ -34,6 +34,14 @@ export const SignUp = (): JSX.Element => {
       const data = await response.json();
 
       if (response.ok && data.status === "success") {
+        // Clear all previous tokens
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userData");
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminData");
+        localStorage.removeItem("kidToken");
+        localStorage.removeItem("kidData");
+
         // Store token in localStorage
         localStorage.setItem("kidToken", data.data.token);
         localStorage.setItem("kidData", JSON.stringify(data.data.kid));

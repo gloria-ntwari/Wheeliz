@@ -35,13 +35,23 @@ export const Login = (): JSX.Element => {
       if (response.ok && data.status === "success") {
         // Store token and user data
         const { token, user } = data.data;
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("userData", JSON.stringify(user));
         
-        // Redirect based on role
+        // Clear all possible previous tokens to avoid confusion
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userData");
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminData");
+        localStorage.removeItem("kidToken");
+        localStorage.removeItem("kidData");
+
+        // Redirect and store based on role
         if (user.role === "admin") {
+          localStorage.setItem("adminToken", token);
+          localStorage.setItem("adminData", JSON.stringify(user));
           navigate("/admin/dashboard");
         } else if (user.role === "kid") {
+          localStorage.setItem("kidToken", token);
+          localStorage.setItem("kidData", JSON.stringify(user));
           navigate("/kid/dashboard");
         } else {
           setError("Authorized but unknown role. Contact support.");

@@ -85,6 +85,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminData");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("kidToken");
+    localStorage.removeItem("kidData");
     navigate("/login");
   };
 

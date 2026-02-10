@@ -40,6 +40,14 @@ export const KidLogin = (): JSX.Element => {
       const data = await response.json();
 
       if (response.ok && data.status === "success") {
+        // Clear all previous tokens
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userData");
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminData");
+        localStorage.removeItem("kidToken");
+        localStorage.removeItem("kidData");
+
         // Kid exists and credentials are correct
         localStorage.setItem("kidToken", data.data.token);
         localStorage.setItem("kidData", JSON.stringify(data.data.kid));
@@ -82,6 +90,14 @@ export const KidLogin = (): JSX.Element => {
       const data = await response.json();
 
       if (response.ok && data.status === "success") {
+        // Clear all previous tokens
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userData");
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminData");
+        localStorage.removeItem("kidToken");
+        localStorage.removeItem("kidData");
+
         // Kid created successfully
         if (data.data.token) localStorage.setItem("kidToken", data.data.token);
         localStorage.setItem("kidData", JSON.stringify(data.data.kid));

@@ -10,6 +10,7 @@ import {
   getAllKids,
   updateAdminProfile
 } from '../controllers/adminController';
+import { verifyAdmin } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
@@ -35,6 +36,9 @@ const router = express.Router();
  *         description: Login successful
  */
 router.post('/login', adminLogin);
+
+// Protected routes
+router.use(verifyAdmin);
 
 /**
  * @swagger
