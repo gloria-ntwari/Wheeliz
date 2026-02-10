@@ -32,6 +32,11 @@ const checkKidProfile = async (req, res) => {
             });
         }
         const token = jsonwebtoken_1.default.sign({ id: kid.id, role: 'kid' }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        // Update last login
+        await prisma_1.default.kid.update({
+            where: { id: kid.id },
+            data: { lastLogin: new Date() }
+        });
         res.json({
             status: 'success',
             data: {
@@ -75,6 +80,11 @@ const kidLogin = async (req, res) => {
                 message: 'Invalid credentials'
             });
         }
+        // Update last login
+        await prisma_1.default.kid.update({
+            where: { id: kid.id },
+            data: { lastLogin: new Date() }
+        });
         const token = jsonwebtoken_1.default.sign({ id: kid.id, email: kid.email, role: kid.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
         res.json({
             status: 'success',
@@ -172,7 +182,8 @@ const kidSignup = async (req, res) => {
                 name: fullName,
                 email: email,
                 passwordHash: passwordHash,
-                role: 'kid'
+                role: 'kid',
+                lastLogin: new Date()
             }
         });
         const token = jsonwebtoken_1.default.sign({ id: newKid.id, email: newKid.email, role: newKid.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -227,6 +238,13 @@ const getKidDashboardStats = async (req, res) => {
                 }
             }
         });
+        if (kid) {
+            // Update last login whenever they access dashboard to keep status active
+            await prisma_1.default.kid.update({
+                where: { id: kid.id },
+                data: { lastLogin: new Date() }
+            });
+        }
         if (!kid) {
             return res.status(404).json({
                 status: 'error',
@@ -251,6 +269,7 @@ const getKidDashboardStats = async (req, res) => {
             status: 'success',
             data: {
                 kidName: kid.name,
+                avatar: kid.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`,
                 standing: totalMarks, // Using marks as 'standing'
                 rank,
                 comicsRead: totalComicsRead,

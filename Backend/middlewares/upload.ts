@@ -2,42 +2,27 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Ensure uploads directory exists
-const uploadsDir = path.join(process.cwd(), 'uploads');
-const comicsDir = path.join(uploadsDir, 'comics');
-const documentsDir = path.join(uploadsDir, 'documents');
-const avatarsDir = path.join(uploadsDir, 'avatars');
+// Ensure uploads directory exists (Optional if using Cloudinary, but good for local dev fallback)
+// const uploadsDir = path.join(process.cwd(), 'uploads');
+// ... (Removing local dir checks for clarity, or keeping if we want dual mode)
+// Per user request "use cloudinary instead", let's switch fully.
 
-[uploadsDir, comicsDir, documentsDir, avatarsDir].forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-});
+import { cloudinaryStorage } from '../config/cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-// Storage configuration for comic cover images
-const comicImageStorage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    console.log('Multer Destination: Saving comic image to:', comicsDir);
-    cb(null, comicsDir);
-  },
-  filename: (_req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const filename = 'comic-' + uniqueSuffix + path.extname(file.originalname);
-    console.log('Multer Filename: Generated filename:', filename);
-    cb(null, filename);
-  }
-});
+// Cloudinary Storage Instances
+const comicImageStorage = cloudinaryStorage('comics');
+const comicDocumentStorage = cloudinaryStorage('documents');
+const avatarStorage = cloudinaryStorage('avatars');
 
-// Storage configuration for comic documents
-const comicDocumentStorage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, documentsDir);
-  },
-  filename: (_req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'doc-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+
+// Storage configuration for comic cover images (using Cloudinary)
+// const comicImageStorage => already defined above as `comicImageStorage` using helper
+
+
+// Storage configuration for comic documents (using Cloudinary)
+// const comicDocumentStorage => already defined above
+
 
 // File filter for images
 const imageFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
@@ -83,19 +68,19 @@ export const uploadComicDocuments = multer({
 
 // Combined upload for both image and documents
 export const uploadComicFiles = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      if (file.fieldname === 'coverImage') {
-        cb(null, comicsDir);
-      } else {
-        cb(null, documentsDir);
-      }
+  storage: new CloudinaryStorage({
+    cloudinary: require('../config/cloudinary').default,
+    params: async (req: any, file: any) => {
+      let folderName = 'wheeliz/others';
+      if (file.fieldname === 'coverImage') folderName = 'wheeliz/comics';
+      else if (file.fieldname === 'documents') folderName = 'wheeliz/documents';
+      
+      return {
+        folder: folderName,
+        resource_type: 'auto',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf', 'doc', 'docx'],
+      };
     },
-    filename: (_req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const prefix = file.fieldname === 'coverImage' ? 'comic-' : 'doc-';
-      cb(null, prefix + uniqueSuffix + path.extname(file.originalname));
-    }
   }),
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
   fileFilter: (_req, file, cb) => {
@@ -112,15 +97,7 @@ export const uploadComicFiles = multer({
 
 // Upload for avatars (Admin & Kid)
 export const uploadAvatar = multer({
-  storage: multer.diskStorage({
-    destination: (_req, _file, cb) => {
-      cb(null, avatarsDir);
-    },
-    filename: (_req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      cb(null, 'avatar-' + uniqueSuffix + path.extname(file.originalname));
-    }
-  }),
+  storage: avatarStorage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: imageFilter
 }).fields([{ name: 'avatar', maxCount: 1 }]);

@@ -264,12 +264,12 @@ export const createComic = async (req: Request, res: Response) => {
     let documentPath = '';
 
     if (files?.coverImage?.[0]) {
-      coverImage = `/uploads/comics/${files.coverImage[0].filename}`;
+      coverImage = files.coverImage[0].path;
     }
 
     // Handle document upload (single document for now based on requirement)
     if (files?.documents?.[0]) {
-      documentPath = `/uploads/documents/${files.documents[0].filename}`;
+      documentPath = files.documents[0].path;
     }
 
     if (!title || !subtitle || !description) {
@@ -368,11 +368,11 @@ export const updateComic = async (req: Request, res: Response) => {
     let documentPath = undefined;
 
     if (files?.coverImage?.[0]) {
-      coverImage = `/uploads/comics/${files.coverImage[0].filename}`;
+      coverImage = files.coverImage[0].path;
     }
 
     if (files?.documents?.[0]) {
-      documentPath = `/uploads/documents/${files.documents[0].filename}`;
+      documentPath = files.documents[0].path;
     }
 
     const dataToUpdate: any = {};
@@ -479,7 +479,7 @@ export const createKid = async (req: Request, res: Response) => {
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     let avatar = '';
     if (files?.avatar?.[0]) {
-      avatar = `/uploads/avatars/${files.avatar[0].filename}`;
+      avatar = files.avatar[0].path;
     }
 
     const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
@@ -645,7 +645,7 @@ export const updateAdminProfile = async (req: Request, res: Response) => {
     // Handle avatar upload
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     if (files?.avatar?.[0]) {
-      dataToUpdate.avatar = `/uploads/avatars/${files.avatar[0].filename}`;
+      dataToUpdate.avatar = files.avatar[0].path;
     }
 
     if (newPassword) {

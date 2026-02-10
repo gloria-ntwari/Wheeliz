@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const adminController_1 = require("../controllers/adminController");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
 const router = express_1.default.Router();
 /**
  * @swagger
@@ -28,6 +29,11 @@ const router = express_1.default.Router();
  *         description: Login successful
  */
 router.post('/login', adminController_1.adminLogin);
+// Publicly viewable by authenticated users (Admin or Kid)
+router.get('/comics', authMiddleware_1.verifyAuth, adminController_1.getComics);
+router.get('/comics/:id', authMiddleware_1.verifyAuth, adminController_1.getComicById);
+// Protected routes (Admin Only)
+router.use(authMiddleware_1.verifyAdmin);
 /**
  * @swagger
  * /api/admin/stats:
@@ -49,8 +55,8 @@ router.get('/stats', adminController_1.getDashboardStats);
  *     summary: Create a new comic
  *     tags: [Comics]
  */
-router.get('/comics', adminController_1.getComics);
-router.post('/comics', adminController_1.createComic);
+const upload_1 = require("../middlewares/upload");
+router.post('/comics', upload_1.uploadComicFiles, adminController_1.createComic);
 /**
  * @swagger
  * /api/admin/comics/{id}:
@@ -64,8 +70,7 @@ router.post('/comics', adminController_1.createComic);
  *     summary: Delete a comic
  *     tags: [Comics]
  */
-router.get('/comics/:id', adminController_1.getComicById);
-router.put('/comics/:id', adminController_1.updateComic);
+router.put('/comics/:id', upload_1.uploadComicFiles, adminController_1.updateComic);
 router.delete('/comics/:id', adminController_1.deleteComic);
 /**
  * @swagger
@@ -78,4 +83,7 @@ router.delete('/comics/:id', adminController_1.deleteComic);
  *         description: List of kids retrieved successfully
  */
 router.get('/kids', adminController_1.getAllKids);
+router.post('/kids', upload_1.uploadAvatar, adminController_1.createKid);
+router.get('/submissions', adminController_1.getSubmissions);
+router.put('/profile', upload_1.uploadAvatar, adminController_1.updateAdminProfile);
 exports.default = router;
