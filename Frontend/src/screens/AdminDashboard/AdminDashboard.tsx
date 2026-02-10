@@ -3,6 +3,7 @@ import { API_BASE_URL } from "../../config/api";
 import { Smile } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Home, Puzzle, Grid3X3, Search, Bell, ChevronDown, Menu, Download } from "lucide-react";
+import { AdminHeader } from "../../components/AdminHeader";
 
 const summaryCards = [
   { colorClass: "bg-[#F5D27B]", underlineClass: "bg-[#F5D27B]" },
@@ -183,50 +184,7 @@ export const AdminDashboard = (): JSX.Element => {
       {/* Main Content */}
       <div className="flex flex-col flex-1 overflow-x-hidden bg-white rounded-tl-3xl">
         {/* Header */}
-        <header className="flex flex-col items-stretch gap-4 px-4 py-4 mt-6 bg-white rounded-tl-3xl sm:px-6 lg:px-10 lg:flex-row lg:items-center lg:justify-between">
-          {/* Left: menu + search */}
-          <div className="flex items-center w-full gap-3 lg:w-auto">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="flex items-center justify-center text-gray-700 border border-gray-300 rounded-full w-9 h-9 hover:bg-gray-100 lg:hidden"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center  max-w-[515px] h-[45px] px-5 bg-[#f4f6fb] rounded-full gap-3 lg:w-[800px] sm:w-full">
-              <Search className="w-4 h-4 text-[#0f2a5f] shrink-0 ml-2 sm:ml-4" />
-              <input
-                type="text"
-                placeholder="Search for something"
-                className="flex-1 w-full bg-transparent text-[13px] leading-none text-[#0f2a5f] placeholder:text-[#0f2a5f] outline-none text-left [font-family:'Poppins']"
-              />
-            </div>
-
-
-          </div>
-
-          {/* Right: notifications + profile */}
-          <div className="flex items-center justify-end w-full gap-4 lg:w-auto">
-            <button className="relative flex items-center justify-center transition-colors bg-white rounded-full w-9 h-9 ">
-              <Bell className="w-5 h-5 text-[#111827]" />
-              <span className="absolute w-1.5 h-1.5 bg-red-500 rounded-full top-1.5 right-2.5"></span>
-            </button>
-
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-                  alt="Profile"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              <span className="hidden text-sm font-medium text-gray-900 sm:block">
-                {adminData.name || "Admin"}
-              </span>
-              <ChevronDown className="w-5 h-5 text-gray-500" />
-            </div>
-          </div>
-        </header>
+        <AdminHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         {/* Main Content Area */}
         <main className="flex-1 w-full px-4 pt-6 pb-10 overflow-x-hidden overflow-y-auto bg-white sm:px-6 lg:px-10">

@@ -7,7 +7,8 @@ import {
   getComicById, 
   updateComic, 
   deleteComic,
-  getAllKids
+  getAllKids,
+  updateAdminProfile
 } from '../controllers/adminController';
 
 const router = express.Router();
@@ -90,5 +91,6 @@ router.delete('/comics/:id', deleteComic);
  *         description: List of kids retrieved successfully
  */
 router.get('/kids', getAllKids);
+router.put('/profile', updateAdminProfile);
 
 export default router;

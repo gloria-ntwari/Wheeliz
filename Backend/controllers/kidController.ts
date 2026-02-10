@@ -211,7 +211,8 @@ export const kidSignup = async (req: Request, res: Response) => {
                 name: fullName as string,
                 email: email as string,
                 passwordHash: passwordHash as string,
-                role: 'kid'
+                role: 'kid',
+                lastLogin: new Date()
             }
         });
 
@@ -274,6 +275,14 @@ export const getKidDashboardStats = async (req: Request, res: Response) => {
                  }
              }
          });
+
+         if (kid) {
+             // Update last login whenever they access dashboard to keep status active
+             await (prisma.kid as any).update({
+                 where: { id: kid.id },
+                 data: { lastLogin: new Date() }
+             });
+         }
 
          if (!kid) {
              return res.status(404).json({

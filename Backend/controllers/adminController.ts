@@ -320,14 +320,15 @@ export const getAllKids = async (req: Request, res: Response) => {
       }
     });
 
-    // Calculate 7 days ago
+    // Calculate 7 days ago (start of day)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
 
     // Transform data
     const formattedKids = kids.map((kid: any) => {
-      // Determine active status: true if lastLogin > sevenDaysAgo
-      const isActive = kid.lastLogin ? new Date(kid.lastLogin) > sevenDaysAgo : false;
+      // Determine active status: true if lastLogin >= sevenDaysAgo
+      const isActive = kid.lastLogin ? new Date(kid.lastLogin) >= sevenDaysAgo : false;
 
       return {
         ...kid,
@@ -349,5 +350,58 @@ export const getAllKids = async (req: Request, res: Response) => {
       status: 'error',
       message: 'Server error'
     });
+  }
+};
+
+// Update Admin Profile
+export const updateAdminProfile = async (req: Request, res: Response) => {
+  try {
+    const adminId = (req as any).admin?.id;
+    if (!adminId) {
+      return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+    }
+
+    const { name, email, oldPassword, newPassword } = req.body;
+    const dataToUpdate: any = {};
+
+    if (name) dataToUpdate.name = name;
+    if (email) dataToUpdate.email = email;
+
+    if (newPassword) {
+      if (!oldPassword) {
+        return res.status(400).json({ status: 'error', message: 'Old password is required to set a new one' });
+      }
+
+      const admin = await prisma.admin.findUnique({ where: { id: adminId } });
+      if (!admin) {
+        return res.status(404).json({ status: 'error', message: 'Admin not found' });
+      }
+
+      const isPasswordValid = await bcrypt.compare(oldPassword, admin.passwordHash);
+      if (!isPasswordValid) {
+        return res.status(401).json({ status: 'error', message: 'Invalid old password' });
+      }
+
+      dataToUpdate.passwordHash = await bcrypt.hash(newPassword, 10);
+    }
+
+    const updatedAdmin = await prisma.admin.update({
+      where: { id: adminId },
+      data: dataToUpdate
+    });
+
+    res.json({
+      status: 'success',
+      message: 'Profile updated successfully',
+      data: {
+        id: updatedAdmin.id,
+        name: updatedAdmin.name,
+        email: updatedAdmin.email,
+        role: updatedAdmin.role
+      }
+    });
+  } catch (error) {
+    console.error('Update admin profile error:', error);
+    res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
