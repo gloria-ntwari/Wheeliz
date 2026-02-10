@@ -15,24 +15,28 @@ app.use(express.json());
 
 const allowedOrigins = process.env.FRONTEND_URL
   ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
-  : ['http://localhost:5173', 'https://wheeliz-web.vercel.app', 'https://wheeliz-production.up.railway.app'];
+  : [
+      'http://localhost:5173',
+      'https://wheeliz-web.vercel.app',
+      'https://wheeliz-production.up.railway.app'
+    ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
+app.use(cors({
+  origin: function (origin, callback) {
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
+    // Allow requests with no origin (Postman, mobile apps, etc)
+    if (!origin) return callback(null, true);
 
-      return callback(new Error(`CORS blocked: ${origin}`));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("Blocked origin:", origin); // DEBUG
+      callback(new Error("CORS blocked: " + origin));
+    }
+  },
+  credentials: true
+}));
+
 
 app.options('*', cors());
 
