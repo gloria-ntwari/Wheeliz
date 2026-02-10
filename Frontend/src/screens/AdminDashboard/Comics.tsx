@@ -62,7 +62,12 @@ export const Comics = (): JSX.Element => {
   const fetchComics = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/admin/comics?t=${new Date().getTime()}`);
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch(`${API_BASE_URL}/admin/comics?t=${new Date().getTime()}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
       if (data.status === 'success') {
         setComics(data.data);
@@ -79,8 +84,12 @@ export const Comics = (): JSX.Element => {
       if (!window.confirm("Are you sure you want to delete this comic?")) return;
 
       try {
+          const token = localStorage.getItem("adminToken");
           const response = await fetch(`${API_BASE_URL}/admin/comics/${id}`, {
               method: 'DELETE',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
           });
           const result = await response.json();
           if (result.status === 'success') {

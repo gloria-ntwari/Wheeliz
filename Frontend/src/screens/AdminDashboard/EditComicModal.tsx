@@ -104,8 +104,12 @@ export const EditComicModal = ({ isOpen, onClose, comic, onUpdate }: EditComicMo
         data.append('documents', documentFile);
       }
 
+      const token = localStorage.getItem("adminToken");
       const response = await fetch(`${API_BASE_URL}/admin/comics/${comic.id}`, {
         method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: data,
       });
 

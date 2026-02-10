@@ -10,7 +10,7 @@ import {
   getAllKids,
   updateAdminProfile
 } from '../controllers/adminController';
-import { verifyAdmin } from '../middlewares/authMiddleware';
+import { verifyAdmin, verifyAuth } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
@@ -37,7 +37,11 @@ const router = express.Router();
  */
 router.post('/login', adminLogin);
 
-// Protected routes
+// Publicly viewable by authenticated users (Admin or Kid)
+router.get('/comics', verifyAuth, getComics);
+router.get('/comics/:id', verifyAuth, getComicById);
+
+// Protected routes (Admin Only)
 router.use(verifyAdmin);
 
 /**
@@ -64,7 +68,6 @@ router.get('/stats', getDashboardStats);
  */
 import { uploadComicFiles } from '../middlewares/upload';
 
-router.get('/comics', getComics);
 router.post('/comics', uploadComicFiles, createComic);
 
 /**
@@ -80,7 +83,6 @@ router.post('/comics', uploadComicFiles, createComic);
  *     summary: Delete a comic
  *     tags: [Comics]
  */
-router.get('/comics/:id', getComicById);
 router.put('/comics/:id', uploadComicFiles, updateComic);
 router.delete('/comics/:id', deleteComic);
 

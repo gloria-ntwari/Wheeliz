@@ -104,8 +104,12 @@ export const AddComics = (): JSX.Element => {
         data.append('documents', doc);
       });
 
+      const token = localStorage.getItem("adminToken");
       const response = await fetch(`${API_BASE_URL}/admin/comics`, {
         method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: data,
       });
 
