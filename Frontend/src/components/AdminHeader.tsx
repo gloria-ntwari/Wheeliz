@@ -140,6 +140,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                   src={adminProfileData.avatar ? (adminProfileData.avatar.startsWith('http') ? adminProfileData.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${adminProfileData.avatar}`) : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"}
                   alt="Profile"
                   className="object-cover w-full h-full"
+                  onError={(e) => {
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face";
+                    e.currentTarget.onerror = null;
+                  }}
                 />
               </div>
               <span className="hidden text-sm font-medium text-gray-900 sm:block">
@@ -208,6 +212,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                       src={avatarPreview || (adminProfileData.avatar ? (adminProfileData.avatar.startsWith('http') ? adminProfileData.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${adminProfileData.avatar}`) : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face")} 
                       alt="Profile Preview" 
                       className="object-cover w-full h-full"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face";
+                        e.currentTarget.onerror = null; 
+                      }}
                     />
                   </div>
                   <button

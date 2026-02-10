@@ -21,6 +21,19 @@ import {
 import { EditComicModal } from "./EditComicModal";
 import { AdminHeader } from "../../components/AdminHeader";
 
+export const getComicImageUrl = (path?: string | null) => {
+  if (!path) return "/clip-path-group-16.png";
+  if (path.startsWith("http")) return path;
+  
+  // Clean base URL: remove trailing /api and trailing slashes
+  const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "").replace(/\/+$/, "");
+  
+  // Clean path: ensure it has leading slash but no double slashes
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  
+  return `${baseUrl}${cleanPath}`;
+};
+
 export interface Comic {
   id: string;
   title: string;
@@ -266,9 +279,13 @@ export const Comics = (): JSX.Element => {
                         {comic.image ? (
                              <div className={`w-full overflow-hidden ${layoutMode === 'grid' ? 'h-48' : 'h-36'}`}>
                                  <img 
-                                    src={comic.image ? (comic.image.startsWith('http') ? comic.image : `${API_BASE_URL.replace(/\/api\/?$/, '')}${comic.image.startsWith('/') ? '' : '/'}${comic.image}`) : "/clip-path-group-16.png"} 
+                                    src={getComicImageUrl(comic.image)} 
                                     alt={comic.title} 
                                     className="object-cover w-full h-full"
+                                    onError={(e) => {
+                                      e.currentTarget.src = "/clip-path-group-16.png"; 
+                                      e.currentTarget.onerror = null; // Prevent infinite loop
+                                    }}
                                  />
                              </div>
                         ) : (
@@ -345,7 +362,7 @@ export const Comics = (): JSX.Element => {
                         {/* File Attachment */}
                         {comic.document ? (
                              <a 
-                                href={comic.document.startsWith('http') ? comic.document : `${API_BASE_URL.replace(/\/api\/?$/, '')}${comic.document.startsWith('/') ? '' : '/'}${comic.document}`} 
+                                href={getComicImageUrl(comic.document)} 
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-3 p-2 mt-2 transition-colors rounded-lg cursor-pointer hover:bg-gray-50"

@@ -52,6 +52,12 @@ const corsOptions = {
 // ✅ IMPORTANT: CORS MUST BE FIRST
 app.use(cors(corsOptions));
 
+// Global Request Logger
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
 // ✅ Handle preflight requests
 app.options('*', cors(corsOptions));
 
@@ -60,7 +66,14 @@ app.use(express.json());
 
 
 // Serve uploaded files statically
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+// Serve uploaded files statically
+const uploadsPath = path.resolve(__dirname, process.env.NODE_ENV === 'production' ? '../uploads' : './uploads');
+console.log('Serving uploads from:', uploadsPath);
+
+app.use('/uploads', (req, res, next) => {
+  console.log(`Static file request: ${req.method} ${req.url}`);
+  next();
+}, express.static(uploadsPath));
 
 
 // Root route

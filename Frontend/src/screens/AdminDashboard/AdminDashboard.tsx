@@ -14,74 +14,17 @@ const summaryCards = [
 
 
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-const CHART_DATA = [
-  { month: "Jan", active: 35, offline: 25 },
-  { month: "Feb", active: 40, offline: 30 },
-  { month: "Mar", active: 25, offline: 20 },
-  { month: "Apr", active: 30, offline: 25 },
-  { month: "Mai", active: 60, offline: 50 },
-  { month: "Jun", active: 65, offline: 55 },
-  { month: "Jul", active: 55, offline: 45 },
-  { month: "Aug", active: 75, offline: 65 },
-  { month: "Sep", active: 95, offline: 50 },
-  { month: "Oct", active: 55, offline: 45 },
-  { month: "Nov", active: 90, offline: 75 },
-  { month: "Dec", active: 70, offline: 60 },
-];
 
-const clampPct = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
 
-type ChartPoint = { label: string; active: number; offline: number };
+type ChartPoint = { label?: string; month?: string; active: number; offline: number };
 
-function buildChartView(selectedPeriod: string, now: Date): { labels: string[]; data: ChartPoint[] } {
-  const currentMonthIndex = now.getMonth(); // 0..11
-  const currentMonth = CHART_DATA[currentMonthIndex] ?? CHART_DATA[0];
+type ChartData = {
+    monthly: ChartPoint[];
+    weekly: ChartPoint[];
+    daily: ChartPoint[];
+};
 
-  if (selectedPeriod === "6 month") {
-    // Per request: early-year → Jan-Jun, late-year → Jul-Dec (so the view depends on the current date)
-    const start = currentMonthIndex <= 5 ? 0 : 6;
-    const slice = CHART_DATA.slice(start, start + 6);
-    return {
-      labels: slice.map((d) => d.month),
-      data: slice.map((d) => ({ label: d.month, active: d.active, offline: d.offline })),
-    };
-  }
-
-  if (selectedPeriod === "30 days") {
-    const labels = ["Week 1", "Week 2", "Week 3", "Week 4"];
-    const multipliers = [0.9, 1.05, 0.95, 1.1];
-    return {
-      labels,
-      data: labels.map((label, i) => ({
-        label,
-        active: clampPct(currentMonth.active * multipliers[i]),
-        offline: clampPct(currentMonth.offline * multipliers[(i + 1) % multipliers.length]),
-      })),
-    };
-  }
-
-  if (selectedPeriod === "7 days") {
-    const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const activeWave = [0.95, 1.02, 0.98, 1.05, 1.1, 0.92, 0.9];
-    const offlineWave = [0.9, 0.95, 1.0, 0.92, 0.98, 1.05, 1.08];
-    return {
-      labels,
-      data: labels.map((label, i) => ({
-        label,
-        active: clampPct(currentMonth.active * activeWave[i]),
-        offline: clampPct(currentMonth.offline * offlineWave[i]),
-      })),
-    };
-  }
-
-  // Default: 12 months
-  return {
-    labels: MONTHS,
-    data: CHART_DATA.map((d) => ({ label: d.month, active: d.active, offline: d.offline })),
-  };
-}
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: true },
@@ -103,8 +46,11 @@ export const AdminDashboard = (): JSX.Element => {
     totalComics: 0,
     totalSubmissions: 0,
     totalAdmins: 0,
-    greeting: "Morning"
+    greeting: "Morning",
+    chartData: { monthly: [], weekly: [], daily: [] } as ChartData
   });
+
+  const [hoveredPoint, setHoveredPoint] = useState<{ x: number, y: number, data: ChartPoint } | null>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -134,10 +80,52 @@ export const AdminDashboard = (): JSX.Element => {
   ];
 
   const adminData = JSON.parse(localStorage.getItem("adminData") || '{"name": "Ange Nadette"}');
-  const { labels, data: viewData } = useMemo(
-    () => buildChartView(selectedPeriod, new Date()),
-    [selectedPeriod],
-  );
+  
+  // No secondary chartData state needed
+  // const [chartData, setChartData] = useState<ChartPoint[]>([]);
+
+  // useEffect(() => {
+  //   if (stats.chartData) {
+  //       setChartData(stats.chartData);
+  //   }
+  // }, [stats.chartData]);
+
+  // We can still use buildChartView logic if we want to filter the REAL data,
+  // but for now let's just show the 12-month data we get.
+  // If selectedPeriod is different, we can slice the real data.
+  
+  const viewData = useMemo(() => {
+      const { monthly, weekly, daily } = stats.chartData || { monthly: [], weekly: [], daily: [] };
+      
+      if (selectedPeriod === "1 month") { // Weekly view
+          return weekly || [];
+      }
+      if (selectedPeriod === "7 days") { // Daily view
+          return daily || [];
+      }
+      if (selectedPeriod === "6 month") {
+          // Filter monthly to last 6? Or just show filtered view of 'monthly'
+          // Backend sends full year (12 months), we can slice.
+          // Assuming 'monthly' is array of 12 items.
+          if (monthly && monthly.length > 0) {
+             const currentMonth = new Date().getMonth();
+             const start = currentMonth <= 5 ? 0 : 6;
+             return monthly.slice(start, start + 6);
+          }
+           return monthly || [];
+      }
+      
+      // Default 12 month
+      return monthly || [];
+  }, [stats.chartData, selectedPeriod]);
+
+  const labels = viewData.map(d => d.month || d.label);
+  
+  // Dynamic Y-Axis Max
+  const maxVal = Math.max(...viewData.map(d => Math.max(d.active, d.offline)), 10);
+  const yAxisStep = Math.ceil(maxVal / 5);
+  const yAxisValues = [0, 1, 2, 3, 4].map(i => Math.round(i * yAxisStep * 1.25)).reverse(); // Create 5 steps
+
 
   return (
     <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
@@ -283,7 +271,7 @@ export const AdminDashboard = (): JSX.Element => {
 
                 {/* Y AXIS */}
                 <div className="flex flex-col justify-between pr-1 sm:pr-3 text-[10px] sm:text-xs text-muted-foreground [font-family:'Poppins']">
-                  {[10, 8.75, 7.5, 6.25, 5, 3.75, 2.5, 1.25, 0].map((val) => (
+                  {yAxisValues.map((val) => (
                     <span key={val}>{val}</span>
                   ))}
                 </div>
@@ -325,22 +313,57 @@ export const AdminDashboard = (): JSX.Element => {
                   <div
                     className="relative z-10 grid h-full"
                     style={{ gridTemplateColumns: `repeat(${labels.length}, 1fr)` }}
+                    onMouseLeave={() => setHoveredPoint(null)}
                   >
                     {viewData.map((data, index) => (
                       <div
                         key={index}
-                        className="flex items-end justify-center h-full gap-1 sm:gap-2 lg:gap-4"
-                      >
+                        className="flex items-end justify-center h-full gap-1 sm:gap-2 lg:gap-4 group relative"
+                        onMouseEnter={(e) => {
+                             const rect = e.currentTarget.getBoundingClientRect();
+                             // Position relative to the chart container would be better, but fixed for now
+                             // Actually, let's use the mouse event to set a localized tooltip
+                             // or just simple title.
+                             // Implementing custom tooltip logic:
+                             const chartArea = e.currentTarget.closest('.relative.flex.h-52');
+                             if(chartArea) {
+                                 const chartRect = chartArea.getBoundingClientRect();
+                                 setHoveredPoint({
+                                     x: rect.left - chartRect.left + (rect.width / 2),
+                                     y: rect.top - chartRect.top,
+                                     data: data
+                                 });
+                             }
+                        }}
+                      > 
                         <div
-                          className="w-2 lg:w-[15px] rounded-t-md bg-[#CB3E21]"
-                          style={{ height: `${data.active}%` }}
+                          className="w-2 lg:w-[15px] rounded-t-lg bg-[#CB3E21]" // Use rounded-t-lg for smoothness
+                          style={{ height: `${(data.active / (yAxisValues[0] || 1)) * 100}%` }}
                         />
                         <div
-                          className="w-2 lg:w-[15px] rounded-t-md bg-[#F2A528]"
-                          style={{ height: `${data.offline}%` }}
+                          className="w-2 lg:w-[15px] rounded-t-lg bg-[#F2A528]"
+                          style={{ height: `${(data.offline / (yAxisValues[0] || 1)) * 100}%` }}
                         />
                       </div>
                     ))}
+                    
+                    {/* Floating Tooltip */}
+                    {hoveredPoint && (
+                        <div 
+                            className="absolute z-50 px-3 py-2 text-xs text-white bg-black/80 rounded shadow-lg pointer-events-none transform -translate-x-1/2 -translate-y-[110%]"
+                            style={{ left: hoveredPoint.x, top: hoveredPoint.y }}
+                        >
+                            <p className="font-bold mb-1">{hoveredPoint.data.month || hoveredPoint.data.label}</p>
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-[#CB3E21]"></div>
+                                <span>Active: {hoveredPoint.data.active}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-[#F2A528]"></div>
+                                <span>Offline: {hoveredPoint.data.offline}</span>
+                            </div>
+                        </div>
+                    )}
                   </div>
                 </div>
               </div>

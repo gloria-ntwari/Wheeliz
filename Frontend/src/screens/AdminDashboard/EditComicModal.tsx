@@ -45,7 +45,10 @@ export const EditComicModal = ({ isOpen, onClose, comic, onUpdate }: EditComicMo
       });
 
         if (comic.image) {
-             setCoverImagePreview(comic.image.startsWith('http') ? comic.image : `${API_BASE_URL.replace(/\/api\/?$/, '')}${comic.image.startsWith('/') ? '' : '/'}${comic.image}`);
+             const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "").replace(/\/+$/, "");
+             const cleanPath = comic.image.startsWith("/") ? comic.image : `/${comic.image}`;
+             const fullUrl = comic.image.startsWith('http') ? comic.image : `${baseUrl}${cleanPath}`;
+             setCoverImagePreview(fullUrl);
         } else {
              setCoverImagePreview(null);
         }

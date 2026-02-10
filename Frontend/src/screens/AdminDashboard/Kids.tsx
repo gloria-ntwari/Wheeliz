@@ -3,7 +3,7 @@ import { API_BASE_URL } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, ArrowLeft, UserPlus, Pencil, Download, Printer, Share2} from "lucide-react";
 import { AdminHeader } from "../../components/AdminHeader";
-import { Home, Clock, Puzzle, Grid3X3, Camera } from "lucide-react";
+import { Home, Clock, Puzzle, Grid3X3 } from "lucide-react";
 import { AddKidModal } from "./AddKidModal";
 
 const navItems = [
@@ -56,7 +56,13 @@ export const Kids = (): JSX.Element => {
     fetchKids();
   }, []);
 
-  const adminData = JSON.parse(localStorage.getItem("adminData") || '{"name": "Ange Nadette"}');
+  const getFullImageUrl = (path: string | null) => {
+    if (!path) return null;
+    if (path.startsWith("http")) return path;
+    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
+    return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
+  };
+
 
   useEffect(() => {
     if (selectedKid && modalScrollRef.current) {
@@ -186,9 +192,13 @@ export const Kids = (): JSX.Element => {
                     >
                       <div className="relative w-16 h-16 mb-4">
                         <img
-                          src={kid.avatar ? (kid.avatar.startsWith('http') ? kid.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${kid.avatar}`) : `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`}
+                          src={getFullImageUrl(kid.avatar) || `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`}
                           alt={kid.name}
                           className="object-cover w-full h-full rounded-full border-[3px] border-[#FFA500]"
+                          onError={(e) => {
+                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`;
+                            e.currentTarget.onerror = null;
+                          }}
                         />
                       </div>
 
@@ -296,9 +306,13 @@ export const Kids = (): JSX.Element => {
                 <div className="flex flex-col items-center mt-2 mb-8 text-center">
                   <div className="w-20 h-20 mb-4 overflow-hidden rounded-full border-4 border-[#FFA500]">
                     <img
-                      src={selectedKid.avatar ? (selectedKid.avatar.startsWith('http') ? selectedKid.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${selectedKid.avatar}`) : `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedKid.name)}&background=random`}
+                      src={getFullImageUrl(selectedKid.avatar) || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedKid.name)}&background=random`}
                       alt={selectedKid.name}
                       className="object-cover w-full h-full"
+                      onError={(e) => {
+                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedKid.name)}&background=random`;
+                        e.currentTarget.onerror = null;
+                      }}
                     />
                   </div>
                   <h3 className="mb-1 text-xl font-semibold text-black [font-family:'Poppins']">

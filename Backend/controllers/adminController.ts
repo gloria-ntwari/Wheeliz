@@ -81,6 +81,155 @@ export const getDashboardStats = async (_req: Request, res: Response) => {
     if (hour < 12) greeting = 'Good Morning';
     else if (hour < 18) greeting = 'Good Afternoon';
 
+    // Chart Data Logic for the last 12 months
+    const now = new Date();
+    // Chart Data Container
+    const monthlyData = [];
+    const months = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+
+    const currentYear = now.getFullYear();
+
+    for (let i = 0; i < 12; i++) {
+        const monthName = months[i];
+        
+        // Define start and end of the month in UTC to ensure consistency
+        // Using UTC 00:00:00.000 for start
+        const startOfMonth = new Date(Date.UTC(currentYear, i, 1));
+        // Using UTC 23:59:59.999 for end of month
+        const endOfMonth = new Date(Date.UTC(currentYear, i + 1, 0, 23, 59, 59, 999));
+
+
+        if (startOfMonth > now) {
+             monthlyData.push({ month: monthName, active: 0, offline: 0 });
+             continue;
+        }
+
+        
+        const totalAtMonth = await prisma.kid.count({
+            where: {
+                createdAt: {
+                    lte: endOfMonth
+                }
+            }
+        });
+
+        // For the current month, we define Active as "Logged in since start of month"
+        let activeCount = 0;
+        if (i === now.getMonth()) {
+             activeCount = await prisma.kid.count({
+                where: {
+                    lastLogin: {
+                        gte: startOfMonth
+                    }
+                }
+             });
+        } else {
+             // For past months, we can't know. Let's assume 0 active? Or mock it?
+             // If we return 0 active for Jan-Sept, the graph looks broken.
+             // If we just approximate it based on the current ratio?
+             // Users usually prefer "some data" over "no data" for history if schema is limited.
+             // But let's stick to what we CAN know:
+             // If a user's `lastLogin` is IN THAT MONTH, they were active then.
+             // If a user's `lastLogin` is AFTER that month, they MIGHT have been active then.
+             // This is hard.
+             
+             // Simplest Valid Approach:
+             // Just return the total accumulated users as "Offline" (or "Total") and 0 Active for past months?
+             // No, the user wants "active and inactive".
+             
+             // Let's use the creation date.
+             // Active = Kids created in that month? No.
+             
+             // Let's assume standard behavior:
+             // We will count 'Active' as anyone whose `lastLogin` is *physically recorded* in that specific month range.
+             // This means if I logged in Jan 1st, then Feb 1st, my record shows Feb 1st. I will NOT show up in Jan stats.
+             // This is the only "real" data we have.
+             
+             activeCount = await prisma.kid.count({
+                 where: {
+                     lastLogin: {
+                         gte: startOfMonth,
+                         lte: endOfMonth
+                     }
+                 }
+             });
+             // This will result in strictly non-overlapping active users (a user is active in ONLY ONE month - their last one).
+             // This is technically "Distribution of users by their last login month".
+             // It's not "Monthly Active Users", but it's "real data from DB".
+        }
+
+        const offline = Math.max(0, totalAtMonth - activeCount);
+        // console.log(`[Stats Debug] Month: ${monthName}, Start: ${startOfMonth.toISOString()}, End: ${endOfMonth.toISOString()}, Total: ${totalAtMonth}, Active: ${activeCount}`);
+        monthlyData.push({ month: monthName, active: activeCount, offline });
+    }
+
+    // --- Weekly Data (Last 4 Weeks) ---
+    const weeklyData = [];
+    for (let i = 0; i < 4; i++) {
+        // i=0 is current week, i=1 is last week...
+        // For display: "Week 1" (Oldest) to "Week 4" (Newest)?
+        // User said: "Week 1 week 2 and week 3".
+        // Let's do Week 1 = Current Week? Or Week 1 = Start of month?
+        // Usually charts go Left (Old) -> Right (New).
+        // Let's generate last 4 weeks, then reverse them for the chart.
+        
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - (i * 7) - now.getDay() + 1); // Start of week (Monday)
+        startOfWeek.setHours(0, 0, 0, 0);
+        
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        endOfWeek.setHours(23, 59, 59, 999);
+
+        const label = `Week ${4 - i}`;
+
+        const totalAtWeek = await prisma.kid.count({
+            where: { createdAt: { lte: endOfWeek } }
+        });
+
+        const activeCount = await prisma.kid.count({
+            where: { lastLogin: { gte: startOfWeek, lte: endOfWeek } }
+        });
+
+        const offline = Math.max(0, totalAtWeek - activeCount);
+        weeklyData.unshift({ label, active: activeCount, offline });
+    }
+
+    // --- Daily Data (Last 7 Days) ---
+    const dailyData = [];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        d.setHours(0, 0, 0, 0);
+        
+        const startOfDay = new Date(d);
+        const endOfDay = new Date(d);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const dayLabel = days[d.getDay()];
+
+        const totalAtDay = await prisma.kid.count({
+            where: { createdAt: { lte: endOfDay } }
+        });
+
+        const activeCount = await prisma.kid.count({
+            where: { lastLogin: { gte: startOfDay, lte: endOfDay } }
+        });
+
+        const offline = Math.max(0, totalAtDay - activeCount);
+        dailyData.push({ label: dayLabel, active: activeCount, offline });
+    }
+    
+    // Construct final response structure
+    const chartData = {
+        monthly: monthlyData,
+        weekly: weeklyData,
+        daily: dailyData
+    };
+
+
     res.json({
       status: 'success',
       data: {
@@ -88,7 +237,8 @@ export const getDashboardStats = async (_req: Request, res: Response) => {
         totalSubmissions,
         totalKids,
         totalAdmins,
-        greeting
+        greeting,
+        chartData // Sending the calculated chart data
       }
     });
   } catch (error) {
@@ -107,6 +257,9 @@ export const createComic = async (req: Request, res: Response) => {
 
     // Handle file uploads
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    console.log('CreateComic Controller - Files received:', files);
+    console.log('CreateComic Controller - Body received:', req.body);
+    
     let coverImage = '';
     let documentPath = '';
 
@@ -375,7 +528,13 @@ export const getAllKids = async (req: Request, res: Response) => {
         name: true,
         email: true,
         role: true,
+        avatar: true,
+        gender: true,
+        fatherName: true,
+        motherName: true,
+        dateOfBirth: true,
         lastLogin: true,
+        createdAt: true,
         _count: {
           select: {
             submissions: true,
@@ -397,7 +556,8 @@ export const getAllKids = async (req: Request, res: Response) => {
       return {
         ...kid,
         status: isActive ? 'Active' : 'Inactive',
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`,
+        // Use uploaded avatar if exists, otherwise generate placeholder
+        avatar: kid.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`,
         comicsRead: 0, // Placeholder
         rank: 0,       // Placeholder
         submissions: kid._count.submissions
@@ -410,6 +570,44 @@ export const getAllKids = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Error fetching kids:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error'
+    });
+  }
+};
+
+// Get All Submissions
+export const getSubmissions = async (req: Request, res: Response) => {
+  try {
+    const submissions = await prisma.submission.findMany({
+      include: {
+        kid: {
+          select: {
+            id: true,
+            name: true,
+            avatar: true,
+            email: true
+          }
+        },
+        comic: {
+          select: {
+            id: true,
+            title: true,
+            image: true,
+            subtitle: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    res.json({
+      status: 'success',
+      data: submissions
+    });
+  } catch (error) {
+    console.error('Error fetching submissions:', error);
     res.status(500).json({
       status: 'error',
       message: 'Server error'

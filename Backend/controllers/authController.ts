@@ -59,10 +59,18 @@ export const login = async (req: Request, res: Response) => {
 
         // Update last login if user is a kid
         if (role === 'kid') {
-            await (prisma.kid as any).update({
-                where: { id: user.id },
-                data: { lastLogin: new Date() }
-            });
+            console.log(`[Auth] Updating lastLogin for kid: ${user.email}`);
+            try {
+                // Ensure we use the correct model typing
+                await prisma.kid.update({
+                    where: { id: user.id },
+                    data: { lastLogin: new Date() }
+                });
+                console.log(`[Auth] Successfully updated lastLogin`);
+            } catch (updateError) {
+                console.error(`[Auth] Failed to update lastLogin:`, updateError);
+                // Don't block login if this fails, but it's critical for stats
+            }
         }
 
         // 6. Return response with user data and role

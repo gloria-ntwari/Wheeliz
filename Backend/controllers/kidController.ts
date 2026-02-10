@@ -312,6 +312,7 @@ export const getKidDashboardStats = async (req: Request, res: Response) => {
             status: 'success',
             data: {
                 kidName: kid.name,
+                avatar: kid.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`,
                 standing: totalMarks, // Using marks as 'standing'
                 rank,
                 comicsRead: totalComicsRead,

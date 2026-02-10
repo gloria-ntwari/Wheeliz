@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 
 // Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, '..', 'uploads');
+const uploadsDir = path.join(process.cwd(), 'uploads');
 const comicsDir = path.join(uploadsDir, 'comics');
 const documentsDir = path.join(uploadsDir, 'documents');
 const avatarsDir = path.join(uploadsDir, 'avatars');
@@ -17,11 +17,14 @@ const avatarsDir = path.join(uploadsDir, 'avatars');
 // Storage configuration for comic cover images
 const comicImageStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
+    console.log('Multer Destination: Saving comic image to:', comicsDir);
     cb(null, comicsDir);
   },
   filename: (_req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'comic-' + uniqueSuffix + path.extname(file.originalname));
+    const filename = 'comic-' + uniqueSuffix + path.extname(file.originalname);
+    console.log('Multer Filename: Generated filename:', filename);
+    cb(null, filename);
   }
 });
 
@@ -38,13 +41,16 @@ const comicDocumentStorage = multer.diskStorage({
 
 // File filter for images
 const imageFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  console.log('Multer Filter: Processing file:', file.originalname, 'Mimetype:', file.mimetype);
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = allowedTypes.test(file.mimetype);
 
   if (mimetype && extname) {
+    console.log('Multer Filter: File accepted');
     return cb(null, true);
   } else {
+    console.error('Multer Filter: File rejected');
     cb(new Error('Only image files are allowed (jpeg, jpg, png, gif, webp)'));
   }
 };

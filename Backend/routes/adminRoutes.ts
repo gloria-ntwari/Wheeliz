@@ -9,7 +9,8 @@ import {
   deleteComic,
   getAllKids,
   createKid,
-  updateAdminProfile
+  updateAdminProfile,
+  getSubmissions
 } from '../controllers/adminController';
 import { verifyAdmin, verifyAuth } from '../middlewares/authMiddleware';
 
@@ -99,6 +100,7 @@ router.delete('/comics/:id', deleteComic);
  */
 router.get('/kids', getAllKids);
 router.post('/kids', uploadAvatar, createKid);
+router.get('/submissions', getSubmissions);
 router.put('/profile', uploadAvatar, updateAdminProfile);
 
 export default router;

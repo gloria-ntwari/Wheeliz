@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../config/api";
 import {
   Home,
   Smile,
@@ -112,6 +113,40 @@ export const Submissions = (): JSX.Element => {
     typeof window !== "undefined" ? window.innerWidth >= 1024 : true
   );
 
+  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchSubmissions = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch(`${API_BASE_URL}/admin/submissions`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (data.status === "success") {
+        setSubmissions(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching submissions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubmissions();
+  }, []);
+
+  const getFullImageUrl = (path: string | null) => {
+    if (!path) return "/clip-path-group-16.png";
+    if (path.startsWith("http")) return path;
+    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
+    return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
+  };
+
 
   return (
     <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
@@ -167,49 +202,42 @@ export const Submissions = (): JSX.Element => {
         <main className="flex-1 w-full px-4 pt-6 pb-10 bg-white sm:px-6 lg:px-14 font-[Poppins]">
           <div className="mb-8">
             <h1 className="text-[17px] font-bold text-black">Submissions</h1>
-            <p className="text-sm text-gray-500">You have 3.2K in total submissions.</p>
+            <p className="text-sm text-gray-500">You have {submissions.length} in total submissions.</p>
           </div>
 
           {/* Cards Section */}
           <section className="grid grid-cols-1 gap-6 mb-12 md:grid-cols-2 lg:grid-cols-3">
-            {submissionCards.map((card) => (
-              <div key={card.id} className="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-3xl hover:shadow-md transition-shadow">
+            {loading ? (
+                <div className="py-10 text-center col-span-full">Loading submissions...</div>
+            ) : submissions.slice(0, 3).map((sub) => (
+              <div key={sub.id} className="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-3xl hover:shadow-md transition-shadow">
                 <div className="h-40 overflow-hidden">
-                   <img src={card.image} alt={card.title} className="object-cover w-full h-full" />
+                   <img src={getFullImageUrl(sub.comic?.image)} alt={sub.comic?.title} className="object-cover w-full h-full" />
                 </div>
                 <div className="p-5">
-                   <h3 className="text-[15px] font-bold text-black mb-1">{card.title}</h3>
-                   <p className="mb-4 text-xs text-gray-500">{card.subtitle}</p>
+                   <h3 className="text-[15px] font-bold text-black mb-1">{sub.comic?.title}</h3>
+                   <p className="mb-4 text-xs text-gray-500">{sub.comic?.subtitle}</p>
                    
                    <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-1 px-2.5 py-2 bg-[#c0c0c0] rounded-full">
                          <div className="flex items-center justify-center  ">
                            <MessageCircleMore className="w-4 h-4 text-gray-600" />
                          </div>
-                         <span className="text-xs font-medium text-gray-600">{card.time}</span>
+                         <span className="text-xs font-medium text-gray-600">{sub.marks || 0}</span>
                       </div>
                       <div className="flex -space-x-2">
                          <div className="w-10 h-10 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
-                            <img src="/profile1.jpg" className="w-full h-full object-cover" alt="Profile 1" />
-                         </div>
-                         <div className="w-10 h-10 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
-                            <img src="/profile2.jpg" className="w-full h-full object-cover" alt="Profile 2" />
-                         </div>
-                         <div className="w-10 h-10 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
-                            <img src="/profile1.jpg" className="w-full h-full object-cover" alt="Profile 3" />
-                         </div>
-                         <div className="flex items-center justify-center w-10 h-10 text-[10px] font-bold text-gray-600 bg-white border-2 border-gray-100 rounded-full">
-                            +7
+                            <img src={getFullImageUrl(sub.kid?.avatar)} className="w-full h-full object-cover" alt={sub.kid?.name} />
                          </div>
                       </div>
                    </div>
 
                    <div className="w-full h-1.5 bg-gray-100 rounded-full mb-2">
-                      <div className={`h-full rounded-full ${card.progressColor}`} style={{ width: `${card.progress}%` }}></div>
+                      <div className={`h-full rounded-full ${sub.status === 'graded' ? 'bg-[#4CAF7A]' : 'bg-[#D94528]'}`} style={{ width: `${sub.marks || 0}%` }}></div>
                    </div>
                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>Progress</span>
-                      <span>{card.progress}%</span>
+                      <span>Score</span>
+                      <span>{sub.marks || 0}%</span>
                    </div>
                 </div>
               </div>
@@ -230,20 +258,22 @@ export const Submissions = (): JSX.Element => {
                       </tr>
                    </thead>
                    <tbody>
-                      {submissionsTable.map((row) => (
-                         <tr key={row.id}>
+                      {submissions.map((sub) => (
+                         <tr key={sub.id}>
                             <td className="py-4">
                                <div className="flex items-center gap-3">
-                                  <img src={row.avatar} alt={row.name} className="object-cover w-10 h-10 rounded-lg" />
-                                  <span className="text-sm font-bold text-black">{row.name}</span>
+                                  <img src={getFullImageUrl(sub.kid?.avatar)} alt={sub.kid?.name} className="object-cover w-10 h-10 rounded-lg" />
+                                  <span className="text-sm font-bold text-black">{sub.kid?.name}</span>
                                </div>
                             </td>
-                            <td className="py-4 text-sm font-medium text-black">{row.date}</td>
-                            <td className={`py-4 text-sm font-bold text-center ${row.statusColor}`}>{row.status}</td>
+                            <td className="py-4 text-sm font-medium text-black">{new Date(sub.createdAt).toLocaleString()}</td>
+                            <td className={`py-4 text-sm font-bold text-center ${sub.status === 'graded' ? 'text-green-500' : 'text-red-500'}`}>
+                                {sub.status === 'graded' ? 'Verified' : 'Not Verified'}
+                            </td>
                             <td className="py-4">
                                <div className="flex items-center gap-3">
-                                  <img src={row.comicImage} alt="Comic" className="object-cover w-10 h-10 rounded-full" />
-                                  <span className="text-sm font-medium text-black">{row.comicTitle}</span>
+                                  <img src={getFullImageUrl(sub.comic?.image)} alt="Comic" className="object-cover w-10 h-10 rounded-full" />
+                                  <span className="text-sm font-medium text-black">{sub.comic?.title}</span>
                                </div>
                             </td>
                          </tr>

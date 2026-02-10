@@ -44,6 +44,13 @@ export const KidDashboard = (): JSX.Element => {
     fetchDashboardData();
   }, [navigate]);
 
+  const getFullImageUrl = (path: string | null) => {
+    if (!path) return "/clip-path-group-16.png";
+    if (path.startsWith("http")) return path;
+    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
+    return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
+  };
+
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
@@ -75,7 +82,7 @@ export const KidDashboard = (): JSX.Element => {
             <div className="flex items-center gap-2 cursor-pointer">
               <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+                  src={getFullImageUrl(kidData.avatar)}
                   alt="Profile"
                   className="object-cover w-full h-full"
                 />
