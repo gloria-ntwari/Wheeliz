@@ -6,8 +6,9 @@ import fs from 'fs';
 const uploadsDir = path.join(__dirname, '..', 'uploads');
 const comicsDir = path.join(uploadsDir, 'comics');
 const documentsDir = path.join(uploadsDir, 'documents');
+const avatarsDir = path.join(uploadsDir, 'avatars');
 
-[uploadsDir, comicsDir, documentsDir].forEach(dir => {
+[uploadsDir, comicsDir, documentsDir, avatarsDir].forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -102,3 +103,18 @@ export const uploadComicFiles = multer({
   { name: 'coverImage', maxCount: 1 },
   { name: 'documents', maxCount: 5 }
 ]);
+
+// Upload for avatars (Admin & Kid)
+export const uploadAvatar = multer({
+  storage: multer.diskStorage({
+    destination: (_req, _file, cb) => {
+      cb(null, avatarsDir);
+    },
+    filename: (_req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, 'avatar-' + uniqueSuffix + path.extname(file.originalname));
+    }
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: imageFilter
+}).fields([{ name: 'avatar', maxCount: 1 }]);

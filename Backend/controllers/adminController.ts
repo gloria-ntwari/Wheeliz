@@ -301,6 +301,70 @@ export const deleteComic = async (req: Request, res: Response) => {
   }
 };
 
+// Create Kid (Admin functionality)
+export const createKid = async (req: Request, res: Response) => {
+  try {
+    const { 
+      name, 
+      email, 
+      gender, 
+      fatherName, 
+      motherName, 
+      dateOfBirth, 
+      parentPhone,
+      password 
+    } = req.body;
+
+    if (!name || !parentPhone) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Name and Parent Phone are required'
+      });
+    }
+
+    // Handle avatar upload if any
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    let avatar = '';
+    if (files?.avatar?.[0]) {
+      avatar = `/uploads/avatars/${files.avatar[0].filename}`;
+    }
+
+    const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
+
+    const kid = await prisma.kid.create({
+      data: {
+        name,
+        email,
+        gender,
+        fatherName,
+        motherName,
+        parentPhone,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+        passwordHash: hashedPassword,
+        avatar: avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
+      }
+    });
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Kid created successfully',
+      data: kid
+    });
+  } catch (error: any) {
+    console.error('Create kid error:', error);
+    if (error.code === 'P2002') {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Email or Parent Phone already exists'
+      });
+    }
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error'
+    });
+  }
+};
+
 // Get All Kids
 export const getAllKids = async (req: Request, res: Response) => {
   try {
@@ -380,6 +444,12 @@ export const updateAdminProfile = async (req: Request, res: Response) => {
     if (name) dataToUpdate.name = name;
     if (email) dataToUpdate.email = email;
 
+    // Handle avatar upload
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    if (files?.avatar?.[0]) {
+      dataToUpdate.avatar = `/uploads/avatars/${files.avatar[0].filename}`;
+    }
+
     if (newPassword) {
       if (!oldPassword) {
         return res.status(400).json({ status: 'error', message: 'Old password is required to set a new one' });
@@ -405,7 +475,8 @@ export const updateAdminProfile = async (req: Request, res: Response) => {
         id: updatedAdmin.id,
         name: updatedAdmin.name,
         email: updatedAdmin.email,
-        role: updatedAdmin.role
+        role: updatedAdmin.role,
+        avatar: updatedAdmin.avatar
       }
     });
   } catch (error) {

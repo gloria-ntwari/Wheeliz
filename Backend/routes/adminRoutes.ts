@@ -8,6 +8,7 @@ import {
   updateComic, 
   deleteComic,
   getAllKids,
+  createKid,
   updateAdminProfile
 } from '../controllers/adminController';
 import { verifyAdmin, verifyAuth } from '../middlewares/authMiddleware';
@@ -66,7 +67,7 @@ router.get('/stats', getDashboardStats);
  *     summary: Create a new comic
  *     tags: [Comics]
  */
-import { uploadComicFiles } from '../middlewares/upload';
+import { uploadComicFiles, uploadAvatar } from '../middlewares/upload';
 
 router.post('/comics', uploadComicFiles, createComic);
 
@@ -97,6 +98,7 @@ router.delete('/comics/:id', deleteComic);
  *         description: List of kids retrieved successfully
  */
 router.get('/kids', getAllKids);
-router.put('/profile', updateAdminProfile);
+router.post('/kids', uploadAvatar, createKid);
+router.put('/profile', uploadAvatar, updateAdminProfile);
 
 export default router;

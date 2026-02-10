@@ -3,7 +3,8 @@ import { API_BASE_URL } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, ArrowLeft, UserPlus, Pencil, Download, Printer, Share2} from "lucide-react";
 import { AdminHeader } from "../../components/AdminHeader";
-import { Home, Clock, Puzzle, Grid3X3 } from "lucide-react";
+import { Home, Clock, Puzzle, Grid3X3, Camera } from "lucide-react";
+import { AddKidModal } from "./AddKidModal";
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
@@ -25,33 +26,33 @@ export const Kids = (): JSX.Element => {
   const [filterActive, setFilterActive] = useState<"active" | "not-active">("active");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKid, setSelectedKid] = useState<any | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
   const [kids, setKids] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchKids = async () => {
-      try {
-        const token = localStorage.getItem("adminToken");
-        const response = await fetch(`${API_BASE_URL}/admin/kids`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await response.json();
-        if (data.status === "success") {
-            // Transform if needed or use directly if backend returns compatible format
-            // Backend returns: status='Active', avatar=Generated, comicsRead=0, rank=0, submissions=0
-            setKids(data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching kids:", error);
-      } finally {
-        setLoading(false);
+  const fetchKids = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch(`${API_BASE_URL}/admin/kids`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (data.status === "success") {
+          setKids(data.data);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching kids:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchKids();
   }, []);
 
@@ -141,6 +142,7 @@ export const Kids = (): JSX.Element => {
 
 
               <button
+                onClick={() => setIsAddModalOpen(true)}
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-[#681618] rounded-full hover:bg-[#8a1322] transition-colors"
               >
                 <UserPlus className="w-4 h-4" />
@@ -184,7 +186,7 @@ export const Kids = (): JSX.Element => {
                     >
                       <div className="relative w-16 h-16 mb-4">
                         <img
-                          src={kid.avatar}
+                          src={kid.avatar ? (kid.avatar.startsWith('http') ? kid.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${kid.avatar}`) : `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`}
                           alt={kid.name}
                           className="object-cover w-full h-full rounded-full border-[3px] border-[#FFA500]"
                         />
@@ -294,7 +296,7 @@ export const Kids = (): JSX.Element => {
                 <div className="flex flex-col items-center mt-2 mb-8 text-center">
                   <div className="w-20 h-20 mb-4 overflow-hidden rounded-full border-4 border-[#FFA500]">
                     <img
-                      src={selectedKid.avatar}
+                      src={selectedKid.avatar ? (selectedKid.avatar.startsWith('http') ? selectedKid.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${selectedKid.avatar}`) : `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedKid.name)}&background=random`}
                       alt={selectedKid.name}
                       className="object-cover w-full h-full"
                     />
@@ -336,28 +338,28 @@ export const Kids = (): JSX.Element => {
 
                 <div className="w-full max-w-[280px] mx-auto space-y-6 text-sm text-gray-800 [font-family:'Poppins']">
                   <div className="flex justify-between gap-4">
-                    <span className="font-medium">Gender</span>
-                    <span>Ange Nadette</span>
+                    <span className="font-medium text-gray-500">Gender</span>
+                    <span className="font-semibold">{selectedKid.gender || "Not specified"}</span>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span className="font-medium">Father's Name</span>
-                    <span>Ange Nadette</span>
+                    <span className="font-medium text-gray-500">Father's Name</span>
+                    <span className="font-semibold">{selectedKid.fatherName || "Not specified"}</span>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span className="font-medium">Mother's Names</span>
-                    <span>Ange Nadette</span>
+                    <span className="font-medium text-gray-500">Mother's Names</span>
+                    <span className="font-semibold">{selectedKid.motherName || "Not specified"}</span>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span className="font-medium">Date of Birth</span>
-                    <span>Ange Nadette</span>
+                    <span className="font-medium text-gray-500">Date of Birth</span>
+                    <span className="font-semibold">{selectedKid.dateOfBirth ? new Date(selectedKid.dateOfBirth).toLocaleDateString() : "Not specified"}</span>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span className="font-medium">Email</span>
-                    <span>Ange Nadette</span>
+                    <span className="font-medium text-gray-500">Email</span>
+                    <span className="font-semibold truncate max-w-[150px]">{selectedKid.email || "Not specified"}</span>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span className="font-medium">Submission Date</span>
-                    <span>Ange Nadette</span>
+                    <span className="font-medium text-gray-500">Submission Date</span>
+                    <span className="font-semibold">{selectedKid.createdAt ? new Date(selectedKid.createdAt).toLocaleDateString() : "Not specified"}</span>
                   </div>
                 </div>
 
@@ -379,6 +381,12 @@ export const Kids = (): JSX.Element => {
             </div>
           )}
         </main>
+        
+        <AddKidModal 
+          isOpen={isAddModalOpen} 
+          onClose={() => setIsAddModalOpen(false)} 
+          onSuccess={fetchKids} 
+        />
       </div>
     </div>
   );

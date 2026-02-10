@@ -8,7 +8,8 @@ import {
   Copy, 
   User, 
   LogOut, 
-  X 
+  X,
+  Camera
 } from "lucide-react";
 import { API_BASE_URL } from "../config/api";
 
@@ -44,34 +45,44 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
     newPassword: ""
   });
 
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("adminToken");
+      const formData = new FormData();
+      formData.append('name', editFormData.name);
+      formData.append('email', editFormData.email);
+      if (editFormData.oldPassword) formData.append('oldPassword', editFormData.oldPassword);
+      if (editFormData.newPassword) formData.append('newPassword', editFormData.newPassword);
+      if (avatarFile) formData.append('avatar', avatarFile);
+
       const response = await fetch(`${API_BASE_URL}/admin/profile`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(editFormData)
+        body: formData
       });
       
       const result = await response.json();
       if (result.status === 'success') {
         const updatedAdmin = result.data;
-        setAdminProfileData({
+        const newAdminData = {
           ...adminProfileData,
           name: updatedAdmin.name,
-          email: updatedAdmin.email
-        });
-        localStorage.setItem("adminData", JSON.stringify({
-          ...JSON.parse(localStorage.getItem("adminData") || '{}'),
-          name: updatedAdmin.name,
-          email: updatedAdmin.email
-        }));
+          email: updatedAdmin.email,
+          avatar: updatedAdmin.avatar
+        };
+        setAdminProfileData(newAdminData);
+        localStorage.setItem("adminData", JSON.stringify(newAdminData));
         setIsEditProfileOpen(false);
         setEditFormData({ ...editFormData, oldPassword: "", newPassword: "" });
+        setAvatarFile(null);
+        setAvatarPreview(null);
         alert("Profile updated successfully");
       } else {
         alert(result.message || "Failed to update profile");
@@ -124,9 +135,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
             >
-              <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full shrink-0">
+              <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full shrink-0 border border-gray-100 shadow-sm">
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+                  src={adminProfileData.avatar ? (adminProfileData.avatar.startsWith('http') ? adminProfileData.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${adminProfileData.avatar}`) : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"}
                   alt="Profile"
                   className="object-cover w-full h-full"
                 />
@@ -189,6 +200,41 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Edit Profile</h3>
             
             <form onSubmit={handleUpdateProfile} className="space-y-4">
+              {/* Profile Photo Upload */}
+              <div className="flex flex-col items-center mb-6">
+                <div className="relative group">
+                  <div className="w-24 h-24 overflow-hidden bg-gray-100 rounded-full border-4 border-[#FFA500] shadow-md">
+                    <img 
+                      src={avatarPreview || (adminProfileData.avatar ? (adminProfileData.avatar.startsWith('http') ? adminProfileData.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${adminProfileData.avatar}`) : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face")} 
+                      alt="Profile Preview" 
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute bottom-0 right-0 p-2 bg-[#681618] text-white rounded-full shadow-lg hover:bg-[#8a1322] transition-all"
+                  >
+                    <Camera className="w-4 h-4" />
+                  </button>
+                  <input 
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        const file = e.target.files[0];
+                        setAvatarFile(file);
+                        const reader = new FileReader();
+                        reader.onloadend = () => setAvatarPreview(reader.result as string);
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-2">Click icon to change photo</p>
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                 <input 
