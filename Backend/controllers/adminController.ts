@@ -255,9 +255,10 @@ export const createComic = async (req: Request, res: Response) => {
       coverImage = files.coverImage[0].path;
     }
 
-    // Handle document upload (single document for now based on requirement)
-    if (files?.documents?.[0]) {
-      documentPath = files.documents[0].path;
+    // Handle document upload (multiple documents support)
+    if (files?.documents && files.documents.length > 0) {
+      const paths = files.documents.map(doc => doc.path);
+      documentPath = JSON.stringify(paths);
     }
 
     if (!title || !subtitle || !description) {
@@ -359,8 +360,9 @@ export const updateComic = async (req: Request, res: Response) => {
       coverImage = files.coverImage[0].path;
     }
 
-    if (files?.documents?.[0]) {
-      documentPath = files.documents[0].path;
+    if (files?.documents && files.documents.length > 0) {
+      const paths = files.documents.map(doc => doc.path);
+      documentPath = JSON.stringify(paths);
     }
 
     const dataToUpdate: any = {};

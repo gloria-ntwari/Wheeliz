@@ -11,6 +11,7 @@ import { Comics } from "./screens/AdminDashboard/Comics";
 import { AddComics } from "./screens/AdminDashboard/AddComics";
 import { Submissions } from "./screens/AdminDashboard/Submissions";
 import { KidDashboard } from "./screens/KidDashboard/KidDashboard";
+import { ComicView } from "./screens/AdminDashboard";
 
 // Protected Route Component for Admin
 const ProtectedAdminRoute = ({ children }: { children: React.ReactElement }) => {
@@ -24,7 +25,14 @@ const ProtectedKidRoute = ({ children }: { children: React.ReactElement }) => {
   return token ? children : <Navigate to="/login" replace />;
 };
 
-createRoot(document.getElementById("app") as HTMLElement).render(
+const container = document.getElementById("app") as HTMLElement;
+// Ensure we only create the root once, even during Hot Module Replacement
+const root = (container as any)._reactRoot || createRoot(container);
+if (!(container as any)._reactRoot) {
+  (container as any)._reactRoot = root;
+}
+
+root.render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
@@ -76,6 +84,14 @@ createRoot(document.getElementById("app") as HTMLElement).render(
           element={
             <ProtectedAdminRoute>
               <Submissions />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/comics/view/:comicId"
+          element={
+            <ProtectedAdminRoute>
+              <ComicView />
             </ProtectedAdminRoute>
           }
         />

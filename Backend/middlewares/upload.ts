@@ -30,13 +30,13 @@ const imageFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilter
 
 // File filter for documents
 const documentFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowedTypes = /pdf|doc|docx|txt/;
+  const allowedTypes = /pdf|doc|docx|txt|jpeg|jpg|png|webp/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
 
   if (extname) {
     return cb(null, true);
   } else {
-    cb(new Error('Only document files are allowed (pdf, doc, docx, txt)'));
+    cb(new Error('Only PDF, Word, Text, or Image files are allowed for documents'));
   }
 };
 

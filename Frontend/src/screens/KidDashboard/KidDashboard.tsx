@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../../config/api";
 import { useNavigate } from "react-router-dom";
-import {
-  Bell,
-  ChevronDown
-} from "lucide-react";
+import { KidHeader } from "../../components/KidHeader";
 
 export const KidDashboard = (): JSX.Element => {
   const navigate = useNavigate();
@@ -44,12 +41,6 @@ export const KidDashboard = (): JSX.Element => {
     fetchDashboardData();
   }, [navigate]);
 
-  const getFullImageUrl = (path: string | null) => {
-    if (!path) return "/clip-path-group-16.png";
-    if (path.startsWith("http")) return path;
-    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
-    return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
-  };
 
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
@@ -62,38 +53,7 @@ export const KidDashboard = (): JSX.Element => {
   return (
     <div className="flex flex-col w-full min-h-screen bg-white font-poppins">
       {/* Header / Navbar */}
-      <header className="flex items-center justify-between px-12 py-4 bg-white shadow-md">
-        <div className="flex items-center gap-2">
-           {/* Logo placeholder or text */}
-           <img src="/clip-path-group-16.png" alt="Wheeliez" className="h-14" />
-        </div>
-        
-        <nav className="hidden gap-8 md:flex">
-            <button className="font-bold text-black [font-family:'Poppins']" onClick={() => navigate("/kid/dashboard")}>Home</button>
-            <button className="font-medium text-gray-600" onClick={() => navigate("/kid/comics")}>Comics</button>
-            <button className="font-medium text-gray-600" onClick={() => navigate("/kid/submission")}>Submission</button>
-        </nav>
-
-        <div className="flex items-center gap-4">
-                        <button className="relative">
-                          <Bell className="w-5 h-5 text-[#111827]" />
-                          <span className="absolute w-1.5 h-1.5 bg-red-500 rounded-full top-0 right-0.5"></span>
-                        </button>
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
-                <img
-                  src={getFullImageUrl(kidData.avatar)}
-                  alt="Profile"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              <span className="hidden text-sm font-bold text-gray-900 sm:block [font-family:'Poppins']">
-                ntwari
-              </span>
-              <ChevronDown className="w-5 h-5 text-gray-500" />
-            </div>
-        </div>
-      </header>
+      <KidHeader kidData={kidData} />
 
       <main className="flex-1 px-6 py-6 overflow-y-auto md:px-12 lg:px-20">
         
@@ -141,7 +101,7 @@ export const KidDashboard = (): JSX.Element => {
 
 
         {/* Recent Comics Progress */}
-        <h2 className="mb-6 text-[17px] font-bold text-black">Recent Comics progress</h2>
+        <h2 className="mb-6 text-[17px] font-bold text-black">Recent Marks From Submissions</h2>
 
         <div className="grid gap-4">
             {kidData.recentProgress.map((comic: any) => (

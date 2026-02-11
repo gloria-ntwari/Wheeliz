@@ -28,8 +28,8 @@ export const getComicImageUrl = (path?: string | null) => {
   // Clean base URL: remove trailing /api and trailing slashes
   const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "").replace(/\/+$/, "");
   
-  // Clean path: ensure it has leading slash but no double slashes
-  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  // Clean path: ensure it has leading slash but no double slashes, and fix Windows backslashes
+  const cleanPath = (path.startsWith("/") ? path : `/${path}`).replace(/\\/g, "/");
   
   return `${baseUrl}${cleanPath}`;
 };
@@ -240,7 +240,8 @@ export const Comics = (): JSX.Element => {
                 {comics.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((comic) => (
                     <div 
                     key={comic.id} 
-                    className="relative flex flex-col overflow-hidden transition-shadow bg-white border border-gray-100 shadow-sm rounded-xl hover:shadow-md"
+                    onClick={() => navigate(`/admin/comics/view/${comic.id}`)}
+                    className="relative flex flex-col overflow-hidden transition-shadow bg-white border border-gray-100 shadow-sm rounded-xl hover:shadow-md cursor-pointer"
                     >
                         {/* Image Header */}
                         {comic.image ? (
@@ -325,22 +326,37 @@ export const Comics = (): JSX.Element => {
                         </div>
     
                         {/* File Attachment */}
-                        {comic.document ? (
-                             <a 
-                                href={getComicImageUrl(comic.document)} 
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-3 p-2 mt-2 transition-colors rounded-lg cursor-pointer hover:bg-gray-50"
-                             >
-                                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-50 shrink-0">
-                                    <FileText className="w-5 h-5 text-[#D94528]" />
-                                </div>
-                                <div className="min-w-0">
-                                    <p className="text-[13px] font-semibold text-black truncate">Comic Document</p>
-                                    <p className="text-[11px] text-gray-400">PDF</p>
-                                </div>
-                            </a>
-                        ) : (
+                        {comic.document ? (() => {
+                            let docUrl = "";
+                            try {
+                                if (comic.document.startsWith('[') && comic.document.endsWith(']')) {
+                                    const pages = JSON.parse(comic.document);
+                                    docUrl = getComicImageUrl(pages[0]);
+                                } else {
+                                    docUrl = getComicImageUrl(comic.document);
+                                }
+                            } catch (e) {
+                                docUrl = getComicImageUrl(comic.document);
+                            }
+
+                            return (
+                                <a 
+                                    href={docUrl} 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="flex items-center gap-3 p-2 mt-2 transition-colors rounded-lg cursor-pointer hover:bg-gray-50"
+                                >
+                                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-50 shrink-0">
+                                        <FileText className="w-5 h-5 text-[#D94528]" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-[13px] font-semibold text-black truncate">Comic Document</p>
+                                        <p className="text-[11px] text-gray-400">PDF/Page 1</p>
+                                    </div>
+                                </a>
+                            );
+                        })() : (
                             <div className="flex items-center gap-3 mt-2 opacity-50">
                                 <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-lg shrink-0">
                                     <FileText className="w-5 h-5 text-gray-400" />
