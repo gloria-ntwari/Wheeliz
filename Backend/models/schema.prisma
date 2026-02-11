@@ -33,6 +33,9 @@ model Kid {
   role         String    @default("kid")
   gender       String?
   avatar       String?
+  isVerified   Boolean   @default(false)
+  verificationCode String?
+  verificationCodeExpires DateTime?
   lastLogin    DateTime?
   submissions  Submission[]
   createdAt    DateTime  @default(now())

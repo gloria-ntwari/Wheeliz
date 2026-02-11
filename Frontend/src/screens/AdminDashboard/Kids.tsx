@@ -13,8 +13,7 @@ const navItems = [
   { icon: Grid3X3, label: "Submissions", path: "/admin/submissions", active: false },
 ];
 
-const TOTAL_PAGES = 10;
-const PAGE_NUMBERS = [1, 2, 3, 8, 9, 10];
+const itemsPerPage = 6;
 
 export const Kids = (): JSX.Element => {
   /* const kidsData = [...]; (Removed static data) */
@@ -175,6 +174,7 @@ export const Kids = (): JSX.Element => {
                     const isActive = kid.status?.toLowerCase() === "active";
                     return filterActive === "active" ? isActive : !isActive;
                   })
+                  .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                   .map((kid: any) => {
                     const isActive = kid.status?.toLowerCase() === "active";
 
@@ -254,23 +254,29 @@ export const Kids = (): JSX.Element => {
 
 
           {/* Pagination */}
-          {kids.length > 8 && (
+          {kids.filter((k: any) => {
+            const isActive = k.status?.toLowerCase() === "active";
+            return filterActive === "active" ? isActive : !isActive;
+          }).length > itemsPerPage && (
           <section className="flex flex-col items-center w-full gap-4 mt-8 sm:flex-row sm:justify-between sm:gap-0">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="flex items-center gap-1 px-4 py-3 text-sm font-normal text-black bg-[#f0f0f0] rounded-full hover:bg-[#e5e5e5] transition-colors [font-family:'Poppins']"
+              disabled={currentPage === 1}
+              className="flex items-center gap-1 px-4 py-3 text-sm font-normal text-black bg-[#f0f0f0] rounded-full hover:bg-[#e5e5e5] transition-colors [font-family:'Poppins'] disabled:opacity-50"
             >
               <ArrowLeft className="w-3 h-3" />
               Previous
             </button>
 
             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
-              {PAGE_NUMBERS.map((num, idx) => (
-                <React.Fragment key={num}>
-                  {idx === 3 && (
-                    <span className="px-2 py-1 text-sm text-gray-500">...</span>
-                  )}
+              {Array.from({
+                length: Math.ceil(kids.filter((k: any) => {
+                  const isActive = k.status?.toLowerCase() === "active";
+                  return filterActive === "active" ? isActive : !isActive;
+                }).length / itemsPerPage)
+              }, (_, i) => i + 1).map((num) => (
                   <button
+                    key={num}
                     onClick={() => setCurrentPage(num)}
                     className={`min-w-[36px] px-3 py-2 text-sm font-medium rounded-lg transition-colors ${currentPage === num
                       ? "bg-gray-900 text-white"
@@ -279,13 +285,22 @@ export const Kids = (): JSX.Element => {
                   >
                     {num}
                   </button>
-                </React.Fragment>
               ))}
             </div>
 
             <button
-              onClick={() => setCurrentPage((p) => Math.min(TOTAL_PAGES, p + 1))}
-              className="flex items-center gap-1 px-4 py-2.5 text-sm font-medium text-black bg-[#f0f0f0] rounded-full hover:bg-[#e5e5e5] transition-colors [font-family:'Poppins']"
+              onClick={() => {
+                const totalFiltered = kids.filter((k: any) => {
+                  const isActive = k.status?.toLowerCase() === "active";
+                  return filterActive === "active" ? isActive : !isActive;
+                }).length;
+                setCurrentPage((p) => Math.min(Math.ceil(totalFiltered / itemsPerPage), p + 1));
+              }}
+              disabled={currentPage === Math.ceil(kids.filter((k: any) => {
+                const isActive = k.status?.toLowerCase() === "active";
+                return filterActive === "active" ? isActive : !isActive;
+              }).length / itemsPerPage)}
+              className="flex items-center gap-1 px-4 py-2.5 text-sm font-medium text-black bg-[#f0f0f0] rounded-full hover:bg-[#e5e5e5] transition-colors [font-family:'Poppins'] disabled:opacity-50"
             >
               Next
               <ArrowRight className="w-4 h-3" />

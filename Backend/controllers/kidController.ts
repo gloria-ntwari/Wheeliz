@@ -2,6 +2,8 @@ import type { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma';
+import { sendVerificationEmail } from '../config/emailService';
+import crypto from 'crypto';
 
 
 
@@ -194,7 +196,6 @@ export const kidSignup = async (req: Request, res: Response) => {
 
         const existingKid = await prisma.kid.findUnique({
             where: { email }
-           
         });
 
         if (existingKid) {
@@ -205,6 +206,8 @@ export const kidSignup = async (req: Request, res: Response) => {
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
+        const verificationCode = crypto.randomInt(100000, 999999).toString();
+        const verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
         const newKid = await prisma.kid.create({
             data: {
@@ -212,31 +215,156 @@ export const kidSignup = async (req: Request, res: Response) => {
                 email: email as string,
                 passwordHash: passwordHash as string,
                 role: 'kid',
+                verificationCode,
+                verificationCodeExpires,
+                isVerified: false
+            }
+        });
+
+        // Send Email
+        const emailSent = await sendVerificationEmail(email, verificationCode);
+
+        if (!emailSent) {
+             // In a real app, you might want to handle this differently
+             console.warn(`Failed to send verification email to ${email}`);
+        }
+
+        res.status(201).json({
+            status: 'success',
+            message: 'Step 1 complete: Please verify your email',
+            data: {
+                email: newKid.email
+            }
+        });
+    } catch (error) {
+        console.error('Signup error:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error'
+        });
+    }
+};
+
+export const verifyEmail = async (req: Request, res: Response) => {
+    try {
+        const { email, code } = req.body;
+
+        if (!email || !code) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Email and verification code are required'
+            });
+        }
+
+        const kid = await prisma.kid.findUnique({
+            where: { email }
+        });
+
+        if (!kid) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Kid not found'
+            });
+        }
+
+        if (kid.isVerified) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Email already verified'
+            });
+        }
+
+        if (kid.verificationCode !== code) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid verification code'
+            });
+        }
+
+        if (kid.verificationCodeExpires && kid.verificationCodeExpires < new Date()) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Verification code expired'
+            });
+        }
+
+        await prisma.kid.update({
+            where: { id: kid.id },
+            data: {
+                isVerified: true,
+                verificationCode: null,
+                verificationCodeExpires: null
+            }
+        });
+
+        // Generate a temporary token if needed, or just proceed to profile completion
+        // For now, let's return a success message so frontend moves to Step 3
+        res.json({
+            status: 'success',
+            message: 'Email verified successfully'
+        });
+
+    } catch (error) {
+        console.error('Verification error:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error'
+        });
+    }
+};
+
+export const completeKidProfile = async (req: Request, res: Response) => {
+    try {
+        const { email, fatherName, motherName, gender, dateOfBirth } = req.body;
+
+        if (!email) {
+             return res.status(400).json({ status: 'error', message: 'Email is required' });
+        }
+
+        const kid = await prisma.kid.findUnique({
+            where: { email }
+        });
+
+        if (!kid || !kid.isVerified) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'User not found or not verified'
+            });
+        }
+
+        const updatedKid = await prisma.kid.update({
+            where: { id: kid.id },
+            data: {
+                fatherName,
+                motherName,
+                gender,
+                dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
                 lastLogin: new Date()
             }
         });
 
         const token = jwt.sign(
-            { id: newKid.id, email: newKid.email, role: newKid.role },
+            { id: updatedKid.id, email: updatedKid.email, role: updatedKid.role },
             process.env.JWT_SECRET!,
             { expiresIn: '7d' }
         );
 
-        res.status(201).json({
+        res.json({
             status: 'success',
-            message: 'Kid registered successfully',
+            message: 'Profile completed successfully',
             data: {
                 token,
                 kid: {
-                    id: newKid.id,
-                    name: newKid.name,
-                    email: newKid.email,
-                    role: newKid.role
+                    id: updatedKid.id,
+                    name: updatedKid.name,
+                    email: updatedKid.email,
+                    role: updatedKid.role
                 }
             }
         });
+
     } catch (error) {
-        console.error('Signup error:', error);
+        console.error('Profile completion error:', error);
         res.status(500).json({
             status: 'error',
             message: 'Server error'

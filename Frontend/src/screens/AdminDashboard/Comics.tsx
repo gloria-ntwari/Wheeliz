@@ -11,9 +11,13 @@ import {
   LayoutGrid,
   FileText,
   MoreVertical,
+  MoreHorizontal,
   Edit,
   Trash2,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
+import React from "react";
 import { EditComicModal } from "./EditComicModal";
 import { AdminHeader } from "../../components/AdminHeader";
 
@@ -62,6 +66,10 @@ export const Comics = (): JSX.Element => {
   const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
   const [comics, setComics] = useState<Comic[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
   
   // Edit/Delete State
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -222,55 +230,18 @@ export const Comics = (): JSX.Element => {
                 </div>
             </div>
           </div>
-
             {loading ? (
                 <div className="flex items-center justify-center h-64">
                     <p className="text-gray-500">Loading comics...</p>
                 </div>
             ) : (
+                <>
                 <section className={`grid gap-6 ${layoutMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
-                {comics.map((comic) => (
+                {comics.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((comic) => (
                     <div 
                     key={comic.id} 
                     className="relative flex flex-col overflow-hidden transition-shadow bg-white border border-gray-100 shadow-sm rounded-xl hover:shadow-md"
                     >
-                        {/* 3-Dots Menu */}
-                        <div className="absolute z-10 top-3 right-3">
-                            <button 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setActiveMenuId(activeMenuId === comic.id ? null : comic.id);
-                                }}
-                                className="p-1.5 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white shadow-sm transition-all"
-                            >
-                                <MoreVertical className="w-4 h-4 text-gray-700" />
-                            </button>
-                            
-                            {activeMenuId === comic.id && (
-                                <div className="absolute right-0 z-20 w-32 py-1 mt-2 overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
-                                    <button 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleEdit(comic);
-                                        }}
-                                        className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-gray-700 transition-colors hover:bg-gray-50"
-                                    >
-                                        <Edit className="w-3.5 h-3.5" />
-                                        Edit
-                                    </button>
-                                    <button 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDelete(comic.id);
-                                        }}
-                                        className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-600 transition-colors hover:bg-red-50"
-                                    >
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                        Delete
-                                    </button>
-                                </div>
-                            )}
-                        </div>
                         {/* Image Header */}
                         {comic.image ? (
                              <div className={`w-full overflow-hidden ${layoutMode === 'grid' ? 'h-48' : 'h-36'}`}>
@@ -295,43 +266,41 @@ export const Comics = (): JSX.Element => {
                             <h3 className="text-[15px] font-bold font-[Poppins] text-black leading-tight">
                                 {comic.title}
                             </h3>
-                            {layoutMode === "list" && (
-                                <div className="relative">
-                                     <button 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setActiveMenuId(activeMenuId === comic.id ? null : comic.id);
-                                        }}
-                                        className="p-1 text-gray-400 hover:text-black"
-                                    >
-                                        •••
-                                    </button>
-                                     {activeMenuId === comic.id && (
-                                        <div className="absolute right-0 z-20 w-32 py-1 mt-2 overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
-                                            <button 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleEdit(comic);
-                                                }}
-                                                className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-gray-700 transition-colors hover:bg-gray-50"
-                                            >
-                                                <Edit className="w-3.5 h-3.5" />
-                                                Edit
-                                            </button>
-                                            <button 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDelete(comic.id);
-                                                }}
-                                                className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-600 transition-colors hover:bg-red-50"
-                                            >
-                                                <Trash2 className="w-3.5 h-3.5" />
-                                                Delete
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            <div className="relative">
+                                    <button 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setActiveMenuId(activeMenuId === comic.id ? null : comic.id);
+                                    }}
+                                    className="p-1 text-gray-400 hover:text-black transition-colors"
+                                >
+                                    <MoreHorizontal className="w-5 h-5" />
+                                </button>
+                                    {activeMenuId === comic.id && (
+                                    <div className="absolute right-0 z-20 w-32 py-1 mt-2 overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEdit(comic);
+                                            }}
+                                            className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-gray-700 transition-colors hover:bg-gray-50"
+                                        >
+                                            <Edit className="w-3.5 h-3.5" />
+                                            Edit
+                                        </button>
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDelete(comic.id);
+                                            }}
+                                            className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-600 transition-colors hover:bg-red-50"
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         
                         <div className="flex items-center text-xs text-gray-500 font-[Poppins] mb-4">
@@ -385,6 +354,45 @@ export const Comics = (): JSX.Element => {
                     </div>
                 ))}
                 </section>
+
+                {/* Pagination UI */}
+                {comics.length > itemsPerPage && (
+                    <div className="flex flex-col items-center w-full gap-4 mt-12 sm:flex-row sm:justify-between sm:gap-0">
+                        <button
+                            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 transition-colors border border-gray-200 rounded-full hover:bg-gray-50"
+                        >
+                            <ArrowLeft className="w-3 h-3" />
+                            Previous
+                        </button>
+
+                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
+                            {Array.from({ length: Math.ceil(comics.length / itemsPerPage) }, (_, i) => i + 1).map((num) => (
+                                <button
+                                    key={num}
+                                    onClick={() => setCurrentPage(num)}
+                                    className={`transition-colors w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium ${currentPage === num
+                                        ? "bg-gray-900 text-white"
+                                        : "bg-[#f0f0f0] text-gray-700 hover:bg-[#e5e5e5]"
+                                        }`}
+                                >
+                                    {num}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => setCurrentPage((p) => Math.min(Math.ceil(comics.length / itemsPerPage), p + 1))}
+                            disabled={currentPage === Math.ceil(comics.length / itemsPerPage)}
+                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 transition-colors border border-gray-200 rounded-full hover:bg-gray-50"
+                        >
+                            Next
+                            <ArrowRight className="w-4 h-3" />
+                        </button>
+                    </div>
+                )}
+                </>
             )}
 
         </main>

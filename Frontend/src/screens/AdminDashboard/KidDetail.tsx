@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Home, Users, Puzzle, Grid3X3, Search, Bell, ChevronDown, Menu, ArrowLeft, Edit, Download, Share } from "lucide-react";
+import { Home, Smile, Puzzle, Grid3X3, ArrowLeft, Edit, Download, Share } from "lucide-react";
+import { AdminHeader } from "../../components/AdminHeader";
 
 const summaryCards = [
     { title: "Total Points", value: "50", colorClass: "bg-gradient-to-br from-[#89C349] to-[#415D23]" },
@@ -42,7 +43,7 @@ const submissions = [
 
 const navItems = [
     { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
-    { icon: Users, label: "Kids", path: "/admin/kids", active: true },
+    { icon: Smile, label: "Kids", path: "/admin/kids", active: true },
     { icon: Puzzle, label: "Comics", path: "/admin/comics", active: false },
     { icon: Grid3X3, label: "Submissions", path: "/admin/submissions", active: false },
 ];
@@ -56,28 +57,38 @@ export const KidDetail = (): JSX.Element => {
 
     return (
         <div className="flex w-full min-h-screen bg-[#1f1f1f] font-barlow">
+            {/* Mobile backdrop */}
+            {sidebarOpen && (
+                <button
+                    type="button"
+                    aria-label="Close sidebar"
+                    onClick={() => setSidebarOpen(false)}
+                    className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+                />
+            )}
+
             {/* Sidebar */}
             <aside
-                className={`${sidebarOpen ? "w-72" : "w-0"
-                    } transition-all duration-300 bg-[#1f1f1f] flex flex-col overflow-hidden shrink-0`}
+                className={`bg-[#181817] flex flex-col overflow-hidden shrink-0
+                fixed inset-y-0 left-0 z-50 w-80 transform transition-transform duration-300
+                ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+                lg:static lg:translate-x-0`}
             >
-                {/* Logo */}
                 <div className="flex items-center justify-center p-8">
                     <img src="/clip-path-group-16.png" alt="Wheeliez" className="object-contain w-auto h-20" />
                 </div>
 
-                {/* Navigation */}
-                <nav className="flex-1 px-5 mt-4 space-y-12">
+                <nav className="flex-1 px-8 mt-16 space-y-8">
                     {navItems.map((item) => (
                         <button
                             key={item.label}
                             onClick={() => navigate(item.path)}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${item.active
-                                ? "bg-white text-black"
+                            className={`w-full flex items-center gap-3 px-10 py-5 rounded-full font-medium transition-colors [font-family:'Poppins'] text-[15px] ${item.active
+                                ? "bg-[#68161c] text-white"
                                 : "text-white hover:bg-[#2a2a2a]"
                                 }`}
                         >
-                            <item.icon className={`w-5 h-5 ${item.active ? "text-black" : "text-white"}`} />
+                            <item.icon className="w-5 h-5" />
                             <span>{item.label}</span>
                         </button>
                     ))}
@@ -87,58 +98,7 @@ export const KidDetail = (): JSX.Element => {
             {/* Main Content */}
             <div className="flex flex-col flex-1 min-w-0 bg-white rounded-tl-3xl">
                 {/* Header */}
-                <header className="flex items-center px-8 py-4 border-b bg-white border-border rounded-tl-3xl border-[#1f2937] mt-7">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => setSidebarOpen(!sidebarOpen)}
-                            className="p-2 transition-colors rounded-lg hover:bg-[#1f2937]"
-                        >
-                            <Menu className="w-5 h-5 text-foreground" />
-                        </button>
-                        <button
-                            onClick={() => navigate("/admin/kids")}
-                            className="p-2 transition-colors rounded-lg hover:bg-gray-100"
-                        >
-                            <ArrowLeft className="w-5 h-5 text-gray-600" />
-                        </button>
-                        <h1 className="text-xl font-semibold text-black text-foreground">Kids</h1>
-                    </div>
-
-                    {/* Centered Search Bar */}
-                    <div className="flex justify-center flex-1 px-8">
-                        <div className="hidden md:flex items-center bg-[#8fb1e116] rounded-full px-5 py-2.5 gap-3 min-w-[400px] max-w-[400px]">
-                            <Search className="w-5 h-5 text-gray-400" />
-                            <input
-                                type="text"
-                                placeholder="Search for something"
-                                className="flex-1 text-sm text-white bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        {/* Notifications */}
-                        <button className="relative p-2 transition-colors rounded-full hover:bg-[#1f2937]">
-                            <Bell className="w-5 h-5 text-black" />
-                            <span className="absolute w-2 h-2 bg-red-500 rounded-full top-1 right-1"></span>
-                        </button>
-
-                        {/* User Profile */}
-                        <div className="flex items-center gap-1 cursor-pointer">
-                            <div className="w-10 h-10 overflow-hidden rounded-full bg-muted">
-                                <img
-                                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-                                    alt="Profile"
-                                    className="object-cover w-full h-full"
-                                />
-                            </div>
-                            <span className="hidden font-medium text-foreground sm:block">
-                                {adminData.name || "Admin"}
-                            </span>
-                            <ChevronDown className="h-5 w-7 text-muted-foreground" />
-                        </div>
-                    </div>
-                </header>
+                <AdminHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
                 {/* Main Content Area */}
                 <main className="flex-1 p-10 bg-white">

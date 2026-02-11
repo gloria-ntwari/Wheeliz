@@ -1,7 +1,9 @@
 import  { useState, useRef, ChangeEvent } from "react";
 import { API_BASE_URL } from "../../config/api";
-import { ArrowLeft, Menu, Search, Bell, ChevronDown, Home, Smile, Puzzle, Grid3X3, CloudUpload, FileText, X } from "lucide-react";
+import { ArrowLeft, CloudUpload, FileText, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Home, Smile, Puzzle, Grid3X3 } from "lucide-react";
+import { AdminHeader } from "../../components/AdminHeader";
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
@@ -14,10 +16,6 @@ export const AddComics = (): JSX.Element => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth >= 1024 : true
-  );
-
-  const adminData = JSON.parse(
-    localStorage.getItem("adminData") || '{"name": "Ange Nadette"}'
   );
 
   // Form State
@@ -176,46 +174,8 @@ export const AddComics = (): JSX.Element => {
 
       <div className="flex flex-col flex-1 min-w-0 overflow-x-hidden bg-white rounded-tl-3xl">
       {/* Header */}
-      <header className="flex flex-col items-stretch gap-4 px-4 py-4 mt-6 bg-white rounded-tl-3xl sm:px-6 lg:px-10 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center w-full gap-3 lg:w-auto">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="flex items-center justify-center text-gray-700 border border-gray-300 rounded-full w-9 h-9 hover:bg-gray-100 lg:hidden"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+      <AdminHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-          <div className="flex items-center  max-w-[515px] h-[45px] px-5 bg-[#f4f6fb] rounded-full gap-3 lg:w-[800px] sm:w-full">
-            <Search className="w-4 h-4 text-[#0f2a5f] shrink-0 ml-2 sm:ml-4" />
-            <input
-              type="text"
-              placeholder="Search for something"
-              className="flex-1 w-full bg-transparent text-[13px] leading-none text-[#0f2a5f] placeholder:text-[#0f2a5f] outline-none text-left [font-family:'Poppins']"
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center justify-end w-full gap-4 lg:w-auto shrink-0">
-          <button className="relative flex items-center justify-center transition-colors bg-white rounded-full w-9 h-9 ">
-            <Bell className="w-5 h-5 text-[#111827]" />
-            <span className="absolute w-1.5 h-1.5 bg-red-500 rounded-full top-1.5 right-2.5"></span>
-          </button>
-
-          <div className="flex items-center gap-2 cursor-pointer">
-            <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full shrink-0">
-              <img
-                src="/profile2.jpg"
-                alt="Profile"
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <span className="hidden text-sm font-medium text-gray-900 sm:block">
-              {adminData.name || "Admin"}
-            </span>
-            <ChevronDown className="w-5 h-5 text-gray-500 shrink-0" />
-          </div>
-        </div>
-      </header>
 
       <main className="flex-1 w-full px-4 pt-6 pb-10 bg-white sm:px-6 lg:px-14 font-[Poppins]">
         {/* Top Navigation Row */}

@@ -246,14 +246,14 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 flex-1 sm:flex-none text-semibold text-[17px]"
+              className="px-6 py-2.5 font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 flex-1 sm:flex-none text-semibold text-[14px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-8 py-2.5 font-semibold text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] disabled:opacity-50 flex-1 sm:flex-none text-semibold text-[17px]"
+              className="px-8 py-2.5 font-semibold text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] disabled:opacity-50 flex-1 sm:flex-none text-semibold text-[14px]"
             >
               {loading ? "Adding..." : "Add Kid"}
             </button>

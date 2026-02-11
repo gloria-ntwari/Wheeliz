@@ -1,5 +1,5 @@
 import express from 'express';
-import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile } from '../controllers/kidController';
+import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile, verifyEmail, completeKidProfile } from '../controllers/kidController';
 import { verifyKid } from '../middlewares/authMiddleware';
 
 const router = express.Router();
@@ -79,6 +79,24 @@ router.post('/create', createKid);
  *         description: Signup successful
  */
 router.post('/signup', kidSignup);
+
+/**
+ * @swagger
+ * /api/kid/verify-email:
+ *   post:
+ *     summary: Verify kid email with OTP
+ *     tags: [Kid]
+ */
+router.post('/verify-email', verifyEmail);
+
+/**
+ * @swagger
+ * /api/kid/complete-profile:
+ *   post:
+ *     summary: Complete kid profile details
+ *     tags: [Kid]
+ */
+router.post('/complete-profile', completeKidProfile);
 
 /**
  * @swagger
