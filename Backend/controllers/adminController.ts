@@ -49,11 +49,12 @@ export const adminLogin = async (req: Request, res: Response) => {
       message: 'Login successful',
       data: {
         token,
-        admin: {
+        user: {
           id: admin.id,
           name: admin.name,
           email: admin.email,
-          role: admin.role
+          role: admin.role,
+          avatar: admin.avatar
         }
       }
     });
@@ -125,26 +126,7 @@ export const getDashboardStats = async (_req: Request, res: Response) => {
                 }
              });
         } else {
-             // For past months, we can't know. Let's assume 0 active? Or mock it?
-             // If we return 0 active for Jan-Sept, the graph looks broken.
-             // If we just approximate it based on the current ratio?
-             // Users usually prefer "some data" over "no data" for history if schema is limited.
-             // But let's stick to what we CAN know:
-             // If a user's `lastLogin` is IN THAT MONTH, they were active then.
-             // If a user's `lastLogin` is AFTER that month, they MIGHT have been active then.
-             // This is hard.
-             
-             // Simplest Valid Approach:
-             // Just return the total accumulated users as "Offline" (or "Total") and 0 Active for past months?
-             // No, the user wants "active and inactive".
-             
-             // Let's use the creation date.
-             // Active = Kids created in that month? No.
-             
-             // Let's assume standard behavior:
-             // We will count 'Active' as anyone whose `lastLogin` is *physically recorded* in that specific month range.
-             // This means if I logged in Jan 1st, then Feb 1st, my record shows Feb 1st. I will NOT show up in Jan stats.
-             // This is the only "real" data we have.
+
              
              activeCount = await prisma.kid.count({
                  where: {
@@ -154,9 +136,7 @@ export const getDashboardStats = async (_req: Request, res: Response) => {
                      }
                  }
              });
-             // This will result in strictly non-overlapping active users (a user is active in ONLY ONE month - their last one).
-             // This is technically "Distribution of users by their last login month".
-             // It's not "Monthly Active Users", but it's "real data from DB".
+
         }
 
         const offline = Math.max(0, totalAtMonth - activeCount);
@@ -164,25 +144,33 @@ export const getDashboardStats = async (_req: Request, res: Response) => {
         monthlyData.push({ month: monthName, active: activeCount, offline });
     }
 
-    // --- Weekly Data (Last 4 Weeks) ---
+    // --- Weekly Data (Current Month's Weeks) ---
     const weeklyData = [];
-    for (let i = 0; i < 4; i++) {
-        // i=0 is current week, i=1 is last week...
-        // For display: "Week 1" (Oldest) to "Week 4" (Newest)?
-        // User said: "Week 1 week 2 and week 3".
-        // Let's do Week 1 = Current Week? Or Week 1 = Start of month?
-        // Usually charts go Left (Old) -> Right (New).
-        // Let's generate last 4 weeks, then reverse them for the chart.
+    const currentYearW = now.getFullYear();
+    const currentMonthW = now.getMonth();
+
+    for (let i = 1; i <= 4; i++) {
+        const startDay = (i - 1) * 7 + 1;
         
-        const startOfWeek = new Date(now);
-        startOfWeek.setDate(now.getDate() - (i * 7) - now.getDay() + 1); // Start of week (Monday)
+        // Start of week
+        const startOfWeek = new Date(currentYearW, currentMonthW, startDay);
         startOfWeek.setHours(0, 0, 0, 0);
-        
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+        // End of week
+        let endOfWeek;
+        if (i === 4) {
+             // Last week goes until end of month (e.g. 28th, 30th, 31st)
+             endOfWeek = new Date(currentYearW, currentMonthW + 1, 0);
+        } else {
+             endOfWeek = new Date(currentYearW, currentMonthW, startDay + 6);
+        }
         endOfWeek.setHours(23, 59, 59, 999);
 
-        const label = `Week ${4 - i}`;
+        // If the start of the week is in the future, display 0 stats
+        if (startOfWeek > now) {
+             weeklyData.push({ label: `Week ${i}`, active: 0, offline: 0 });
+             continue;
+        }
 
         const totalAtWeek = await prisma.kid.count({
             where: { createdAt: { lte: endOfWeek } }
@@ -193,7 +181,7 @@ export const getDashboardStats = async (_req: Request, res: Response) => {
         });
 
         const offline = Math.max(0, totalAtWeek - activeCount);
-        weeklyData.unshift({ label, active: activeCount, offline });
+        weeklyData.push({ label: `Week ${i}`, active: activeCount, offline });
     }
 
     // --- Daily Data (Last 7 Days) ---
@@ -377,7 +365,7 @@ export const updateComic = async (req: Request, res: Response) => {
 
     const dataToUpdate: any = {};
 
-    // Update string fields if provided (allow empty strings if that's what user intends, but usually titles aren't empty)
+
     if (title !== undefined) dataToUpdate.title = title;
     if (subtitle !== undefined) dataToUpdate.subtitle = subtitle;
     if (description !== undefined) dataToUpdate.description = description; 
@@ -620,17 +608,20 @@ export const updateAdminProfile = async (req: Request, res: Response) => {
   try {
     const adminId = (req as any).admin?.id;
     if (!adminId) {
+      console.error('[Admin Update] Unauthorized: No adminId in request');
       return res.status(401).json({ status: 'error', message: 'Unauthorized' });
     }
 
-    console.log(`Attempting to update admin profile for ID: ${adminId}`);
+    console.log(`[Admin Update] Attempting to update admin profile for ID: ${adminId}`);
 
     const { name, email, oldPassword, newPassword } = req.body;
     
     // Check if admin exists
     const existingAdmin = await prisma.admin.findUnique({ where: { id: adminId } });
+    console.log(`[Admin Update] Database check for ID ${adminId}: ${existingAdmin ? 'Found' : 'NOT FOUND'}`);
+
     if (!existingAdmin) {
-      console.error(`Admin with ID ${adminId} not found in database.`);
+      console.error(`[Admin Update] Admin with ID ${adminId} not found in database.`);
       return res.status(404).json({ 
         status: 'error', 
         message: 'Admin record not found. Please log out and log back in to refresh your session.' 

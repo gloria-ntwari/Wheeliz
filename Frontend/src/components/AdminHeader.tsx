@@ -49,6 +49,14 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
+  const getAvatarUrl = (avatar: string | null) => {
+    if (!avatar) return "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face";
+    if (avatar.startsWith('http')) return avatar;
+    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, '');
+    const cleanPath = avatar.startsWith('/') ? avatar : `/${avatar}`;
+    return `${baseUrl}${cleanPath}`;
+  };
+
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -137,7 +145,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             >
               <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full shrink-0 border border-gray-100 shadow-sm">
                 <img
-                  src={adminProfileData.avatar ? (adminProfileData.avatar.startsWith('http') ? adminProfileData.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${adminProfileData.avatar}`) : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"}
+                  src={getAvatarUrl(adminProfileData.avatar)}
                   alt="Profile"
                   className="object-cover w-full h-full"
                   onError={(e) => {
@@ -209,7 +217,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                 <div className="relative group">
                   <div className="w-24 h-24 overflow-hidden bg-gray-100 rounded-full border-4 border-[#FFA500] shadow-md">
                     <img 
-                      src={avatarPreview || (adminProfileData.avatar ? (adminProfileData.avatar.startsWith('http') ? adminProfileData.avatar : `${API_BASE_URL.replace(/\/api\/?$/, '')}${adminProfileData.avatar}`) : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face")} 
+                      src={avatarPreview || getAvatarUrl(adminProfileData.avatar)} 
                       alt="Profile Preview" 
                       className="object-cover w-full h-full"
                       onError={(e) => {

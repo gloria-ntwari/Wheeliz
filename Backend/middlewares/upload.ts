@@ -2,29 +2,17 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Ensure uploads directory exists (Optional if using Cloudinary, but good for local dev fallback)
-// const uploadsDir = path.join(process.cwd(), 'uploads');
-// ... (Removing local dir checks for clarity, or keeping if we want dual mode)
-// Per user request "use cloudinary instead", let's switch fully.
+
 
 import { cloudinaryStorage } from '../config/cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-// Cloudinary Storage Instances
+
 const comicImageStorage = cloudinaryStorage('comics');
 const comicDocumentStorage = cloudinaryStorage('documents');
 const avatarStorage = cloudinaryStorage('avatars');
 
 
-// Storage configuration for comic cover images (using Cloudinary)
-// const comicImageStorage => already defined above as `comicImageStorage` using helper
-
-
-// Storage configuration for comic documents (using Cloudinary)
-// const comicDocumentStorage => already defined above
-
-
-// File filter for images
 const imageFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   console.log('Multer Filter: Processing file:', file.originalname, 'Mimetype:', file.mimetype);
   const allowedTypes = /jpeg|jpg|png|gif|webp/;

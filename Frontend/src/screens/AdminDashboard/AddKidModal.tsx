@@ -94,17 +94,17 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl my-8">
+      <div className="relative w-full max-w-2xl my-8 bg-white shadow-2xl rounded-3xl">
         <div className="flex items-center justify-between px-8 py-6 bg-[#181817] rounded-t-3xl border-b border-gray-800">
-          <h2 className="text-xl font-bold text-white font-[Poppins]">Add New Kid</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
+          <h2 className="text-[17px] font-semibold text-white font-[Poppins]">Add New Kid</h2>
+          <button onClick={onClose} className="text-gray-400 transition-colors hover:text-white">
             <X className="w-6 h-6" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-6 max-h-[70vh] overflow-y-auto font-[Poppins]">
           {error && (
-            <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r">
+            <div className="p-4 text-red-700 border-l-4 border-red-500 rounded-r bg-red-50">
               <p className="text-sm font-medium">{error}</p>
             </div>
           )}
@@ -140,7 +140,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Full Name*</label>
               <input
@@ -149,7 +149,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
                 value={formData.name}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Enter full name"
               />
             </div>
@@ -161,7 +161,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Enter email"
               />
             </div>
@@ -172,7 +172,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
                 name="gender"
                 value={formData.gender}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors appearance-none bg-white"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors appearance-none bg-white text-[15px]"
               >
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
@@ -189,7 +189,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
                 value={formData.parentPhone}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Enter parent phone"
               />
             </div>
@@ -201,7 +201,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
                 name="fatherName"
                 value={formData.fatherName}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Enter father's name"
               />
             </div>
@@ -213,7 +213,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
                 name="motherName"
                 value={formData.motherName}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Enter mother's name"
               />
             </div>
@@ -225,7 +225,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
                 name="dateOfBirth"
                 value={formData.dateOfBirth}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
               />
             </div>
 
@@ -236,7 +236,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Create password"
               />
             </div>
@@ -246,14 +246,14 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 flex-1 sm:flex-none"
+              className="px-6 py-2.5 font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 flex-1 sm:flex-none text-semibold text-[17px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-8 py-2.5 font-semibold text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] disabled:opacity-50 flex-1 sm:flex-none"
+              className="px-8 py-2.5 font-semibold text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] disabled:opacity-50 flex-1 sm:flex-none text-semibold text-[17px]"
             >
               {loading ? "Adding..." : "Add Kid"}
             </button>

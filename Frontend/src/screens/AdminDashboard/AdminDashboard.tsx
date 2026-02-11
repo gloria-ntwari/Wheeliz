@@ -80,19 +80,7 @@ export const AdminDashboard = (): JSX.Element => {
   ];
 
   const adminData = JSON.parse(localStorage.getItem("adminData") || '{"name": "Ange Nadette"}');
-  
-  // No secondary chartData state needed
-  // const [chartData, setChartData] = useState<ChartPoint[]>([]);
 
-  // useEffect(() => {
-  //   if (stats.chartData) {
-  //       setChartData(stats.chartData);
-  //   }
-  // }, [stats.chartData]);
-
-  // We can still use buildChartView logic if we want to filter the REAL data,
-  // but for now let's just show the 12-month data we get.
-  // If selectedPeriod is different, we can slice the real data.
   
   const viewData = useMemo(() => {
       const { monthly, weekly, daily } = stats.chartData || { monthly: [], weekly: [], daily: [] };
@@ -318,7 +306,7 @@ export const AdminDashboard = (): JSX.Element => {
                     {viewData.map((data, index) => (
                       <div
                         key={index}
-                        className="flex items-end justify-center h-full gap-1 sm:gap-2 lg:gap-4 group relative"
+                        className="relative flex items-end justify-center h-full gap-1 sm:gap-2 lg:gap-4 group"
                         onMouseEnter={(e) => {
                              const rect = e.currentTarget.getBoundingClientRect();
                              // Position relative to the chart container would be better, but fixed for now
@@ -353,7 +341,7 @@ export const AdminDashboard = (): JSX.Element => {
                             className="absolute z-50 px-3 py-2 text-xs text-white bg-black/80 rounded shadow-lg pointer-events-none transform -translate-x-1/2 -translate-y-[110%]"
                             style={{ left: hoveredPoint.x, top: hoveredPoint.y }}
                         >
-                            <p className="font-bold mb-1">{hoveredPoint.data.month || hoveredPoint.data.label}</p>
+                            <p className="mb-1 font-bold">{hoveredPoint.data.month || hoveredPoint.data.label}</p>
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full bg-[#CB3E21]"></div>
                                 <span>Active: {hoveredPoint.data.active}</span>
