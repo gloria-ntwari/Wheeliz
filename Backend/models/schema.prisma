@@ -60,14 +60,17 @@ model Comic {
 }
 
 model Submission {
-  id        String   @id @default(uuid())
-  kidId     String
-  comicId   String
-  kid       Kid      @relation(fields: [kidId], references: [id])
-  comic     Comic    @relation(fields: [comicId], references: [id])
-  marks     Int?
-  fileUrl   String
-  status    String   @default("pending") // e.g., pending, graded
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String   @id @default(uuid())
+  kidId          String
+  comicId        String
+  kid            Kid      @relation(fields: [kidId], references: [id])
+  comic          Comic    @relation(fields: [comicId], references: [id])
+  marks          Int?
+  description    String?
+  files          String   // JSON array of file URLs
+  comments       String?
+  status         String   @default("pending") // e.g., pending, graded
+  submissionDate DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

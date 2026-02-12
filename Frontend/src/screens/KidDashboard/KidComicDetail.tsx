@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { KidHeader } from "../../components/KidHeader";
 import { CloudinaryPdfViewer } from "../../components/CloudinaryPdfViewer";
 import { ArrowLeft } from "lucide-react";
+import { SubmissionDrawer } from "../../components/SubmissionDrawer";
 
 interface ComicDetail {
   id: string;
@@ -27,6 +28,7 @@ export const KidComicDetail = (): JSX.Element => {
   const [comic, setComic] = useState<ComicDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [documentUrls, setDocumentUrls] = useState<string[]>([]);
+  const [isSubmissionDrawerOpen, setIsSubmissionDrawerOpen] = useState(false);
 
   const getImageUrl = (path?: string | null) => {
     if (!path) return "/clip-path-group-16.png";
@@ -122,7 +124,7 @@ export const KidComicDetail = (): JSX.Element => {
             Go Back to All Comics
           </button>
           <button
-            onClick={() => {/* TODO: submission logic */}}
+            onClick={() => setIsSubmissionDrawerOpen(true)}
             className="px-6 py-2.5 bg-[#7C1F2D] text-white text-sm font-semibold rounded-lg hover:bg-[#6a1a26] transition-colors"
           >
             Submit Assignment
@@ -187,6 +189,23 @@ export const KidComicDetail = (): JSX.Element => {
           </div>
         )}
       </main>
+
+      {comic && (
+        <SubmissionDrawer
+          isOpen={isSubmissionDrawerOpen}
+          onClose={() => setIsSubmissionDrawerOpen(false)}
+          comic={{
+            id: comic.id,
+            title: comic.title,
+            submissionDeadline: comic.submissionDeadline,
+            maxUploads: comic.maxUploads || 1
+          }}
+          onSuccess={() => {
+            // Ideally refresh submission status or show success
+            alert('Assignment submitted successfully!');
+          }}
+        />
+      )}
     </div>
   );
 };

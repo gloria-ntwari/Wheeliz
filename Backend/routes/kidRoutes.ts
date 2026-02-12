@@ -1,5 +1,5 @@
 import express from 'express';
-import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile, verifyEmail, completeKidProfile } from '../controllers/kidController';
+import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile, verifyEmail, completeKidProfile, submitAssignment } from '../controllers/kidController';
 import { verifyKid } from '../middlewares/authMiddleware';
 
 const router = express.Router();
@@ -109,5 +109,7 @@ router.post('/complete-profile', completeKidProfile);
  *         description: Dashboard data retrieved
  */
 router.get('/dashboard', verifyKid, getKidDashboardStats);
+import { uploadSubmissionFiles } from '../middlewares/upload';
+router.post('/submit', verifyKid, uploadSubmissionFiles, submitAssignment);
 
 export default router;

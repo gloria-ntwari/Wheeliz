@@ -89,3 +89,19 @@ export const uploadAvatar = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: imageFilter
 }).fields([{ name: 'avatar', maxCount: 1 }]);
+
+// Upload for assignment submissions
+export const uploadSubmissionFiles = multer({
+  storage: new CloudinaryStorage({
+    cloudinary: require('../config/cloudinary').default,
+    params: async (req: any, file: any) => {
+      return {
+        folder: 'wheeliz/submissions',
+        resource_type: 'auto',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf', 'doc', 'docx'],
+      };
+    },
+  }),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: documentFilter
+}).array('attachments', 10); // Allow up to 10 files (limit will be checked in controller)

@@ -456,3 +456,61 @@ export const getKidDashboardStats = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const submitAssignment = async (req: Request, res: Response) => {
+    try {
+        const kidId = (req as any).user?.id;
+        const { comicId, description, comments } = req.body;
+        const files = req.files as Express.Multer.File[];
+
+        if (!kidId) {
+            return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+        }
+
+        if (!comicId) {
+            return res.status(400).json({ status: 'error', message: 'Comic ID is required' });
+        }
+
+        const comic = await prisma.comic.findUnique({
+            where: { id: comicId }
+        });
+
+        if (!comic) {
+            return res.status(404).json({ status: 'error', message: 'Comic not found' });
+        }
+
+        if (files && files.length > comic.maxUploads) {
+            return res.status(400).json({
+                status: 'error',
+                message: `Maximum ${comic.maxUploads} files allowed for this assignment`
+            });
+        }
+
+        const fileUrls = files ? files.map(file => file.path) : [];
+
+        const submission = await (prisma.submission as any).create({
+            data: {
+                kid: { connect: { id: kidId } },
+                comic: { connect: { id: comicId } },
+                description,
+                comments,
+                files: JSON.stringify(fileUrls),
+                status: 'pending',
+                submissionDate: new Date()
+            }
+        });
+
+        res.status(201).json({
+            status: 'success',
+            message: 'Assignment submitted successfully',
+            data: submission
+        });
+
+    } catch (error) {
+        console.error('Submit assignment error:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error: ' + (error instanceof Error ? error.message : String(error))
+        });
+    }
+};
