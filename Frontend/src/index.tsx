@@ -11,6 +11,8 @@ import { Comics } from "./screens/AdminDashboard/Comics";
 import { AddComics } from "./screens/AdminDashboard/AddComics";
 import { Submissions } from "./screens/AdminDashboard/Submissions";
 import { KidDashboard } from "./screens/KidDashboard/KidDashboard";
+import { KidComics } from "./screens/KidDashboard/KidComics";
+import { KidComicDetail } from "./screens/KidDashboard/KidComicDetail";
 import { ComicView } from "./screens/AdminDashboard";
 
 // Protected Route Component for Admin
@@ -100,6 +102,22 @@ root.render(
           element={
             <ProtectedKidRoute>
               <KidDashboard />
+            </ProtectedKidRoute>
+          }
+        />
+        <Route
+          path="/kid/comics"
+          element={
+            <ProtectedKidRoute>
+              <KidComics />
+            </ProtectedKidRoute>
+          }
+        />
+        <Route
+          path="/kid/comics/:comicId"
+          element={
+            <ProtectedKidRoute>
+              <KidComicDetail />
             </ProtectedKidRoute>
           }
         />

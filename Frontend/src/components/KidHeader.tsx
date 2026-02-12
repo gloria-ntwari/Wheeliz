@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { 
   Search, 
   Bell, 
@@ -20,6 +20,7 @@ interface KidHeaderProps {
 
 export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const getAvatarUrl = (avatar: string | null) => {
@@ -40,9 +41,12 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
     navigate("/login");
   };
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100 md:px-12">
+    <header className="flex items-center justify-between px-6 py-6 bg-white shadow-md md:px-12">
       {/* Logo Section */}
+      <div className="flex gap-16">
       <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/kid/dashboard")}>
         <img src="/clip-path-group-16.png" alt="Wheeliez" className="h-10 md:h-12" />
       </div>
@@ -50,29 +54,31 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
       {/* Nav Links - Centered */}
       <nav className="hidden gap-8 lg:flex">
         <button 
-          className="text-sm font-bold text-black border-b-2 border-transparent hover:border-black transition-all [font-family:'Poppins']" 
+          className={`text-[16px] transition-all [font-family:'Poppins'] ${isActive("/kid/dashboard") ? "font-bold text-black" : "font-medium text-gray-500 hover:text-black"}`} 
           onClick={() => navigate("/kid/dashboard")}
         >
           Home
         </button>
         <button 
-          className="text-sm font-medium text-gray-500 hover:text-black transition-colors [font-family:'Poppins']" 
+          className={`text-sm transition-all [font-family:'Poppins'] ${isActive("/kid/comics") ? "font-bold text-black" : "font-medium text-gray-500 hover:text-black"}`} 
           onClick={() => navigate("/kid/comics")}
         >
           Comics
         </button>
         <button 
-          className="text-sm font-medium text-gray-500 hover:text-black transition-colors [font-family:'Poppins']" 
+          className={`text-sm transition-all [font-family:'Poppins'] ${isActive("/kid/submission") ? "font-bold text-black" : "font-medium text-gray-500 hover:text-black"}`} 
           onClick={() => navigate("/kid/submission")}
         >
           Submission
         </button>
       </nav>
+      </div>
 
       {/* Action Section - Right */}
       <div className="flex items-center gap-4">
         {/* Search Bar - Imitating Admin Style */}
-        <div className="hidden sm:flex items-center h-[40px] px-4 bg-[#f4f6fb] rounded-full gap-3 w-[200px] md:w-[300px]">
+        <div className="flex">
+        <div className="hidden sm:flex items-center h-[45px] px-4 bg-[#f4f6fb] rounded-full gap-3 w-[200px] md:w-[300px] lg:w-[500px]">
           <Search className="w-4 h-4 text-[#0f2a5f] shrink-0" />
           <input
             type="text"
@@ -86,14 +92,15 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
           <Bell className="w-5 h-5 text-[#111827]" />
           <span className="absolute w-1.5 h-1.5 bg-red-500 rounded-full top-1.5 right-2.5"></span>
         </button>
+        </div>
 
         {/* Profile Dropdown */}
         <div className="relative">
           <div 
-            className="flex items-center gap-2 p-1 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 p-1 transition-colors rounded-lg cursor-pointer hover:bg-gray-50"
             onClick={() => setIsProfileOpen(!isProfileOpen)}
           >
-            <div className="w-8 h-8 overflow-hidden bg-gray-200 rounded-lg shrink-0 border border-gray-50">
+            <div className="w-8 h-8 overflow-hidden bg-gray-200 border rounded-lg shrink-0 border-gray-50">
               <img
                 src={getAvatarUrl(kidData.avatar)}
                 alt="Profile"
@@ -111,7 +118,7 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
           </div>
 
           {isProfileOpen && (
-            <div className="absolute right-0 z-50 w-56 mt-2 overflow-hidden bg-white border border-gray-100 rounded-xl shadow-lg">
+            <div className="absolute right-0 z-50 w-56 mt-2 overflow-hidden bg-white border border-gray-100 shadow-lg rounded-xl">
               <div className="px-4 py-3 border-b border-gray-50 bg-gray-50/50">
                 <p className="text-xs font-bold text-gray-900 truncate [font-family:'Poppins']">{kidData.kidName}</p>
                 <p className="text-[10px] text-gray-500 truncate mt-0.5">{kidData.email || 'Kid Member'}</p>

@@ -301,11 +301,29 @@ export const createComic = async (req: Request, res: Response) => {
 export const getComics = async (_req: Request, res: Response) => {
   try {
     const comics = await prisma.comic.findMany({
+      include: {
+        _count: {
+          select: {
+            submissions: true
+          }
+        }
+      },
       orderBy: { createdAt: 'desc' }
     });
+
+    // Get total kids count for progress calculation
+    const totalKids = await prisma.kid.count();
+
+    // Transform comics to include submission count
+    const comicsWithStats = comics.map(comic => ({
+      ...comic,
+      submissionCount: comic._count.submissions,
+      totalKids
+    }));
+
     res.json({
       status: 'success',
-      data: comics
+      data: comicsWithStats
     });
   } catch (error) {
     res.status(500).json({
