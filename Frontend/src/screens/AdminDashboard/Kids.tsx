@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { API_BASE_URL } from "../../config/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowRight, ArrowLeft, UserPlus, Pencil, Download, Printer, Share2} from "lucide-react";
 import { AdminHeader } from "../../components/AdminHeader";
 import { Home, Clock, Puzzle, Grid3X3 } from "lucide-react";
@@ -22,6 +22,10 @@ export const Kids = (): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth >= 1024 : true
   );
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get("search")?.toLowerCase() || "";
+
   const [filterActive, setFilterActive] = useState<"active" | "not-active">("active");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKid, setSelectedKid] = useState<any | null>(null);
@@ -163,7 +167,8 @@ export const Kids = (): JSX.Element => {
                 <div className="py-10 text-center col-span-full">Loading kids...</div>
               ) : kids.filter((k: any) => {
                 const isActive = k.status?.toLowerCase() === "active";
-                return filterActive === "active" ? isActive : !isActive;
+                const matchesSearch = k.name.toLowerCase().includes(searchQuery) || k.email?.toLowerCase().includes(searchQuery);
+                return (filterActive === "active" ? isActive : !isActive) && matchesSearch;
               }).length === 0 ? (
                 <div className="py-10 text-center col-span-full font-medium text-gray-500 [font-family:'Poppins'] uppercase tracking-wider">
                   No {filterActive === "active" ? "Active" : "Not Active"} Kids Found
@@ -172,7 +177,8 @@ export const Kids = (): JSX.Element => {
                 kids
                   .filter((kid: any) => {
                     const isActive = kid.status?.toLowerCase() === "active";
-                    return filterActive === "active" ? isActive : !isActive;
+                    const matchesSearch = kid.name.toLowerCase().includes(searchQuery) || kid.email?.toLowerCase().includes(searchQuery);
+                    return (filterActive === "active" ? isActive : !isActive) && matchesSearch;
                   })
                   .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                   .map((kid: any) => {
@@ -256,7 +262,8 @@ export const Kids = (): JSX.Element => {
           {/* Pagination */}
           {kids.filter((k: any) => {
             const isActive = k.status?.toLowerCase() === "active";
-            return filterActive === "active" ? isActive : !isActive;
+            const matchesSearch = k.name.toLowerCase().includes(searchQuery) || k.email?.toLowerCase().includes(searchQuery);
+            return (filterActive === "active" ? isActive : !isActive) && matchesSearch;
           }).length > itemsPerPage && (
           <section className="flex flex-col items-center w-full gap-4 mt-8 sm:flex-row sm:justify-between sm:gap-0">
             <button
@@ -272,7 +279,8 @@ export const Kids = (): JSX.Element => {
               {Array.from({
                 length: Math.ceil(kids.filter((k: any) => {
                   const isActive = k.status?.toLowerCase() === "active";
-                  return filterActive === "active" ? isActive : !isActive;
+                  const matchesSearch = k.name.toLowerCase().includes(searchQuery) || k.email?.toLowerCase().includes(searchQuery);
+                  return (filterActive === "active" ? isActive : !isActive) && matchesSearch;
                 }).length / itemsPerPage)
               }, (_, i) => i + 1).map((num) => (
                   <button
@@ -292,13 +300,15 @@ export const Kids = (): JSX.Element => {
               onClick={() => {
                 const totalFiltered = kids.filter((k: any) => {
                   const isActive = k.status?.toLowerCase() === "active";
-                  return filterActive === "active" ? isActive : !isActive;
+                  const matchesSearch = k.name.toLowerCase().includes(searchQuery) || k.email?.toLowerCase().includes(searchQuery);
+                  return (filterActive === "active" ? isActive : !isActive) && matchesSearch;
                 }).length;
                 setCurrentPage((p) => Math.min(Math.ceil(totalFiltered / itemsPerPage), p + 1));
               }}
               disabled={currentPage === Math.ceil(kids.filter((k: any) => {
                 const isActive = k.status?.toLowerCase() === "active";
-                return filterActive === "active" ? isActive : !isActive;
+                const matchesSearch = k.name.toLowerCase().includes(searchQuery) || k.email?.toLowerCase().includes(searchQuery);
+                return (filterActive === "active" ? isActive : !isActive) && matchesSearch;
               }).length / itemsPerPage)}
               className="flex items-center gap-1 px-4 py-2.5 text-sm font-medium text-black bg-[#f0f0f0] rounded-full hover:bg-[#e5e5e5] transition-colors [font-family:'Poppins'] disabled:opacity-50"
             >

@@ -136,9 +136,14 @@ export const KidComicDetail = (): JSX.Element => {
           </button>
           <button
             onClick={() => setIsSubmissionDrawerOpen(true)}
-            className="px-6 py-2.5 bg-[#7C1F2D] text-white text-sm font-semibold rounded-lg hover:bg-[#6a1a26] transition-colors"
+            disabled={submissions.length > 0}
+            className={`px-6 py-2.5 text-sm font-semibold rounded-lg transition-colors ${
+              submissions.length > 0 
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed" 
+                : "bg-[#7C1F2D] text-white hover:bg-[#6a1a26]"
+            }`}
           >
-            Submit Assignment
+            {submissions.length > 0 ? "Already Submitted" : "Submit Assignment"}
           </button>
         </div>
 
@@ -218,7 +223,7 @@ export const KidComicDetail = (): JSX.Element => {
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                       <span className="text-sm font-bold text-gray-700">Marks: {sub.marks !== null ? `${sub.marks}/100` : 'Pending'}</span>
+                       <span className="text-sm font-bold text-gray-700">Marks: {sub.marks !== null ? `${sub.marks}/${comic?.totalMarks || 100}` : 'Pending'}</span>
                        {sub.status === 'graded' && (
                            <div className="w-5 h-5 rounded-full bg-[#00C58D] flex items-center justify-center text-white text-[10px]">✓</div>
                        )}

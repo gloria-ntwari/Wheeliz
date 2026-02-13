@@ -374,15 +374,7 @@ export const completeKidProfile = async (req: Request, res: Response) => {
 
 export const getKidDashboardStats = async (req: Request, res: Response) => {
     try {
-        // Assuming user ID is attached to req.user (need to check auth middleware or jwt decoding)
-        // Since I don't see the auth middleware here, I'll assume req has user from the token.
-         // However, in Typescript 'req' might need type extension. 
-         // For now, I'll trust the plan or existing patterns. 
-         // Looking at previous controllers, they use req.body or params. 
-         // Typically auth middleware adds user to req.
-         // I will assume `(req as any).user.id` or similar is available if middleware is used.
-         
-         const kidId = (req as any).user?.id; // Accessing user from request, assuming auth middleware runs before
+        const kidId = (req as any).user?.id;
 
          if (!kidId) {
              return res.status(401).json({
@@ -391,58 +383,112 @@ export const getKidDashboardStats = async (req: Request, res: Response) => {
              });
          }
 
-         const kid = await prisma.kid.findUnique({
-             where: { id: kidId },
+         // Fetch all comics to calculate total possible marks (Global Denominator)
+         const allComics = await prisma.comic.findMany();
+         const grandTotalMarks = allComics.reduce((acc, c) => acc + (c.totalMarks || 0), 0);
+         
+         // Fetch all kids with their submissions to calculate rankings
+         const allKids = await prisma.kid.findMany({
              include: {
                  submissions: {
-                     include: {
-                         comic: true
-                     },
-                     orderBy: { createdAt: 'desc' },
-                     take: 5
+                     include: { comic: true }
                  }
              }
          });
 
-         if (kid) {
-             // Update last login whenever they access dashboard to keep status active
+         // Calculate Score for every kid
+         // Score = Sum(Marks) + Sum(Bonus if submitted before deadline)
+         const kidScores = allKids.map(k => {
+             let totalScore = 0;
+             k.submissions.forEach(sub => {
+                 const marks = sub.marks || 0;
+                 let bonus = 0;
+                 if (sub.comic && sub.comic.bonus && sub.comic.submissionDeadline) {
+                     if (new Date(sub.createdAt) <= new Date(sub.comic.submissionDeadline)) {
+                         bonus = sub.comic.bonus;
+                     }
+                 }
+                 totalScore += marks + bonus;
+             });
+             return { kidId: k.id, score: totalScore, kidData: k };
+         });
+
+         // Sort by Score Descending
+         kidScores.sort((a, b) => b.score - a.score);
+
+         // Find Current Kid's Rank and Data
+         const myRankIndex = kidScores.findIndex(k => k.kidId === kidId);
+         
+         if (myRankIndex === -1) {
+             return res.status(404).json({ status: 'error', message: 'Kid not found in records' });
+         }
+
+         const myData = kidScores[myRankIndex];
+         const rank = myRankIndex + 1;
+         const myTotalScore = myData.score;
+
+         // Calculate Overall Percentage based on Grand Total Marks
+         // If grandTotalMarks is 0, avoid division by zero
+         const overallPercentageRaw = grandTotalMarks > 0 
+            ? (myTotalScore / grandTotalMarks) * 100 
+            : 0;
+         
+         // Format to 2 decimal places
+         const overallPercentage = Number(overallPercentageRaw.toFixed(2));
+
+         // Update last login
+         if (myData.kidData) {
              await (prisma.kid as any).update({
-                 where: { id: kid.id },
+                 where: { id: kidId },
                  data: { lastLogin: new Date() }
              });
          }
 
-         if (!kid) {
-             return res.status(404).json({
-                 status: 'error',
-                 message: 'Kid not found'
-             });
-         }
+         // Prepare Recent Progress (using specific submission marks / comic total marks)
+         // We need to re-fetch or use the data we already have. 
+         // The `allKids` query included submissions, but not sorted or limited.
+         // Let's rely on the sorted `kidScores` finding, but `allKids` has all submissions.
+         // Effectively `myData.kidData.submissions`.
+         
+         const mySubmissions = myData.kidData.submissions
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Recent first
 
-         // Calculate stats
-         const totalComicsRead = new Set(kid.submissions.map(s => s.comicId)).size;
-         const totalMarks = kid.submissions.reduce((acc, curr) => acc + (curr.marks || 0), 0);
+         const recentProgress = mySubmissions.map(sub => {
+             const maxMarks = sub.comic.totalMarks || 100;
+             const obtained = sub.marks || 0;
+             // For individual assignment progress, we usually just show Marks/Total ignoring bonus in the bar,
+             // or do we include bonus? Usually "Marks from Submissions" implies just the grade.
+             // If the user wants consistent "%" everywhere, let's stick to Grade/Total.
+             // Bonus is usually an "extra" on top or part of the "Overall Rank".
+             // Let's keep individual bars as Grade/Total for clarity unless asked otherwise.
+             
+             const percentageRaw = maxMarks > 0 ? (obtained / maxMarks) * 100 : 0;
+             const percentage = Number(percentageRaw.toFixed(2));
+             
+             return {
+                id: sub.comic.id,
+                title: sub.comic.title,
+                cover: sub.comic.image, 
+                progress: percentage, 
+                status: sub.status,
+                submissionDate: sub.submissionDate,
+                marks: obtained,
+                totalMarks: maxMarks
+             };
+         });
          
-         // Mock rank for now (would require fetching all kids and sorting)
-         // For simplicity and speed request, I'll use a placeholder or basic calculation
-         const rank = 1; // Placeholder
-         
-         // Recent progress (mapped from submissions)
-         const recentProgress = kid.submissions.map(sub => ({
-             id: sub.comic.id,
-             title: sub.comic.title,
-             cover: sub.comic.image, 
-             progress: sub.status === 'graded' ? 100 : 50, // Mock progress based on status
-             status: sub.status,
-             submissionDate: sub.submissionDate
-         }));
+         const totalComicsRead = new Set(mySubmissions.map(s => s.comicId)).size;
 
         res.json({
             status: 'success',
             data: {
-                kidName: kid.name,
-                avatar: kid.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`,
-                standing: totalMarks, // Using marks as 'standing'
+                kidName: myData.kidData.name,
+                email: myData.kidData.email,
+                avatar: myData.kidData.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(myData.kidData.name)}&background=random`,
+                parentPhone: myData.kidData.parentPhone,
+                dateOfBirth: myData.kidData.dateOfBirth,
+                standing: rank, 
+                overallPercentage, 
                 rank,
                 comicsRead: totalComicsRead,
                 recentProgress
@@ -488,6 +534,21 @@ export const submitAssignment = async (req: Request, res: Response) => {
         }
 
         const fileUrls = files ? files.map(file => file.path) : [];
+
+        // Check for existing submission
+        const existingSubmission = await prisma.submission.findFirst({
+            where: {
+                kidId,
+                comicId
+            }
+        });
+
+        if (existingSubmission) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'You have already submitted for this comic.'
+            });
+        }
 
         const submission = await (prisma.submission as any).create({
             data: {
@@ -539,6 +600,67 @@ export const getComicSubmissions = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.error('Get comic submissions error:', error);
+        res.status(500).json({ status: 'error', message: 'Server error' });
+    }
+};
+
+export const updateKidProfile = async (req: Request, res: Response) => {
+    try {
+        const kidId = (req as any).user?.id;
+        if (!kidId) {
+            return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+        }
+
+        const { name, email, parentPhone, dateOfBirth, oldPassword, newPassword } = req.body;
+        
+        const existingKid = await prisma.kid.findUnique({ where: { id: kidId } });
+        if (!existingKid) {
+            return res.status(404).json({ status: 'error', message: 'Kid not found' });
+        }
+
+        const dataToUpdate: any = {};
+        if (name) dataToUpdate.name = name;
+        if (email) dataToUpdate.email = email;
+        if (parentPhone) dataToUpdate.parentPhone = parentPhone;
+        if (dateOfBirth) dataToUpdate.dateOfBirth = new Date(dateOfBirth);
+
+        // Handle avatar upload
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+        if (files?.avatar?.[0]) {
+            dataToUpdate.avatar = files.avatar[0].path;
+        }
+
+        if (newPassword) {
+            if (!oldPassword) {
+                return res.status(400).json({ status: 'error', message: 'Old password is required' });
+            }
+            if (!existingKid.passwordHash) {
+                 return res.status(400).json({ status: 'error', message: 'No password set for this account' });
+            }
+            const isPasswordValid = await bcrypt.compare(oldPassword, existingKid.passwordHash);
+            if (!isPasswordValid) {
+                return res.status(401).json({ status: 'error', message: 'Invalid old password' });
+            }
+            dataToUpdate.passwordHash = await bcrypt.hash(newPassword, 10);
+        }
+
+        const updatedKid = await prisma.kid.update({
+            where: { id: kidId },
+            data: dataToUpdate
+        });
+
+        res.json({
+            status: 'success',
+            message: 'Profile updated successfully',
+            data: {
+                kidName: updatedKid.name,
+                avatar: updatedKid.avatar,
+                email: updatedKid.email
+            }
+        });
+
+    } catch (error) {
+        console.error('Update kid profile error:', error);
         res.status(500).json({ status: 'error', message: 'Server error' });
     }
 };

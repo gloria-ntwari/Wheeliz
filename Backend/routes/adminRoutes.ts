@@ -11,7 +11,8 @@ import {
   createKid,
   updateAdminProfile,
   getSubmissions,
-  gradeSubmission
+  gradeSubmission,
+  getNotifications
 } from '../controllers/adminController';
 import { verifyAdmin, verifyAuth } from '../middlewares/authMiddleware';
 
@@ -101,6 +102,8 @@ router.delete('/comics/:id', deleteComic);
  */
 router.get('/kids', getAllKids);
 router.post('/kids', uploadAvatar, createKid);
+router.post('/kids', uploadAvatar, createKid);
+router.get('/notifications', getNotifications);
 router.get('/submissions', getSubmissions);
 router.post('/submissions/:submissionId/grade', gradeSubmission);
 router.put('/profile', uploadAvatar, updateAdminProfile);

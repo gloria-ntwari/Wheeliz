@@ -16,6 +16,7 @@ import {
   Maximize2
 } from "lucide-react";
 import { AdminHeader } from "../../components/AdminHeader";
+import { CloudinaryPdfViewer } from "../../components/CloudinaryPdfViewer";
 import { Comic, getComicImageUrl } from "./Comics";
 
 const navItems = [
@@ -156,22 +157,12 @@ export const ComicView = (): JSX.Element => {
                 <ArrowLeft className="w-5 h-5 text-gray-700" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-black font-[Poppins]">Documents</h1>
+                <h1 className="text-[17px] font-bold text-black font-[Poppins]">Documents</h1>
                 <p className="text-sm text-gray-500 font-[Poppins]">You have {comics.length} documents</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
-              <div className="flex bg-[#F4F6FB] p-1 rounded-lg">
-                <button className="p-2 text-gray-400 rounded-md hover:bg-white hover:shadow-sm"><LayoutGrid className="w-5 h-5" /></button>
-                <button className="p-2 text-gray-400 rounded-md hover:bg-white hover:shadow-sm"><ListIcon className="w-5 h-5" /></button>
-                <button className="p-2 bg-white rounded-md shadow-sm text-[#681618]"><Maximize2 className="w-5 h-5" /></button>
-              </div>
-              <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">
-                <Filter className="w-4 h-4" />
-                Filter
-              </button>
-            </div>
+
           </div>
 
           <div className="flex flex-1 gap-6 px-6 overflow-hidden lg:px-10">
@@ -200,138 +191,164 @@ export const ComicView = (): JSX.Element => {
               </div>
             </div>
 
-            {/* Middle Pane: Main Viewer */}
-            <div className="relative flex flex-col items-center flex-1 min-w-0 bg-[#F4F6FB] rounded-2xl overflow-hidden shadow-inner p-4">
-              <div className="relative flex flex-col items-center justify-center w-full h-full bg-white shadow-2xl rounded-xl overflow-hidden group">
-                {/* Document Viewer */}
-                {pages.length > 0 ? (() => {
-                  const currentDocPath = pages[currentPage - 1];
-                  const docUrl = getComicImageUrl(currentDocPath);
-                  const isPdf = docUrl.toLowerCase().split('?')[0].endsWith('.pdf');
-                  const isImage = /\.(jpg|jpeg|png|webp|gif)/i.test(docUrl.split('?')[0]);
-                  
-                  if (isImage) {
+            {/* Content Area (Middle + Right) */}
+            <div className="flex flex-1 gap-6 overflow-hidden">
+               {/* Logic to choose viewer type */}
+               {(() => {
+                 if (pages.length === 0) {
                     return (
-                      <div className="flex items-center justify-center w-full h-full p-4">
+                      <div className="flex flex-col items-center justify-center flex-1 w-full h-full p-12 text-center bg-[#F4F6FB] rounded-2xl">
                         <img 
-                          src={docUrl} 
-                          alt={`Page ${currentPage}`} 
-                          className="object-contain w-full h-full rounded-lg"
+                          src={getComicImageUrl(currentComic?.image)} 
+                          alt={currentComic?.title} 
+                          className="object-contain w-full h-full max-h-[80%] rounded-lg opacity-30 mb-4"
                         />
+                        <p className="text-gray-400">No document available.</p>
                       </div>
                     );
-                  }
+                 }
 
-                  // For PDFs we can use direct embedding, for others we might need Google Viewer
-                  // If it's a local URL (contains localhost), use direct embedding for PDF
-                  // If it's external (Cloudinary), use Google Viewer to bypass 401/CORS issues
-                  const isLocal = docUrl.includes('localhost');
-                  const viewerSrc = (isPdf && isLocal) 
-                    ? `${docUrl}#toolbar=0&navpanes=0&scrollbar=0`
-                    : `https://docs.google.com/viewer?url=${encodeURIComponent(docUrl)}&embedded=true`;
+                 const firstPage = pages[0];
+                 const firstPageUrl = getComicImageUrl(firstPage);
+                 const isPdf = firstPageUrl.toLowerCase().includes('.pdf');
+                 const isCloudinary = firstPageUrl.includes('res.cloudinary.com');
 
-                  return (
-                    <iframe 
-                      src={viewerSrc}
-                      className="w-full h-full border-0"
-                      key={`${currentComic?.id}-${currentPage}-${currentDocPath}`}
-                      title={currentComic?.title}
-                    />
-                  );
-                })() : (
-                  <div className="flex flex-col items-center justify-center w-full h-full p-12 text-center">
-                    <img 
-                      src={getComicImageUrl(currentComic?.image)} 
-                      alt={currentComic?.title} 
-                      className="object-contain w-full h-full max-h-[80%] rounded-lg opacity-30 mb-4"
-                    />
-                    <p className="text-gray-400">No pages found in this comic.</p>
-                  </div>
-                )}
+                 // Case 1: Cloudinary PDF - Use the specialized viewer
+                 if (isPdf && isCloudinary) {
+                    return (
+                        <div className="flex-1 h-full overflow-hidden bg-[#F4F6FB] rounded-2xl p-4">
+                            <CloudinaryPdfViewer url={firstPageUrl} />
+                        </div>
+                    );
+                 }
 
-                {/* Navigation Overlay */}
-                <button 
-                  onClick={prevPage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-gray-100 hover:bg-[#681618] hover:text-white transition-all opacity-0 group-hover:opacity-100 disabled:opacity-30"
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button 
-                  onClick={nextPage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-gray-100 hover:bg-[#681618] hover:text-white transition-all opacity-0 group-hover:opacity-100 disabled:opacity-30"
-                  disabled={currentPage === pages.length}
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
+                 // Case 2: Standard Image Viewer (or non-Cloudinary PDF fallback)
+                 return (
+                    <>
+                        {/* Middle Pane: Main Viewer */}
+                        <div className="relative flex flex-col items-center flex-1 min-w-0 bg-[#F4F6FB] rounded-2xl overflow-hidden shadow-inner p-4">
+                        <div className="relative flex flex-col items-center justify-center w-full h-full bg-white shadow-2xl rounded-xl overflow-hidden group">
+                            {/* Document Viewer */}
+                            {(() => {
+                            const currentDocPath = pages[currentPage - 1];
+                            const docUrl = getComicImageUrl(currentDocPath);
+                            const isImage = /\.(jpg|jpeg|png|webp|gif)/i.test(docUrl.split('?')[0]);
+                            
+                            if (isImage) {
+                                return (
+                                <div className="flex items-center justify-center w-full h-full p-4">
+                                    <img 
+                                    src={docUrl} 
+                                    alt={`Page ${currentPage}`} 
+                                    className="object-contain w-full h-full rounded-lg"
+                                    />
+                                </div>
+                                );
+                            }
 
-                {/* Page Counter Bottom */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-                   <div className="flex items-center gap-4 bg-white/90 backdrop-blur-md px-6 py-2 rounded-full shadow-xl border border-white/20">
-                      <div className="flex items-center gap-2">
-                          <span className="text-xs text-red-500">❤️ Thank you!</span>
-                      </div>
-                      <div className="w-[1px] h-4 bg-gray-200 mx-2"></div>
-                      <span className="text-sm font-bold text-gray-700">{currentPage} of {pages.length || 0}</span>
-                   </div>
-                   {pages[currentPage - 1] && (
-                      <a 
-                        href={getComicImageUrl(pages[currentPage - 1])} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-[10px] text-gray-400 hover:text-[#681618] underline"
-                      >
-                        Download this page
-                      </a>
-                   )}
-                </div>
-              </div>
-            </div>
+                            // Fallback for non-Cloudinary PDFs or other types
+                            const isLocal = docUrl.includes('localhost');
+                            const viewerSrc = (docUrl.toLowerCase().includes('.pdf') && isLocal) 
+                                ? `${docUrl}#toolbar=0&navpanes=0&scrollbar=0`
+                                : `https://docs.google.com/viewer?url=${encodeURIComponent(docUrl)}&embedded=true`;
 
-            {/* Right Pane: Page Thumbnails */}
-            <div className="flex-col hidden w-40 lg:flex shrink-0">
-               <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
-                  {pages.map((path, i) => (
-                    <div 
-                      key={i}
-                      onClick={() => setCurrentPage(i + 1)}
-                      className={`relative aspect-[3/4] rounded-lg border-2 cursor-pointer transition-all overflow-hidden ${
-                        currentPage === i + 1 
-                          ? "border-[#681618] ring-2 ring-[#681618]/20" 
-                          : "border-transparent hover:border-gray-200"
-                      }`}
-                    >
-                       <div className="w-full h-full bg-gray-100 p-2 flex items-center justify-center">
-                          {/\.(jpg|jpeg|png|webp|gif)/i.test(path.split('?')[0]) ? (
-                            <img 
-                               src={getComicImageUrl(path)} 
-                               className="object-cover w-full h-full"
-                               alt={`Page ${i + 1}`}
-                            />
-                          ) : (
-                            <div className="flex flex-col items-center justify-center gap-2 text-gray-400">
-                               <Puzzle className="w-8 h-8 opacity-20" />
-                               <span className="text-[10px] uppercase font-bold">{path.split('.').pop()}</span>
+                            return (
+                                <iframe 
+                                src={viewerSrc}
+                                className="w-full h-full border-0"
+                                key={`${currentComic?.id}-${currentPage}-${currentDocPath}`}
+                                title={currentComic?.title}
+                                />
+                            );
+                            })()}
+
+                            {/* Navigation Overlay */}
+                            <button 
+                            onClick={prevPage}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-gray-100 hover:bg-[#681618] hover:text-white transition-all opacity-0 group-hover:opacity-100 disabled:opacity-30"
+                            disabled={currentPage === 1}
+                            >
+                            <ChevronLeft className="w-6 h-6" />
+                            </button>
+                            <button 
+                            onClick={nextPage}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-gray-100 hover:bg-[#681618] hover:text-white transition-all opacity-0 group-hover:opacity-100 disabled:opacity-30"
+                            disabled={currentPage === pages.length}
+                            >
+                            <ChevronRight className="w-6 h-6" />
+                            </button>
+
+                            {/* Page Counter Bottom */}
+                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+                            <div className="flex items-center gap-4 bg-white/90 backdrop-blur-md px-6 py-2 rounded-full shadow-xl border border-white/20">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-red-500">❤️ Thank you!</span>
+                                </div>
+                                <div className="w-[1px] h-4 bg-gray-200 mx-2"></div>
+                                <span className="text-sm font-bold text-gray-700">{currentPage} of {pages.length || 0}</span>
                             </div>
-                          )}
-                       </div>
-                       <div className="absolute bottom-0 left-0 right-0 p-1.5 text-[10px] font-bold text-center bg-white/90 text-gray-800 backdrop-blur-sm border-t border-gray-100">
-                          Page {i + 1}
-                       </div>
-                    </div>
-                  ))}
-               </div>
-               
-               {/* Next Page Button beneath thumbnails as in image */}
-               <div className="flex justify-center mt-6">
-                  <button 
-                    onClick={nextPage}
-                    className="p-4 bg-white border border-gray-100 rounded-full shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all text-gray-500 hover:text-[#681618] disabled:opacity-20"
-                    disabled={currentPage === pages.length}
-                  >
-                    <ChevronRight className="w-6 h-6" />
-                  </button>
-               </div>
+                            {pages[currentPage - 1] && (
+                                <a 
+                                    href={getComicImageUrl(pages[currentPage - 1])} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-[10px] text-gray-400 hover:text-[#681618] underline"
+                                >
+                                    Download this page
+                                </a>
+                            )}
+                            </div>
+                        </div>
+                        </div>
+
+                        {/* Right Pane: Page Thumbnails */}
+                        <div className="flex-col hidden w-40 lg:flex shrink-0">
+                        <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+                            {pages.map((path, i) => (
+                                <div 
+                                key={i}
+                                onClick={() => setCurrentPage(i + 1)}
+                                className={`relative aspect-[3/4] rounded-lg border-2 cursor-pointer transition-all overflow-hidden ${
+                                    currentPage === i + 1 
+                                    ? "border-[#681618] ring-2 ring-[#681618]/20" 
+                                    : "border-transparent hover:border-gray-200"
+                                }`}
+                                >
+                                <div className="w-full h-full bg-gray-100 p-2 flex items-center justify-center">
+                                    {/\.(jpg|jpeg|png|webp|gif)/i.test(path.split('?')[0]) ? (
+                                        <img 
+                                        src={getComicImageUrl(path)} 
+                                        className="object-cover w-full h-full"
+                                        alt={`Page ${i + 1}`}
+                                        />
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center gap-2 text-gray-400">
+                                        <Puzzle className="w-8 h-8 opacity-20" />
+                                        <span className="text-[10px] uppercase font-bold">{path.split('.').pop()}</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="absolute bottom-0 left-0 right-0 p-1.5 text-[10px] font-bold text-center bg-white/90 text-gray-800 backdrop-blur-sm border-t border-gray-100">
+                                    Page {i + 1}
+                                </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        {/* Next Page Button beneath thumbnails */}
+                        <div className="flex justify-center mt-6">
+                            <button 
+                                onClick={nextPage}
+                                className="p-4 bg-white border border-gray-100 rounded-full shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all text-gray-500 hover:text-[#681618] disabled:opacity-20"
+                                disabled={currentPage === pages.length}
+                            >
+                                <ChevronRight className="w-6 h-6" />
+                            </button>
+                        </div>
+                        </div>
+                    </>
+                 );
+               })()}
             </div>
           </div>
         </main>

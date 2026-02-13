@@ -79,15 +79,15 @@ export const KidDashboard = (): JSX.Element => {
                 <div className="relative w-full h-3 overflow-hidden bg-gray-100 rounded-full">
                     <div 
                         className="h-full bg-[#68161C] rounded-full transition-all duration-300" 
-                        style={{ width: `${Math.min(kidData.standing, 100)}%` }}
+                        style={{ width: `${Math.min(kidData.overallPercentage || 0, 100)}%` }}
                     ></div>
                     {/* Progress Label */}
                     <div 
                         className="absolute top-0 flex items-center h-full transition-all duration-300"
-                        style={{ left: `${Math.min(kidData.standing, 100)}%` }}
+                        style={{ left: `${Math.min(kidData.overallPercentage || 0, 100)}%` }}
                     >
                         <span className="text-xs font-bold text-white bg-[#68161C] px-2 py-0.5 rounded-full -ml-8">
-                            {kidData.standing}/100
+                            {(kidData.overallPercentage || 0).toFixed(2)}%
                         </span>
                     </div>
                 </div>
@@ -115,23 +115,30 @@ export const KidDashboard = (): JSX.Element => {
                          />
                     </div>
                     
-                    <div className="flex-1 w-full">
-                        <h3 className="font-bold text-gray-900">{comic.title}</h3>
-                        <p className="mb-2 text-sm text-gray-500">Change of work</p> {/* Subtitle placeholder */}
+                    <div className="flex-1 w-full ml-4">
+                        <div className="flex items-center justify-between mb-1">
+                            <h3 className="font-bold text-gray-900">{comic.title}</h3>
+                            <div className="flex items-center gap-2">
+                                {comic.status === 'graded' ? (
+                                    <>
+                                        <span className="text-sm font-bold text-gray-700">{comic.progress}%</span>
+                                        <div className="w-5 h-5 rounded-full bg-[#00C58D] flex items-center justify-center text-white text-[10px]">✓</div>
+                                    </>
+                                ) : (
+                                    <span className="text-xs font-semibold text-orange-500 bg-orange-50 px-2 py-1 rounded-full">
+                                        Pending
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                        {/* <p className="mb-2 text-sm text-gray-500">Change of work</p> */} {/* Subtitle placeholder - removed as causing clutter/confusion with wrong data */}
                         
-                        <div className="relative w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="relative w-full h-2.5 bg-gray-100 rounded-full overflow-hidden mt-2">
                              <div 
-                                className="h-full bg-[#00C58D] rounded-full" 
-                                style={{ width: `${comic.progress}%` }}
+                                className="h-full bg-[#00C58D] rounded-full transition-all duration-300" 
+                                style={{ width: comic.status === 'graded' ? `${comic.progress}%` : '0%' }}
                              ></div>
                         </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 shrink-0">
-                         <span className="text-sm font-bold text-gray-700">{comic.progress}/100</span>
-                         {comic.status === 'graded' && (
-                             <div className="w-6 h-6 rounded-full bg-[#00C58D] flex items-center justify-center text-white text-xs">✓</div>
-                         )}
                     </div>
                 </div>
             ))}

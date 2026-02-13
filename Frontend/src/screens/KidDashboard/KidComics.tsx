@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../../config/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { KidHeader } from "../../components/KidHeader";
 import { 
   FileText, 
@@ -26,6 +26,10 @@ interface Comic {
 
 export const KidComics = (): JSX.Element => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get("search")?.toLowerCase() || "";
+  
   const [kidData, setKidData] = useState<any>(null);
   const [allComics, setAllComics] = useState<Comic[]>([]);
   const [loading, setLoading] = useState(true);
@@ -107,14 +111,15 @@ export const KidComics = (): JSX.Element => {
     };
 
     fetchData();
-  }, [navigate]);
+  }, [navigate]); // location.search removed from dep array to avoid re-fetching, filtering happens on render
 
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
-  const submittedComics = allComics
+    const submittedComics = allComics
     .filter(c => c.status === 'submitted')
+    .filter(c => c.title.toLowerCase().includes(searchQuery) || c.subtitle.toLowerCase().includes(searchQuery))
     .sort((a, b) => {
       const dateA = a.lastSubmissionDate ? new Date(a.lastSubmissionDate).getTime() : 0;
       const dateB = b.lastSubmissionDate ? new Date(b.lastSubmissionDate).getTime() : 0;
@@ -122,7 +127,9 @@ export const KidComics = (): JSX.Element => {
     });
 
   const recentComics = submittedComics.slice(0, 2);
-  const notSubmittedComics = allComics.filter(c => c.status === 'not_submitted');
+  const notSubmittedComics = allComics
+    .filter(c => c.status === 'not_submitted')
+    .filter(c => c.title.toLowerCase().includes(searchQuery) || c.subtitle.toLowerCase().includes(searchQuery));
 
   const startIndex = (currentPage - 1) * 2;
   const endIndex = startIndex + 2;

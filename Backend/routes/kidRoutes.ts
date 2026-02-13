@@ -1,10 +1,10 @@
-import express from 'express';
 import type { Request, Response } from 'express';
-import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile, verifyEmail, completeKidProfile, submitAssignment, getComicSubmissions } from '../controllers/kidController';
+import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile, verifyEmail, completeKidProfile, submitAssignment, getComicSubmissions, updateKidProfile } from '../controllers/kidController';
 
 import { verifyKid } from '../middlewares/authMiddleware';
+import { Router } from 'express';
 
-const router = express.Router();
+const router = Router();
 
 /**
  * @swagger
@@ -112,7 +112,17 @@ router.post('/complete-profile', completeKidProfile);
  */
 router.get('/dashboard', verifyKid, getKidDashboardStats);
 router.get('/submissions/:comicId', verifyKid, getComicSubmissions);
-import { uploadSubmissionFiles } from '../middlewares/upload';
+router.get('/submissions/:comicId', verifyKid, getComicSubmissions);
+import { uploadSubmissionFiles, uploadAvatar } from '../middlewares/upload';
 router.post('/submit', verifyKid, uploadSubmissionFiles, submitAssignment);
+
+/**
+ * @swagger
+ * /api/kid/profile:
+ *   put:
+ *     summary: Update kid profile
+ *     tags: [Kid]
+ */
+router.put('/profile', verifyKid, uploadAvatar, updateKidProfile);
 
 export default router;

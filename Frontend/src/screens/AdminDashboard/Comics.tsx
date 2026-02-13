@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { API_BASE_URL } from "../../config/api";
 import {
   Home,
@@ -47,6 +47,8 @@ export interface Comic {
   category?: string;
   createdAt: string;
   document?: string;
+  submissionCount?: number;
+  totalKids?: number;
   // Add other fields as needed based on API response
 }
 
@@ -62,6 +64,10 @@ export const Comics = (): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth >= 1024 : true
   );
+  
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get("search")?.toLowerCase() || "";
   
   const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
   const [comics, setComics] = useState<Comic[]>([]);
@@ -237,7 +243,9 @@ export const Comics = (): JSX.Element => {
             ) : (
                 <>
                 <section className={`grid gap-6 ${layoutMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
-                {comics.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((comic) => (
+                {comics
+                .filter(comic => comic.title.toLowerCase().includes(searchQuery) || comic.subtitle.toLowerCase().includes(searchQuery))
+                .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((comic) => (
                     <div 
                     key={comic.id} 
                     onClick={() => navigate(`/admin/comics/view/${comic.id}`)}
@@ -314,14 +322,19 @@ export const Comics = (): JSX.Element => {
                             </span>
                         </div>
                         
-                        {/* Progress - Placeholder for now as it depends on kids progress */}
+                        {/* Progress - Submission Count */}
                         <div className="mb-4">
                             <div className="w-full h-1.5 bg-gray-100 rounded-full mb-1">
-                                <div className={`h-full rounded-full bg-[#D94528]`} style={{ width: `0%` }}></div>
+                                <div 
+                                    className={`h-full rounded-full bg-[#D94528]`} 
+                                    style={{ width: `${Math.min(((comic.submissionCount || 0) / (comic.totalKids || 1)) * 100, 100)}%` }}
+                                ></div>
                             </div>
                             <div className="flex items-center justify-between mt-2">
                                 <span className="text-sm text-gray-500 font-[Poppins]">Progress</span>
-                                <span className="text-xs font-medium text-gray-500">0%</span>
+                                <span className="text-xs font-medium text-gray-500">
+                                    {comic.submissionCount || 0}/{comic.totalKids || 0} ({Math.round(((comic.submissionCount || 0) / (comic.totalKids || 1)) * 100)}%)
+                                </span>
                             </div>
                         </div>
     
@@ -372,7 +385,7 @@ export const Comics = (): JSX.Element => {
                 </section>
 
                 {/* Pagination UI */}
-                {comics.length > itemsPerPage && (
+                {comics.filter(comic => comic.title.toLowerCase().includes(searchQuery) || comic.subtitle.toLowerCase().includes(searchQuery)).length > itemsPerPage && (
                     <div className="flex flex-col items-center w-full gap-4 mt-12 sm:flex-row sm:justify-between sm:gap-0">
                         <button
                             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -384,7 +397,7 @@ export const Comics = (): JSX.Element => {
                         </button>
 
                         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
-                            {Array.from({ length: Math.ceil(comics.length / itemsPerPage) }, (_, i) => i + 1).map((num) => (
+                            {Array.from({ length: Math.ceil(comics.filter(comic => comic.title.toLowerCase().includes(searchQuery) || comic.subtitle.toLowerCase().includes(searchQuery)).length / itemsPerPage) }, (_, i) => i + 1).map((num) => (
                                 <button
                                     key={num}
                                     onClick={() => setCurrentPage(num)}
@@ -399,8 +412,8 @@ export const Comics = (): JSX.Element => {
                         </div>
 
                         <button
-                            onClick={() => setCurrentPage((p) => Math.min(Math.ceil(comics.length / itemsPerPage), p + 1))}
-                            disabled={currentPage === Math.ceil(comics.length / itemsPerPage)}
+                            onClick={() => setCurrentPage((p) => Math.min(Math.ceil(comics.filter(comic => comic.title.toLowerCase().includes(searchQuery) || comic.subtitle.toLowerCase().includes(searchQuery)).length / itemsPerPage), p + 1))}
+                            disabled={currentPage === Math.ceil(comics.filter(comic => comic.title.toLowerCase().includes(searchQuery) || comic.subtitle.toLowerCase().includes(searchQuery)).length / itemsPerPage)}
                             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 transition-colors border border-gray-200 rounded-full hover:bg-gray-50"
                         >
                             Next

@@ -80,7 +80,7 @@ export const Submissions = (): JSX.Element => {
   }, []);
 
   const getFullImageUrl = (path: string | null) => {
-    if (!path) return "/clip-path-group-16.png";
+    if (!path) return undefined;
     if (path.startsWith("http")) return path;
     const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
     return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
@@ -107,9 +107,10 @@ export const Submissions = (): JSX.Element => {
       });
 
       const totalValue = obtainedMarks + bonusMarks;
-      const percentage = totalPossibleMarks > 0 
-        ? Math.min(100, Math.round((totalValue / totalPossibleMarks) * 100)) 
+      const percentageRaw = totalPossibleMarks > 0 
+        ? (totalValue / totalPossibleMarks) * 100 
         : 0;
+      const percentage = percentageRaw.toFixed(2);
 
       return {
         ...kid,
@@ -184,10 +185,10 @@ export const Submissions = (): JSX.Element => {
               </p>
             </div>
             <button 
-              className="text-[10px] bg-[#68161c]/10 text-[#68161c] px-4 py-2 rounded-lg font-bold hover:bg-[#68161c]/20 transition-colors"
+              className="text-[12px] bg-[#68161c]/10 text-[#68161c] px-7 py-2 rounded-lg font-bold hover:bg-[#68161c]/20 transition-colors"
               onClick={() => setShowRankings(true)}
             >
-              View Rankings
+              Rankings
             </button>
           </div>
 
@@ -206,7 +207,7 @@ export const Submissions = (): JSX.Element => {
               return (
                 <div 
                   key={comic.id} 
-                  className="overflow-hidden transition-shadow bg-white border border-gray-100 shadow-sm cursor-pointer rounded-3xl hover:shadow-md"
+                  className="overflow-hidden transition-shadow bg-white border border-gray-100 shadow-sm cursor-pointer rounded-xl hover:shadow-md"
                   onClick={() => navigate(`/admin/submissions/${comic.id}`)}
                 >
                   <div className="h-40 overflow-hidden">
@@ -225,7 +226,15 @@ export const Submissions = (): JSX.Element => {
                            {/* Show top 3 submitters if available, else placeholders */}
                            {submissions.filter(s => s.comicId === comic.id).slice(0, 3).map((s, i) => (
                              <div key={i} className="w-7 h-7 overflow-hidden border-2 border-white rounded-full">
-                               <img src={getFullImageUrl(s.kid?.avatar)} className="object-cover w-full h-full" alt="kid" />
+                               <img 
+                                 src={getFullImageUrl(s.kid?.avatar) || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.kid?.name || 'User')}&background=random`} 
+                                 className="object-cover w-full h-full" 
+                                 alt="kid" 
+                                 onError={(e) => {
+                                   e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(s.kid?.name || 'User')}&background=random`;
+                                   e.currentTarget.onerror = null;
+                                 }}
+                               />
                              </div>
                            ))}
                         </div>
@@ -258,11 +267,21 @@ export const Submissions = (): JSX.Element => {
                       </tr>
                    </thead>
                    <tbody>
-                       {submissions.map((sub) => (
+                       {submissions.slice(0, 2).map((sub) => (
                           <tr key={sub.id}>
                              <td className="py-4">
                                 <div className="flex items-center gap-3">
-                                   <img src={getFullImageUrl(sub.kid?.avatar)} alt={sub.kid?.name} className="object-cover w-10 h-10 rounded-lg" />
+                                   <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">
+                                      <img 
+                                        src={getFullImageUrl(sub.kid?.avatar) || `https://ui-avatars.com/api/?name=${encodeURIComponent(sub.kid?.name || 'Unknown')}&background=random`} 
+                                        alt={sub.kid?.name} 
+                                        className="object-cover w-full h-full"
+                                        onError={(e) => {
+                                          e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(sub.kid?.name || 'Unknown')}&background=random`;
+                                          e.currentTarget.onerror = null;
+                                        }}
+                                      />
+                                   </div>
                                    <span className="text-sm font-bold text-black">{sub.kid?.name}</span>
                                 </div>
                              </td>
@@ -272,7 +291,18 @@ export const Submissions = (): JSX.Element => {
                              </td>
                              <td className="py-4">
                                 <div className="flex items-center gap-3">
-                                   <img src={getFullImageUrl(sub.comic?.image)} alt="Comic" className="object-cover w-10 h-10 rounded-full" />
+                                   {/* Comic Image fallback */}                                   
+                                   <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-gray-100">
+                                      <img 
+                                        src={getFullImageUrl(sub.comic?.image) || "/clip-path-group-16.png"} 
+                                        alt="Comic" 
+                                        className="object-cover w-full h-full" 
+                                        onError={(e) => {
+                                           e.currentTarget.src = "/clip-path-group-16.png";
+                                           e.currentTarget.onerror = null;
+                                        }}
+                                      />
+                                   </div>
                                    <span className="text-sm font-medium text-black">{sub.comic?.title}</span>
                                 </div>
                              </td>
@@ -327,7 +357,15 @@ export const Submissions = (): JSX.Element => {
                               <div className="flex -space-x-1.5">
                                  {comicSubmissions.slice(0, 3).map((s, i) => (
                                    <div key={i} className="overflow-hidden border-2 border-white rounded-full w-7 h-7">
-                                     <img src={getFullImageUrl(s.kid?.avatar)} className="object-cover w-full h-full" alt="kid" />
+                                     <img 
+                                       src={getFullImageUrl(s.kid?.avatar) || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.kid?.name || 'User')}&background=random`} 
+                                       className="object-cover w-full h-full" 
+                                       alt="kid" 
+                                       onError={(e) => {
+                                         e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(s.kid?.name || 'User')}&background=random`;
+                                         e.currentTarget.onerror = null;
+                                       }}
+                                     />
                                    </div>
                                  ))}
                                  {extraSubmissions > 0 && (
@@ -386,7 +424,15 @@ export const Submissions = (): JSX.Element => {
                         </td>
                         <td className="py-5 px-4">
                            <div className="flex items-center gap-4">
-                             <img src={getFullImageUrl(kid.avatar)} className="w-10 h-10 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform" />
+                             <img 
+                               src={getFullImageUrl(kid.avatar) || `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name || 'User')}&background=random`} 
+                               className="w-10 h-10 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform" 
+                               alt={kid.name}
+                               onError={(e) => {
+                                 e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name || 'User')}&background=random`;
+                                 e.currentTarget.onerror = null;
+                               }}
+                             />
                              <span className="font-bold text-black text-sm">{kid.name}</span>
                            </div>
                         </td>

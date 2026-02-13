@@ -66,6 +66,26 @@ export const adminLogin = async (req: Request, res: Response) => {
   }
 };
 
+
+// Get Notification Stats
+export const getNotifications = async (_req: Request, res: Response) => {
+  try {
+    const pendingCount = await prisma.submission.count({
+      where: { status: 'pending' }
+    });
+
+    res.json({
+      status: 'success',
+      data: {
+        pendingCount
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    res.status(500).json({ status: 'error', message: 'Server error' });
+  }
+};
+
 // Get Dashboard Statistics
 export const getDashboardStats = async (_req: Request, res: Response) => {
   try {
@@ -447,6 +467,12 @@ export const updateComic = async (req: Request, res: Response) => {
 export const deleteComic = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    
+    // Delete related submissions first (Cascading delete)
+    await prisma.submission.deleteMany({
+      where: { comicId: id as string }
+    });
+
     await prisma.comic.delete({
       where: { id: id as string }
     });

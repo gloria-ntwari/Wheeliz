@@ -27,6 +27,33 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
+
+  // Fetch notifications count
+  React.useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem("adminToken");
+        if (!token) return;
+        
+        const response = await fetch(`${API_BASE_URL}/admin/notifications`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+          setPendingCount(data.data.pendingCount);
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+    // Poll every minute
+    const interval = setInterval(fetchNotifications, 60000);
+    return () => clearInterval(interval);
+  }, []);
   
   const [adminProfileData, setAdminProfileData] = useState(() => {
     const saved = localStorage.getItem("adminData");
@@ -127,16 +154,65 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             <input
               type="text"
               placeholder="Search for something"
+              defaultValue={new URLSearchParams(location.search).get("search") || ""}
+              onChange={(e) => {
+                const search = e.target.value;
+                const params = new URLSearchParams(location.search);
+                if (search) {
+                  params.set("search", search);
+                } else {
+                  params.delete("search");
+                }
+                navigate(`?${params.toString()}`, { replace: true });
+              }}
               className="flex-1 w-full bg-transparent text-[13px] leading-none text-[#0f2a5f] placeholder:text-[#0f2a5f] outline-none text-left [font-family:'Poppins']"
             />
           </div>
         </div>
 
         <div className="flex items-center justify-end w-full gap-4 lg:w-auto shrink-0">
-          <button className="relative flex items-center justify-center transition-colors bg-white rounded-full w-9 h-9">
+        <div className="relative">
+          <button 
+            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+            className="relative flex items-center justify-center transition-colors bg-white rounded-full w-9 h-9 hover:bg-gray-50"
+          >
             <Bell className="w-5 h-5 text-[#111827]" />
-            <span className="absolute w-1.5 h-1.5 bg-red-500 rounded-full top-1.5 right-2.5"></span>
+            {pendingCount > 0 && (
+              <span className="absolute flex items-center justify-center w-4 h-4 text-[9px] font-bold text-white bg-red-500 rounded-full -top-0.5 -right-0.5 border border-white">
+                {pendingCount}
+              </span>
+            )}
           </button>
+
+          {isNotificationsOpen && (
+            <div className="absolute right-0 z-50 w-64 mt-2 overflow-hidden bg-white border border-gray-100 rounded-xl shadow-lg font-[Poppins]">
+              <div className="px-4 py-3 border-b border-gray-50 bg-gray-50/50">
+                <p className="text-sm font-bold text-gray-900">Notifications</p>
+              </div>
+              <div className="py-2">
+                {pendingCount > 0 ? (
+                  <button 
+                    onClick={() => {
+                      navigate('/admin/submissions');
+                      setIsNotificationsOpen(false);
+                    }}
+                    className="flex items-center w-full px-4 py-3 text-sm text-left hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900">New Submissions</p>
+                      <p className="text-xs text-gray-500 mt-0.5">You have {pendingCount} submission{pendingCount !== 1 ? 's' : ''} to review</p>
+                    </div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  </button>
+                ) : (
+                  <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                    No new notifications
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
           <div className="relative">
             <div 
