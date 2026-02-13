@@ -433,7 +433,8 @@ export const getKidDashboardStats = async (req: Request, res: Response) => {
              title: sub.comic.title,
              cover: sub.comic.image, 
              progress: sub.status === 'graded' ? 100 : 50, // Mock progress based on status
-             status: sub.status
+             status: sub.status,
+             submissionDate: sub.submissionDate
          }));
 
         res.json({
@@ -512,5 +513,32 @@ export const submitAssignment = async (req: Request, res: Response) => {
             status: 'error',
             message: 'Server error: ' + (error instanceof Error ? error.message : String(error))
         });
+    }
+};
+
+export const getComicSubmissions = async (req: Request, res: Response) => {
+    try {
+        const kidId = (req as any).user?.id;
+        const comicId = req.params.comicId as string;
+
+        if (!kidId) {
+            return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+        }
+
+        const submissions = await prisma.submission.findMany({
+            where: {
+                kidId,
+                comicId
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        res.json({
+            status: 'success',
+            data: submissions
+        });
+    } catch (error) {
+        console.error('Get comic submissions error:', error);
+        res.status(500).json({ status: 'error', message: 'Server error' });
     }
 };

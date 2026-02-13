@@ -29,6 +29,7 @@ export const KidComicDetail = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [documentUrls, setDocumentUrls] = useState<string[]>([]);
   const [isSubmissionDrawerOpen, setIsSubmissionDrawerOpen] = useState(false);
+  const [submissions, setSubmissions] = useState<any[]>([]);
 
   const getImageUrl = (path?: string | null) => {
     if (!path) return "/clip-path-group-16.png";
@@ -44,53 +45,63 @@ export const KidComicDetail = (): JSX.Element => {
     return /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("kidToken");
-        if (!token) {
-          navigate("/login");
-          return;
-        }
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("kidToken");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
 
-        // Fetch Kid Profile Data
-        const dashboardRes = await fetch(`${API_BASE_URL}/kid/dashboard`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const dashboardData = await dashboardRes.json();
+      // Fetch Kid Profile Data
+      const dashboardRes = await fetch(`${API_BASE_URL}/kid/dashboard`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const dashboardData = await dashboardRes.json();
 
-        // Fetch Comic Detail
-        const comicRes = await fetch(`${API_BASE_URL}/admin/comics/${comicId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const comicData = await comicRes.json();
+      // Fetch Comic Detail
+      const comicRes = await fetch(`${API_BASE_URL}/admin/comics/${comicId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const comicData = await comicRes.json();
 
-        if (dashboardData.status === "success") {
-          setKidData(dashboardData.data);
-        }
+      // Fetch Submissions
+      const submissionsRes = await fetch(`${API_BASE_URL}/kid/submissions/${comicId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const submissionsData = await submissionsRes.json();
 
-        if (comicData.status === "success") {
-          setComic(comicData.data);
+      if (dashboardData.status === "success") {
+        setKidData(dashboardData.data);
+      }
 
-          // Parse document paths
-          if (comicData.data.document) {
-            try {
-              const paths = JSON.parse(comicData.data.document);
-              const urls = (Array.isArray(paths) ? paths : [paths]).map((p: string) => getImageUrl(p));
-              setDocumentUrls(urls);
-            } catch {
-              // If not JSON, treat as single path
-              setDocumentUrls([getImageUrl(comicData.data.document)]);
-            }
+      if (comicData.status === "success") {
+        setComic(comicData.data);
+
+        // Parse document paths
+        if (comicData.data.document) {
+          try {
+            const paths = JSON.parse(comicData.data.document);
+            const urls = (Array.isArray(paths) ? paths : [paths]).map((p: string) => getImageUrl(p));
+            setDocumentUrls(urls);
+          } catch {
+            // If not JSON, treat as single path
+            setDocumentUrls([getImageUrl(comicData.data.document)]);
           }
         }
-      } catch (error) {
-        console.error("Error fetching comic detail:", error);
-      } finally {
-        setLoading(false);
       }
-    };
 
+      if (submissionsData.status === "success") {
+        setSubmissions(submissionsData.data);
+      }
+    } catch (error) {
+      console.error("Error fetching comic detail:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [comicId, navigate]);
 
@@ -132,7 +143,7 @@ export const KidComicDetail = (): JSX.Element => {
         </div>
 
         {/* Cover Image */}
-        <div className="w-full h-[250px] md:h-[300px] rounded-t-2xl overflow-hidden mb-8">
+        <div className="w-full h-[250px] md:h-[300px] rounded-2xl overflow-hidden mb-8">
           <img
             src={getImageUrl(comic.image)}
             alt={comic.title}
@@ -140,54 +151,129 @@ export const KidComicDetail = (): JSX.Element => {
           />
         </div>
 
-        {/* Title */}
-        <h1 className="text-[18px] font-bold text-gray-900 mb-4">
-          {comic.title}
-        </h1>
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* Main Content (Title, Description, Documents) */}
+          <div className="flex-1">
+            {/* Title */}
+            <h1 className="text-[24px] font-bold text-gray-900 mb-4">
+              {comic.title}
+            </h1>
 
-        {/* Description */}
-        <div className="text-sm text-gray-600 leading-relaxed mb-10 max-w-[900px]">
-          {comic.description.split('\n').map((paragraph, index) => (
-            <p key={index} className={index > 0 ? 'mt-4' : ''}>
-              {paragraph}
-            </p>
-          ))}
-        </div>
-
-        {/* Document Section */}
-        {documentUrls.length > 0 && (
-          <div className="mb-12">
-            <div className="flex flex-col gap-8">
-              {documentUrls.map((url, index) => (
-                <div key={index} className="w-full">
-                  {isImageFile(url) ? (
-                    // Direct image rendering
-                    <div className="w-full rounded-2xl overflow-hidden shadow-xl border border-gray-100">
-                      <img
-                        src={url}
-                        alt={`Comic Document ${index + 1}`}
-                        className="w-full h-auto object-contain"
-                      />
-                    </div>
-                  ) : isCloudinaryUrl(url) ? (
-                    // Cloudinary PDF — render pages as images
-                    <CloudinaryPdfViewer url={url} />
-                  ) : (
-                    // Non-Cloudinary PDF — use Google Docs viewer
-                    <div className="w-full rounded-2xl overflow-hidden border border-gray-100 shadow-xl">
-                      <iframe
-                        src={`https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`}
-                        className="w-full border-0"
-                        style={{ height: '80vh', minHeight: '600px' }}
-                        title={`Comic Document ${index + 1}`}
-                      />
-                    </div>
-                  )}
-                </div>
+            {/* Description */}
+            <div className="text-sm text-gray-600 leading-relaxed mb-10">
+              {comic.description.split('\n').map((paragraph, index) => (
+                <p key={index} className={index > 0 ? 'mt-4' : ''}>
+                  {paragraph}
+                </p>
               ))}
             </div>
+
+            {/* Document Section */}
+            {documentUrls.length > 0 && (
+              <div className="mb-12">
+                <div className="flex flex-col gap-8">
+                  {documentUrls.map((url, index) => (
+                    <div key={index} className="w-full">
+                      {isImageFile(url) ? (
+                        <div className="w-full rounded-2xl overflow-hidden shadow-xl border border-gray-100">
+                          <img
+                            src={url}
+                            alt={`Comic Document ${index + 1}`}
+                            className="w-full h-auto object-contain"
+                          />
+                        </div>
+                      ) : isCloudinaryUrl(url) ? (
+                        <CloudinaryPdfViewer url={url} />
+                      ) : (
+                        <div className="w-full rounded-2xl overflow-hidden border border-gray-100 shadow-xl">
+                          <iframe
+                            src={`https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`}
+                            className="w-full border-0"
+                            style={{ height: '80vh', minHeight: '600px' }}
+                            title={`Comic Document ${index + 1}`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Sidebar (Recent & Submitted) */}
+          <div className="w-full lg:w-[350px] space-y-8">
+            {/* Recent Submissions (Top 2) */}
+            <div>
+              <h2 className="text-[17px] font-bold text-black mb-4">Recent</h2>
+              <div className="grid gap-4">
+                {submissions.slice(0, 2).map((sub: any) => (
+                  <div key={sub.id} className="p-4 bg-white border border-gray-100 shadow-sm rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-semibold text-[#7C1F2D] uppercase tracking-wider">
+                        {sub.status}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {new Date(sub.submissionDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                       <span className="text-sm font-bold text-gray-700">Marks: {sub.marks !== null ? `${sub.marks}/100` : 'Pending'}</span>
+                       {sub.status === 'graded' && (
+                           <div className="w-5 h-5 rounded-full bg-[#00C58D] flex items-center justify-center text-white text-[10px]">✓</div>
+                       )}
+                    </div>
+                  </div>
+                ))}
+                {submissions.length === 0 && (
+                  <p className="text-sm text-gray-500">No submissions yet.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Submitted (All Submissions Table/List) */}
+            <div>
+              <h2 className="text-[17px] font-bold text-black mb-4">Submitted</h2>
+              <div className="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-xl">
+                <table className="w-full text-left">
+                  <thead className="bg-gray-50 text-xs font-semibold text-gray-600">
+                    <tr>
+                      <th className="px-4 py-3">Date</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3">Marks</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 text-sm">
+                    {submissions.map((sub: any) => (
+                      <tr key={sub.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-3 text-gray-600">
+                          {new Date(sub.submissionDate).toLocaleDateString()}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                            sub.status === 'graded' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'
+                          }`}>
+                            {sub.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-gray-900">
+                          {sub.marks !== null ? sub.marks : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                    {submissions.length === 0 && (
+                      <tr>
+                        <td colSpan={3} className="px-4 py-8 text-center text-gray-500 lowercase first-letter:uppercase">
+                          No submissions recorded.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
       {comic && (
@@ -201,7 +287,7 @@ export const KidComicDetail = (): JSX.Element => {
             maxUploads: comic.maxUploads || 1
           }}
           onSuccess={() => {
-            // Ideally refresh submission status or show success
+            fetchData();
             alert('Assignment submitted successfully!');
           }}
         />

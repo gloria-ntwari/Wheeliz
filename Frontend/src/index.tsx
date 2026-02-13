@@ -10,6 +10,7 @@ import { KidDetail } from "./screens/AdminDashboard/KidDetail";
 import { Comics } from "./screens/AdminDashboard/Comics";
 import { AddComics } from "./screens/AdminDashboard/AddComics";
 import { Submissions } from "./screens/AdminDashboard/Submissions";
+import { ComicSubmissionsDetail } from "./screens/AdminDashboard/ComicSubmissionsDetail";
 import { KidDashboard } from "./screens/KidDashboard/KidDashboard";
 import { KidComics } from "./screens/KidDashboard/KidComics";
 import { KidComicDetail } from "./screens/KidDashboard/KidComicDetail";
@@ -86,6 +87,14 @@ root.render(
           element={
             <ProtectedAdminRoute>
               <Submissions />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/submissions/:comicId"
+          element={
+            <ProtectedAdminRoute>
+              <ComicSubmissionsDetail />
             </ProtectedAdminRoute>
           }
         />

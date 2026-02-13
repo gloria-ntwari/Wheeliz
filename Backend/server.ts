@@ -118,6 +118,14 @@ app.use('/api/auth', authRoutes);
 
 
 // Start server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+}).on('error', (err: any) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Error: Port ${PORT} is already in use.`);
+    console.error(`Please kill the process using this port or use a different port (e.g., PORT=5001 npm run dev)`);
+    process.exit(1);
+  } else {
+    console.error('Server error:', err);
+  }
 });

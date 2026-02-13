@@ -6,8 +6,7 @@ import {
   FileText, 
   Download, 
   ChevronLeft, 
-  ChevronRight,
-  Search
+  ChevronRight
 } from "lucide-react";
 
 interface Comic {
@@ -22,6 +21,7 @@ interface Comic {
   progress?: number;
   submissionCount?: number;
   totalKids?: number;
+  lastSubmissionDate?: string | null;
 }
 
 export const KidComics = (): JSX.Element => {
@@ -30,7 +30,6 @@ export const KidComics = (): JSX.Element => {
   const [allComics, setAllComics] = useState<Comic[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
 
   const getImageUrl = (path?: string | null) => {
     if (!path) return "/clip-path-group-16.png";
@@ -85,7 +84,8 @@ export const KidComics = (): JSX.Element => {
             let progress = 0;
 
             if (submission) {
-              status = submission.status === 'graded' || submission.status === 'submitted' ? 'submitted' : 'recent';
+              // Any comic with a submission is marked as 'submitted'
+              status = 'submitted';
               progress = submission.progress || 0;
             }
 
@@ -93,6 +93,7 @@ export const KidComics = (): JSX.Element => {
               ...comic,
               status,
               progress,
+              lastSubmissionDate: submission ? submission.submissionDate : null,
             };
           });
 
@@ -112,8 +113,15 @@ export const KidComics = (): JSX.Element => {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
-  const recentComics = allComics.filter(c => c.status === 'recent');
-  const submittedComics = allComics.filter(c => c.status === 'submitted');
+  const submittedComics = allComics
+    .filter(c => c.status === 'submitted')
+    .sort((a, b) => {
+      const dateA = a.lastSubmissionDate ? new Date(a.lastSubmissionDate).getTime() : 0;
+      const dateB = b.lastSubmissionDate ? new Date(b.lastSubmissionDate).getTime() : 0;
+      return dateB - dateA;
+    });
+
+  const recentComics = submittedComics.slice(0, 2);
   const notSubmittedComics = allComics.filter(c => c.status === 'not_submitted');
 
   const startIndex = (currentPage - 1) * 2;

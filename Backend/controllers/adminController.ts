@@ -693,3 +693,31 @@ export const updateAdminProfile = async (req: Request, res: Response) => {
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
+// Grade Submission
+export const gradeSubmission = async (req: Request, res: Response) => {
+  try {
+    const { submissionId } = req.params;
+    const { marks } = req.body;
+
+    if (marks === undefined) {
+      return res.status(400).json({ status: 'error', message: 'Marks are required' });
+    }
+
+    const submission = await prisma.submission.update({
+      where: { id: submissionId as string },
+      data: {
+        marks: parseInt(marks as string),
+        status: 'graded'
+      }
+    });
+
+    res.json({
+      status: 'success',
+      message: 'Submission graded successfully',
+      data: submission
+    });
+  } catch (error) {
+    console.error('Grade submission error:', error);
+    res.status(500).json({ status: 'error', message: 'Server error' });
+  }
+};

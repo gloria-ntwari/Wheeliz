@@ -2,103 +2,17 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../config/api";
 import {
-  Home,
-  Smile,
-  Puzzle,
   Grid3X3,
-  Search,
-  Bell,
-  ChevronDown,
-  Menu,
   MessageCircleMore,
-  ArrowLeft,
-  ArrowRight,
+  X,
+  Trophy
 } from "lucide-react";
 import { AdminHeader } from "../../components/AdminHeader";
+import { Smile } from "lucide-react";
+import { Home } from "lucide-react";
+import { Puzzle } from "lucide-react";
 
 
-// Mock Data
-const submissionCards = [
-  {
-    id: 1,
-    title: "Find Joy in School and Home",
-    subtitle: "Find Joy in School and Home",
-    image: "/marvel2.jpg",
-    time: "23",
-    progress: 34,
-    progressColor: "bg-[#F9DE90]", // Yellow
-  },
-  {
-    id: 2,
-    title: "Find Joy in School and Home",
-    subtitle: "Find Joy in School and Home",
-    image: "/marvel1.jpg",
-    time: "23",
-    progress: 34,
-    progressColor: "bg-[#2f3542]", // Dark blue/grey
-  },
-  {
-    id: 3,
-    title: "Find Joy in School and Home",
-    subtitle: "Find Joy in School and Home",
-    image: "/marvel2.jpg",
-    time: "23",
-    progress: 34,
-    progressColor: "bg-[#D94528]", // Red
-  },
-];
-
-const submissionsTable = [
-  {
-    id: 1,
-    name: "Ange Nadette BATETE",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
-    date: "Mon 29-01-2028 01:00",
-    status: "Not Verified",
-    statusColor: "text-red-500",
-    comicTitle: "Art of forgiveness Through love",
-    comicImage: "/marvel2.jpg",
-  },
-  {
-    id: 2,
-    name: "Ange Nadette BATETE",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
-    date: "Mon 29-01-2028 01:00",
-    status: "Verified",
-    statusColor: "text-green-500",
-    comicTitle: "Art of forgiveness Through love",
-    comicImage: "/marvel1.jpg",
-  },
-  {
-    id: 3,
-    name: "Ange Nadette BATETE",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
-    date: "Mon 29-01-2028 01:00",
-    status: "Verified",
-    statusColor: "text-green-500",
-    comicTitle: "Art of forgiveness Through love",
-    comicImage: "/marvel2.jpg",
-  },
-];
-
-const recentComics = [
-  {
-    id: 1,
-    title: "Learn forgiving though art",
-    description: "At the end of this week's challenge the kid will be able to understand the art of forgiveness cause everyone deserves to be forgiven",
-    progress: 99,
-    progressColor: "bg-[#D94528]", // Red
-    date: "23 Jan 2027",
-  },
-  {
-    id: 2,
-    title: "Learn forgiving though art",
-    description: "At the end of this week's challenge the kid will be able to understand the art of forgiveness cause everyone deserves to be forgiven",
-    progress: 99,
-    progressColor: "bg-[#2D9CDB]", // Blue
-    date: "23 Jan 2027",
-  },
-];
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
@@ -114,30 +28,55 @@ export const Submissions = (): JSX.Element => {
   );
 
   const [submissions, setSubmissions] = useState<any[]>([]);
+  const [comics, setComics] = useState<any[]>([]);
+  const [kids, setKids] = useState<any[]>([]);
+  const [totalKids, setTotalKids] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showRankings, setShowRankings] = useState(false);
 
-  const fetchSubmissions = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("adminToken");
-      const response = await fetch(`${API_BASE_URL}/admin/submissions`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      
+      // Fetch Submissions
+      const subResponse = await fetch(`${API_BASE_URL}/admin/submissions`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      const data = await response.json();
-      if (data.status === "success") {
-        setSubmissions(data.data);
-      }
+      const subData = await subResponse.json();
+      
+      // Fetch Comics
+      const comicsResponse = await fetch(`${API_BASE_URL}/admin/comics`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const comicsData = await comicsResponse.json();
+
+      // Fetch Stats for total kids
+      const statsResponse = await fetch(`${API_BASE_URL}/admin/stats`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const statsData = await statsResponse.json();
+
+      // Fetch All Kids for rankings
+      const kidsResponse = await fetch(`${API_BASE_URL}/admin/kids`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const kidsData = await kidsResponse.json();
+
+      if (subData.status === "success") setSubmissions(subData.data);
+      if (comicsData.status === "success") setComics(comicsData.data);
+      if (statsData.status === "success") setTotalKids(statsData.data.totalKids);
+      if (kidsData.status === "success") setKids(kidsData.data);
+
     } catch (error) {
-      console.error("Error fetching submissions:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchSubmissions();
+    fetchData();
   }, []);
 
   const getFullImageUrl = (path: string | null) => {
@@ -146,6 +85,43 @@ export const Submissions = (): JSX.Element => {
     const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
     return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
   };
+
+  const getRankings = () => {
+    const totalPossibleMarks = comics.reduce((acc, c) => acc + (c.totalMarks || 0), 0);
+    
+    const rankings = kids.map(kid => {
+      const kidSubs = submissions.filter(s => s.kidId === kid.id);
+      let obtainedMarks = 0;
+      let bonusMarks = 0;
+
+      kidSubs.forEach(sub => {
+        obtainedMarks += (sub.marks || 0);
+        
+        // Find the comic to check deadline and bonus
+        const comic = comics.find(c => c.id === sub.comicId);
+        if (comic && comic.bonus && comic.submissionDeadline) {
+          if (new Date(sub.createdAt) <= new Date(comic.submissionDeadline)) {
+            bonusMarks += comic.bonus;
+          }
+        }
+      });
+
+      const totalValue = obtainedMarks + bonusMarks;
+      const percentage = totalPossibleMarks > 0 
+        ? Math.min(100, Math.round((totalValue / totalPossibleMarks) * 100)) 
+        : 0;
+
+      return {
+        ...kid,
+        totalValue,
+        percentage
+      };
+    });
+
+    return rankings.sort((a, b) => b.totalValue - a.totalValue);
+  };
+
+  const rankings = getRankings();
 
 
   return (
@@ -200,48 +176,72 @@ export const Submissions = (): JSX.Element => {
 
         {/* Content Body */}
         <main className="flex-1 w-full px-4 pt-6 pb-10 bg-white sm:px-6 lg:px-14 font-[Poppins]">
-          <div className="mb-8">
-            <h1 className="text-[17px] font-bold text-black">Submissions</h1>
-            <p className="text-sm text-gray-500">You have {submissions.length} in total submissions.</p>
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-[17px] font-bold text-black">Submissions</h1>
+              <p className="text-sm text-gray-500">
+                You have {submissions.length} in total submissions.
+              </p>
+            </div>
+            <button 
+              className="text-[10px] bg-[#68161c]/10 text-[#68161c] px-4 py-2 rounded-lg font-bold hover:bg-[#68161c]/20 transition-colors"
+              onClick={() => setShowRankings(true)}
+            >
+              View Rankings
+            </button>
           </div>
 
           {/* Cards Section */}
           <section className="grid grid-cols-1 gap-6 mb-12 md:grid-cols-2 lg:grid-cols-3">
             {loading ? (
                 <div className="py-10 text-center col-span-full">Loading submissions...</div>
-            ) : submissions.slice(0, 3).map((sub) => (
-              <div key={sub.id} className="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-3xl hover:shadow-md transition-shadow">
-                <div className="h-40 overflow-hidden">
-                   <img src={getFullImageUrl(sub.comic?.image)} alt={sub.comic?.title} className="object-cover w-full h-full" />
-                </div>
-                <div className="p-5">
-                   <h3 className="text-[15px] font-bold text-black mb-1">{sub.comic?.title}</h3>
-                   <p className="mb-4 text-xs text-gray-500">{sub.comic?.subtitle}</p>
-                   
-                   <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-1 px-2.5 py-2 bg-[#c0c0c0] rounded-full">
-                         <div className="flex items-center justify-center  ">
-                           <MessageCircleMore className="w-4 h-4 text-gray-600" />
-                         </div>
-                         <span className="text-xs font-medium text-gray-600">{sub.marks || 0}</span>
-                      </div>
-                      <div className="flex -space-x-2">
-                         <div className="w-10 h-10 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
-                            <img src={getFullImageUrl(sub.kid?.avatar)} className="w-full h-full object-cover" alt={sub.kid?.name} />
-                         </div>
-                      </div>
-                   </div>
+            ) : comics.filter(c => (c.submissionCount || 0) > 0).slice(0, 3).map((comic, idx) => {
+              const submissionPercentage = totalKids > 0 
+                ? Math.round((comic.submissionCount || 0) / totalKids * 100) 
+                : 0;
+              
+              const colors = ["bg-[#F9DE90]", "bg-[#2f3542]", "bg-[#D94528]"];
+              const progressColor = colors[idx % colors.length];
 
-                   <div className="w-full h-1.5 bg-gray-100 rounded-full mb-2">
-                      <div className={`h-full rounded-full ${sub.status === 'graded' ? 'bg-[#4CAF7A]' : 'bg-[#D94528]'}`} style={{ width: `${sub.marks || 0}%` }}></div>
-                   </div>
-                   <div className="flex justify-between text-xs text-gray-500">
-                      <span>Score</span>
-                      <span>{sub.marks || 0}%</span>
-                   </div>
+              return (
+                <div 
+                  key={comic.id} 
+                  className="overflow-hidden transition-shadow bg-white border border-gray-100 shadow-sm cursor-pointer rounded-3xl hover:shadow-md"
+                  onClick={() => navigate(`/admin/submissions/${comic.id}`)}
+                >
+                  <div className="h-40 overflow-hidden">
+                     <img src={getFullImageUrl(comic.image)} alt={comic.title} className="object-cover w-full h-full" />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-[15px] font-bold text-black mb-1">{comic.title}</h3>
+                    <p className="mb-4 text-xs text-gray-500 line-clamp-1">{comic.subtitle}</p>
+                    
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full">
+                           <MessageCircleMore className="w-3 h-3 text-gray-500" />
+                           <span className="text-xs font-bold text-gray-700">{comic.submissionCount || 0}</span>
+                        </div>
+                        <div className="flex -space-x-2">
+                           {/* Show top 3 submitters if available, else placeholders */}
+                           {submissions.filter(s => s.comicId === comic.id).slice(0, 3).map((s, i) => (
+                             <div key={i} className="w-7 h-7 overflow-hidden border-2 border-white rounded-full">
+                               <img src={getFullImageUrl(s.kid?.avatar)} className="object-cover w-full h-full" alt="kid" />
+                             </div>
+                           ))}
+                        </div>
+                    </div>
+
+                    <div className="w-full h-1.5 bg-gray-100 rounded-full mb-2">
+                       <div className={`h-full rounded-full ${progressColor}`} style={{ width: `${submissionPercentage}%` }}></div>
+                    </div>
+                    <div className="flex justify-between text-xs font-medium text-gray-500">
+                       <span>Progress</span>
+                       <span>{submissionPercentage}%</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </section>
 
           {/* Recent Submissions Table */}
@@ -253,32 +253,32 @@ export const Submissions = (): JSX.Element => {
                       <tr className="text-left border-b border-gray-100">
                          <th className="pb-4 text-sm font-medium text-gray-500">Kid Name</th>
                          <th className="pb-4 text-sm font-medium text-gray-500">Date of submission</th>
-                         <th className="pb-4 text-sm font-medium text-gray-500 text-center">Status</th>
+                         <th className="pb-4 text-sm font-medium text-center text-gray-500">Status</th>
                          <th className="pb-4 text-sm font-medium text-gray-500">Comics Submitted</th>
                       </tr>
                    </thead>
                    <tbody>
-                      {submissions.map((sub) => (
-                         <tr key={sub.id}>
-                            <td className="py-4">
-                               <div className="flex items-center gap-3">
-                                  <img src={getFullImageUrl(sub.kid?.avatar)} alt={sub.kid?.name} className="object-cover w-10 h-10 rounded-lg" />
-                                  <span className="text-sm font-bold text-black">{sub.kid?.name}</span>
-                               </div>
-                            </td>
-                            <td className="py-4 text-sm font-medium text-black">{new Date(sub.createdAt).toLocaleString()}</td>
-                            <td className={`py-4 text-sm font-bold text-center ${sub.status === 'graded' ? 'text-green-500' : 'text-red-500'}`}>
-                                {sub.status === 'graded' ? 'Verified' : 'Not Verified'}
-                            </td>
-                            <td className="py-4">
-                               <div className="flex items-center gap-3">
-                                  <img src={getFullImageUrl(sub.comic?.image)} alt="Comic" className="object-cover w-10 h-10 rounded-full" />
-                                  <span className="text-sm font-medium text-black">{sub.comic?.title}</span>
-                               </div>
-                            </td>
-                         </tr>
-                      ))}
-                   </tbody>
+                       {submissions.map((sub) => (
+                          <tr key={sub.id}>
+                             <td className="py-4">
+                                <div className="flex items-center gap-3">
+                                   <img src={getFullImageUrl(sub.kid?.avatar)} alt={sub.kid?.name} className="object-cover w-10 h-10 rounded-lg" />
+                                   <span className="text-sm font-bold text-black">{sub.kid?.name}</span>
+                                </div>
+                             </td>
+                             <td className="py-4 text-sm font-medium text-black">{new Date(sub.createdAt).toLocaleString()}</td>
+                             <td className={`py-6 text-sm font-bold text-center ${sub.status === 'graded' ? 'text-green-500' : 'text-red-500'}`}>
+                                 {sub.status === 'graded' ? 'Verified' : 'Not Verified'}
+                             </td>
+                             <td className="py-4">
+                                <div className="flex items-center gap-3">
+                                   <img src={getFullImageUrl(sub.comic?.image)} alt="Comic" className="object-cover w-10 h-10 rounded-full" />
+                                   <span className="text-sm font-medium text-black">{sub.comic?.title}</span>
+                                </div>
+                             </td>
+                          </tr>
+                       ))}
+                    </tbody>
                 </table>
              </div>
           </section>
@@ -287,76 +287,123 @@ export const Submissions = (): JSX.Element => {
           <section className="mb-12">
              <div className="flex items-center justify-between mb-6">
                 <h2 className="text-base font-bold text-black">Recent Comics</h2>
-                <a href="#" className="text-sm font-bold text-[#8B1A1A] hover:underline">See all</a>
+                {/* <a href="#" className="text-sm font-bold text-[#8B1A1A] hover:underline">See all</a> */}
              </div>
              
              <div className="space-y-6">
-                {recentComics.map((item) => (
-                   <div key={item.id} className="flex items-start gap-4">
-                      <div className="pt-1">
-                         <input type="checkbox" className="w-5 h-5 rounded focus:ring-[#8B1A1A] text-[#8B1A1A]" />
-                      </div>
-                      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_200px] gap-6">
-                         <div>
-                            <h3 className="mb-2 text-sm font-bold text-black">{item.title}</h3>
-                            <p className="mb-4 text-xs leading-relaxed text-gray-500 max-w-xl">{item.description}</p>
-                            
-                            <div className="flex items-center gap-4 max-w-md">
-                               <div className="relative flex-1 h-2 bg-gray-100 rounded-full">
-                                  <div className={`absolute left-0 top-0 h-full rounded-full ${item.progressColor}`} style={{ width: `${item.progress}%` }}></div>
-                               </div>
-                               <span className="text-xs font-medium text-gray-500">{item.progress}%</span>
-                            </div>
-                         </div>
-                         
-                         <div className="flex flex-col items-end justify-center gap-2">
-                             <span className="text-xs font-bold text-black">{item.date}</span>
-                             <div className="flex -space-x-2">
-                                <div className="w-6 h-6 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
-                                    <img src="/profile1.jpg" className="w-full h-full object-cover" alt="Profile 1" />
+                {comics.slice(0, 2).map((comic, idx) => {
+                   const submissionPercentage = totalKids > 0 
+                     ? Math.round((comic.submissionCount || 0) / totalKids * 100) 
+                     : 0;
+                   
+                   const colors = ["bg-[#D94528]", "bg-[#2D9CDB]"];
+                   const progressColor = colors[idx % colors.length];
+                   
+                   const comicSubmissions = submissions.filter(s => s.comicId === comic.id);
+                   const extraSubmissions = Math.max(0, (comic.submissionCount || 0) - 3);
+
+                   return (
+                    <div key={comic.id} className="flex items-start gap-4">
+                       <div className="pt-1">
+                          <input type="checkbox" className="w-5 h-5 rounded focus:ring-[#8B1A1A] text-[#8B1A1A]" />
+                       </div>
+                       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_200px] gap-6">
+                          <div>
+                             <h3 className="mb-2 text-sm font-bold text-black">{comic.title}</h3>
+                             <p className="max-w-xl mb-4 text-xs leading-relaxed text-gray-500 line-clamp-2">{comic.subtitle}</p>
+                             
+                             <div className="flex items-center max-w-md gap-4">
+                                <div className="relative flex-1 h-2 bg-gray-100 rounded-full">
+                                   <div className={`absolute left-0 top-0 h-full rounded-full ${progressColor}`} style={{ width: `${submissionPercentage}%` }}></div>
                                 </div>
-                                <div className="w-6 h-6 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
-                                    <img src="/profile2.jpg" className="w-full h-full object-cover" alt="Profile 2" />
-                                </div>
-                                <div className="w-6 h-6 border-2 border-white rounded-full bg-gray-300 overflow-hidden">
-                                    <img src="/profile1.jpg" className="w-full h-full object-cover" alt="Profile 3" />
-                                </div>
-                                <div className="flex items-center justify-center w-6 h-6 text-[9px] font-bold text-gray-600 bg-white border-2 border-gray-100 rounded-full shadow-sm">
-                                    +7
-                                </div>
+                                <span className="text-xs font-medium text-gray-500">{submissionPercentage}%</span>
                              </div>
-                         </div>
-                      </div>
-                   </div>
-                ))}
+                          </div>
+                          
+                          <div className="flex flex-col items-end justify-center gap-2">
+                               <span className="text-xs font-bold text-black">
+                                 {new Date(comic.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                               </span>
+                              <div className="flex -space-x-1.5">
+                                 {comicSubmissions.slice(0, 3).map((s, i) => (
+                                   <div key={i} className="overflow-hidden border-2 border-white rounded-full w-7 h-7">
+                                     <img src={getFullImageUrl(s.kid?.avatar)} className="object-cover w-full h-full" alt="kid" />
+                                   </div>
+                                 ))}
+                                 {extraSubmissions > 0 && (
+                                   <div className="flex items-center justify-center w-7 h-7 text-[10px] font-bold text-gray-600 bg-gray-50 border-2 border-white rounded-full">
+                                     +{extraSubmissions}
+                                   </div>
+                                 )}
+                              </div>
+                          </div>
+                       </div>
+                    </div>
+                  );
+                })}
              </div>
           </section>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
-             <button className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 transition-colors border border-gray-200 rounded-full hover:bg-gray-50">
-                <ArrowLeft className="w-4 h-4" />
-                <span>Previous</span>
-             </button>
-             
-             <div className="flex items-center gap-1">
-                <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#0f172a] text-white text-xs font-medium">1</button>
-                <button className="flex items-center justify-center w-8 h-8 text-xs font-medium text-gray-500 rounded-lg hover:bg-gray-50">2</button>
-                <button className="flex items-center justify-center w-8 h-8 text-xs font-medium text-gray-500 rounded-lg hover:bg-gray-50">3</button>
-                <span className="flex items-center justify-center w-8 h-8 text-xs text-gray-400">...</span>
-                <button className="flex items-center justify-center w-8 h-8 text-xs font-medium text-gray-500 rounded-lg hover:bg-gray-50">8</button>
-                <button className="flex items-center justify-center w-8 h-8 text-xs font-medium text-gray-500 rounded-lg hover:bg-gray-50">9</button>
-                <button className="flex items-center justify-center w-8 h-8 text-xs font-medium text-gray-500 rounded-lg hover:bg-gray-50">10</button>
-             </div>
-             
-             <button className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 transition-colors border border-gray-200 rounded-full hover:bg-gray-50">
-                <span>Next</span>
-                <ArrowRight className="w-4 h-4" />
-             </button>
-          </div>
-
         </main>
       </div>
+
+      {/* Rankings Modal */}
+      {showRankings && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white w-full max-w-4xl rounded-[20px] overflow-hidden shadow-2xl animate-in zoom-in duration-200 flex flex-col max-h-[90vh]">
+            <div className="p-8 border-b border-gray-100 flex items-center justify-between bg-[#fcfcfc]">
+              <div className="flex items-center gap-4">
+                <div>
+                   <h2 className="text-[17px] font-bold text-black font-[Poppins]">Overall Rankings</h2>
+                   <p className="text-[14px] text-gray-500 font-[Poppins]">Based on all comics and bonus points</p>
+                </div>
+              </div>
+              <button onClick={() => setShowRankings(false)} className="p-3 hover:bg-gray-100 rounded-full transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-10">
+               <table className="w-full">
+                  <thead>
+                    <tr className="text-left border-b border-gray-100">
+                       <th className="pb-6 px-4 text-sm font-bold text-gray-400 uppercase tracking-widest w-24">Rank</th>
+                       <th className="pb-6 px-4 text-sm font-bold text-gray-400 uppercase tracking-widest">Kid</th>
+                       <th className="pb-6 px-4 text-sm font-bold text-gray-400 uppercase tracking-widest text-right w-32">Grade (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {rankings.map((kid, idx) => (
+                      <tr key={kid.id} className="hover:bg-gray-50/50 transition-colors group">
+                        <td className="py-6 px-4">
+                           <div className={`w-7 h-7 rounded-md flex items-center justify-center font-bold text-sm ${
+                             idx === 0 ? 'bg-yellow-100 text-yellow-700' :
+                             idx === 1 ? 'bg-gray-100 text-gray-600' :
+                             idx === 2 ? 'bg-orange-100 text-orange-700' :
+                             'bg-gray-50 text-gray-400'
+                           }`}>
+                             {idx + 1}
+                           </div>
+                        </td>
+                        <td className="py-5 px-4">
+                           <div className="flex items-center gap-4">
+                             <img src={getFullImageUrl(kid.avatar)} className="w-10 h-10 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform" />
+                             <span className="font-bold text-black text-sm">{kid.name}</span>
+                           </div>
+                        </td>
+                        <td className="py-5 px-4 text-right">
+                           <div className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full inline-block font-bold text-xs border border-emerald-100">
+                             {kid.percentage}%
+                           </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+               </table>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };
