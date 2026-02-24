@@ -81,6 +81,7 @@ export const getNotifications = async (_req: Request, res: Response) => {
       }
     });
   } catch (error) {
+    
     console.error('Error fetching notifications:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
