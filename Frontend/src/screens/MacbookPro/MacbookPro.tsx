@@ -10,16 +10,6 @@ import { ProductShowcaseSection } from "./sections/ProductShowcaseSection";
 import { SweetTreatsSection } from "./sections/SweetTreatsSection";
 import { SecondSection } from "./sections/SecondSection.tsx";
 
-const featureItems = [
-  {
-    title: "MADE IN RWANDA",
-    description: "Wheeliez, proudly made in Rwanda by\n Hollanda FairFoods,supports local farmers\n and celebrates Rwanda’s creativity.\nWhen you snack on them,you enjoy\n great flavor.",
-  },
-  {
-    title: "IRRESISTABLE FLAVOUR",
-    description: "From the first crunch, Wheeliez\n bursts with flavor that’s hard to resist.\n Carefully seasoned and crisped, each\n taste brings joy and a taste of\n adventure.",
-  },
-];
 
 export const MacbookPro = (): JSX.Element => {
   return (
@@ -42,69 +32,114 @@ export const MacbookPro = (): JSX.Element => {
         <IntroSection />
       </section>
 
-      <section className="w-full bg-[#181817] py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
-        <div className="max-w-[1490px] mx-auto">
-          {/* Section header */}
-          <div className="flex flex-col items-center mb-8 text-center sm:mb-10 md:mb-12 lg:gap-4">
-            <div className="[font-family:'Barlow',Helvetica] font-semibold text-white text-sm sm:text-base tracking-[0] uppercase lg:text-[22px]">WHY WHEELIEZ</div>
-            <h2 className="[font-family:'Barlow',Helvetica] font-bold text-[#fcc809] text-2xl sm:text-3xl md:text-4xl lg:text-[43px] leading-tight mt-2">A FUN WAY TO SNACK</h2>
+      {/* Adventure Club Section */}
+      <section className="relative w-full overflow-hidden">
+        {/* Dashboard image – absolutely positioned on the RIGHT, spans both blocks */}
+        <div className="hidden lg:block absolute top-[13%] right-[0%] w-[42%] h-[37%] z-10">
+          <img
+            src="/dashboard.png"
+            alt="Wheeliez Adventure Club dashboard"
+            className="object-cover object-left-top w-full h-full"
+          />
+        </div>
+
+        {/* Wheel 1: top-left of black section */}
+        <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[2%] left-[-44px] w-16 md:w-20 lg:w-36 pointer-events-none select-none z-20" />
+
+        {/* Wheel 2: straddling black/white boundary – left side, mostly in white */}
+        <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[39%] left-2 w-20 md:w-24 lg:w-52 pointer-events-none select-none z-20" />
+
+        {/* Wheel 3: bottom-right of the black section */}
+        <img src="/clip-path-group-11.png" alt="" className="hidden lg:block absolute top-[55%] right-6 w-16 md:w-20 lg:w-48 pointer-events-none select-none z-20" />
+
+
+        <div className="w-full bg-[#181817] relative">
+          {/* Centered title at the very top of the dark section */}
+          <div className="w-full pt-20 pb-2 text-center">
+            <span className="[font-family:'Barlow',Helvetica] font-semibold text-white text-xs sm:text-sm md:text-[20px] tracking-wide uppercase">
+              WHEELIEZ ADVENTURE CLUB
+            </span>
           </div>
-          <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:gap-4 ">
-            {/* Left side - text block */}
-            <div className="flex flex-col gap-10 sm:gap-14 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[420px]">
-              {featureItems.slice(0, 1).map((item, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-start gap-3 sm:gap-4 max-w-[420px] w-full"
-                >
-
-                  <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-xl sm:text-2xl tracking-[-0.50px] leading-tight">
-                    {item.title}
-                  </div>
-
-                  <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-base sm:text-lg md:text-[18px] tracking-[-0px] leading-relaxed lg:text-[18px] max-w-[320px] sm:max-w-[340px] md:max-w-[360px] whitespace-nowrap">
-                    {item.description.split("\n").map((line, i) => (
-                      <React.Fragment key={i}>
-                        {line}
-                        {i < item.description.split("\n").length - 1 && <br />}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
-              ))}
+          <div className="max-w-[1490px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-10 sm:py-16 lg:py-52">
+            {/* Content constrained to left ~55% so it doesn't overlap the image */}
+            <div className="w-full lg:w-[52%] flex flex-col items-start gap-5">
+              <h2 className="[font-family:'Barlow',Helvetica] font-extrabold text-[#fcc809] text-2xl sm:text-3xl md:text-[32px] lg:text-[36px] leading-tight tracking-tight uppercase">
+                PLAY OUTSIDE. THINK SMART.
+              </h2>
+              <p className="[font-family:'Barlow',Helvetica] font-normal text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
+                The Wheeliez Adventure Club was created to celebrate the launch of Wheeliez.<br />
+                It invites children aged 4–11 to explore, move, think and discover the world around them
+                through fun, play and learning.
+              </p>
+              <p className="[font-family:'Barlow',Helvetica] font-normal text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
+                Together with Manzi and Nzozi, children go on monthly adventures across
+                Rwanda – from volcanoes and forests to lakes and wildlife parks.
+              </p>
+              <button className="mt-2 flex items-center gap-2 bg-[#8B1A1A] hover:bg-[#6d1414] transition-colors text-white [font-family:'Barlow',Helvetica] font-semibold text-sm sm:text-base px-6 py-3 tracking-wide">
+                JOIN THE CLUB
+                <span className="text-lg leading-none">→</span>
+              </button>
             </div>
+          </div>
+        </div>
 
-            {/* Center - Image */}
-            <div className="flex-shrink-0 mx-0 lg:py-20 md:mx-8">
-              <img
-                className="w-full max-w-[320px] sm:max-w-[420px] md:max-w-[460px] lg:w-auto object-contain lg:scale-125"
-                alt="Central illustration"
-                src="/car_group.svg"
-              />
+        {/* === Block 2: EACH MONTH INCLUDES – full-width white background === */}
+        <div className="relative w-full bg-white">
+          <div className="max-w-[1490px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-14 sm:py-16 lg:py-32">
+            {/* Content constrained to left ~50% */}
+            <div className="w-full lg:w-[100%] flex flex-col items-start gap-5">
+              <h2 className="[font-family:'Barlow',Helvetica] font-extrabold text-black text-2xl sm:text-3xl md:text-[32px] lg:text-[36px] leading-tight tracking-tight uppercase">
+                EACH MONTH INCLUDES:
+              </h2>
+              <p className="[font-family:'Barlow',Helvetica] font-normal text-black text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
+                Children can win prizes by sending photos of completed challenges, games or coloring pages.<br className="hidden sm:block" />
+                All content is shared exclusively within the secure, login-protected member section of this website
+              </p>
+              <p className="[font-family:'Barlow',Helvetica] font-normal text-black text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
+                As a member of the Adventure Club, each child receives a personal username and password to access this secure area.<br className="hidden sm:block" />
+                Here they can read and download all adventures and games, and see the announcement of the monthly winners.
+              </p>
+              <ul className="flex flex-col gap-3 mt-4 w-full list-none p-0 m-0 ml-6 sm:ml-8 md:ml-[72px] lg:ml-[88px]">
+                {[
+                  "A new comic-book style adventure story (English or Kinyarwanda)",
+                  "A featured location in Rwanda",
+                  "Outdoor challenges that encourage children to play outside",
+                  "Smart games such as puzzles, mazes and drawing activities",
+                  "Monthly Prizes",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 sm:gap-4 [font-family:'Barlow',Helvetica] text-black text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed font-normal">
+                    <span className="mt-2 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-gray-500 flex-shrink-0"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
+          </div>
+        </div>
 
-            {/* Right side - text block */}
-            <div className="flex flex-col gap-10 sm:gap-14 md:gap-16 lg:gap-[100px] w-full md:flex-1 md:max-w-[420px] -mt-[25px] " >
-              {featureItems.slice(1, 2).map((item, index) => (
-                <div
-                  key={index + 1}
-                  className="flex flex-col items-start gap-3 sm:gap-4 max-w-[420px] w-full"
-                >
-                  <div className="[font-family:'Barlow',Helvetica] font-semibold text-[#fcc809] text-xl sm:text-2xl tracking-[-0.50px] leading-tight">
-                    {item.title}
-                  </div>
+        {/* Mobile-only: dashboard image below both blocks */}
+        <div className="block w-full lg:hidden">
+          <img
+            src="/dashboard.png"
+            alt="Wheeliez Adventure Club dashboard"
+            className="object-cover w-full"
+          />
+        </div>
 
-                  <div className="[font-family:'Barlow',Helvetica] font-medium text-white text-base sm:text-lg md:text-[18px] tracking-[-0px] leading-relaxed lg:text-[18px] max-w-[320px] sm:max-w-[340px] md:max-w-[360px] whitespace-nowrap">
-                    {item.description.split("\n").map((line, i) => (
-                      <React.Fragment key={i}>
-                        {line}
-                        {i < item.description.split("\n").length - 1 && <br />}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* JOIN THE ADVENTURE CLUB section */}
+        <div className="w-full bg-[#181817] flex flex-col items-center gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 pt-14 sm:pt-16 lg:pt-20 pb-10 sm:pb-16 lg:pb-28">
+          <h2 className="[font-family:'Barlow',Helvetica] font-extrabold text-[#fcc809] text-2xl sm:text-3xl md:text-[34px] lg:text-[40px] tracking-wide uppercase text-center">
+            JOIN THE ADVENTURE CLUB
+          </h2>
+          <p className="[font-family:'Barlow',Helvetica] font-normal text-white text-sm sm:text-base text-center -mt-2">
+            Your parent can register you here
+          </p>
+          <div className="w-full max-w-[580px] mt-4">
+            <img
+              src="/image 12.png"
+              alt="Wheeliez Adventure Club merchandise"
+              className="object-contain w-full"
+            />
           </div>
         </div>
       </section>
