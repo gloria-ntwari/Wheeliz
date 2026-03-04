@@ -19,7 +19,6 @@ const allowedOrigins = process.env.FRONTEND_URL
       'http://localhost:5173',
       'https://wheeliz-web.vercel.app',
       'https://wheeliz-backend.onrender.com',
-      'https://wheeliz-production.up.railway.app'
     ];
 
 
