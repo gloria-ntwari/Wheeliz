@@ -444,11 +444,6 @@ export const getKidDashboardStats = async (req: Request, res: Response) => {
              });
          }
 
-         // Prepare Recent Progress (using specific submission marks / comic total marks)
-         // We need to re-fetch or use the data we already have. 
-         // The `allKids` query included submissions, but not sorted or limited.
-         // Let's rely on the sorted `kidScores` finding, but `allKids` has all submissions.
-         // Effectively `myData.kidData.submissions`.
          
          const mySubmissions = myData.kidData.submissions
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Recent first
@@ -661,6 +656,46 @@ export const updateKidProfile = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.error('Update kid profile error:', error);
+        res.status(500).json({ status: 'error', message: 'Server error' });
+    }
+};
+
+export const getKidNotifications = async (req: Request, res: Response) => {
+    try {
+        const kidId = (req as any).user?.id;
+        if (!kidId) {
+            return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+        }
+
+        // Get all published comics
+        const allComics = await prisma.comic.findMany({
+            orderBy: { createdAt: 'desc' }
+        });
+
+        // Get comics this kid has already submitted for
+        const submissions = await prisma.submission.findMany({
+            where: { kidId },
+            select: { comicId: true }
+        });
+        const submittedComicIds = new Set(submissions.map(s => s.comicId));
+
+        // Unsubmitted comics = new notifications
+        const newComics = allComics.filter(c => !submittedComicIds.has(c.id));
+
+        res.json({
+            status: 'success',
+            data: {
+                count: newComics.length,
+                comics: newComics.map(c => ({
+                    id: c.id,
+                    title: c.title,
+                    image: c.image,
+                    createdAt: c.createdAt
+                }))
+            }
+        });
+    } catch (error) {
+        console.error('Get kid notifications error:', error);
         res.status(500).json({ status: 'error', message: 'Server error' });
     }
 };

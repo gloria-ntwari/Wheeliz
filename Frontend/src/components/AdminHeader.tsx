@@ -9,7 +9,9 @@ import {
   User, 
   LogOut, 
   X,
-  Camera
+  Camera,
+  Eye,
+  EyeOff
 } from "lucide-react";
 import { API_BASE_URL } from "../config/api";
 
@@ -29,6 +31,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   // Fetch notifications count
   React.useEffect(() => {
@@ -196,7 +201,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                       navigate('/admin/submissions');
                       setIsNotificationsOpen(false);
                     }}
-                    className="flex items-center w-full px-4 py-3 text-sm text-left hover:bg-gray-50 transition-colors"
+                    className="flex items-center w-full px-4 py-3 text-sm text-left transition-colors hover:bg-gray-50"
                   >
                     <div className="flex-1">
                       <p className="font-medium text-gray-900">New Submissions</p>
@@ -205,7 +210,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   </button>
                 ) : (
-                  <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                  <div className="px-4 py-3 text-sm text-center text-gray-500">
                     No new notifications
                   </div>
                 )}
@@ -219,7 +224,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
             >
-              <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full shrink-0 border border-gray-100 shadow-sm">
+              <div className="w-10 h-10 overflow-hidden bg-gray-200 border border-gray-100 rounded-full shadow-sm shrink-0">
                 <img
                   src={getAvatarUrl(adminProfileData.avatar)}
                   alt="Profile"
@@ -248,7 +253,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                       <Copy className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-sm text-gray-400 mt-1">{adminProfileData.username || "@ntwarigloria"}</p>
+                  <p className="mt-1 text-sm text-gray-400">{adminProfileData.username }</p>
                 </div>
                 <div className="py-2">
                   <button 
@@ -256,14 +261,14 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                       setIsEditProfileOpen(true);
                       setIsProfileOpen(false);
                     }}
-                    className="flex items-center w-full gap-3 px-6 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+                    className="flex items-center w-full gap-3 px-6 py-3 text-sm text-white transition-colors hover:bg-white/10"
                   >
                     <User className="w-4 h-4" />
                     <span>Profile</span>
                   </button>
                   <button 
                     onClick={handleLogout}
-                    className="flex items-center w-full gap-3 px-6 py-3 text-sm text-red-500 hover:bg-white/10 transition-colors"
+                    className="flex items-center w-full gap-3 px-6 py-3 text-sm text-red-500 transition-colors hover:bg-white/10"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
@@ -278,14 +283,14 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
       {/* Profile Edit Modal */}
       {isEditProfileOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-md p-8 bg-white rounded-2xl shadow-2xl">
+          <div className="relative w-full max-w-md p-8 bg-white shadow-2xl rounded-2xl">
             <button 
               onClick={() => setIsEditProfileOpen(false)}
-              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              className="absolute p-2 text-gray-400 transition-colors top-4 right-4 hover:text-gray-600"
             >
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Edit Profile</h3>
+            <h3 className="mb-6 text-xl font-bold text-gray-900">Edit Profile</h3>
             
             <form onSubmit={handleUpdateProfile} className="space-y-4">
               {/* Profile Photo Upload */}
@@ -325,10 +330,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                     }}
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2">Click icon to change photo</p>
+                <p className="mt-2 text-xs text-gray-500">Click icon to change photo</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <label className="block mb-1 text-sm font-medium text-gray-700">Full Name</label>
                 <input 
                   type="text" 
                   value={editFormData.name}
@@ -338,7 +343,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block mb-1 text-sm font-medium text-gray-700">Email</label>
                 <input 
                   type="email" 
                   value={editFormData.email}
@@ -349,27 +354,45 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
               </div>
               
               <div className="pt-4 border-t border-gray-100">
-                <p className="text-sm font-semibold text-gray-900 mb-4">Change Password (optional)</p>
+                <p className="mb-4 text-sm font-semibold text-gray-900">Change Password (optional)</p>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Old Password</label>
-                    <input 
-                      type="password" 
-                      placeholder="Enter old password"
-                      value={editFormData.oldPassword}
-                      onChange={(e) => setEditFormData({...editFormData, oldPassword: e.target.value})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#681618] focus:border-transparent outline-none transition-all"
-                    />
+                    <label className="block mb-1 text-sm font-medium text-gray-700">Old Password</label>
+                    <div className="relative">
+                      <input 
+                        type={showOldPassword ? "text" : "password"} 
+                        placeholder="Enter old password"
+                        value={editFormData.oldPassword}
+                        onChange={(e) => setEditFormData({...editFormData, oldPassword: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#681618] focus:border-transparent outline-none transition-all pr-12"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowOldPassword(!showOldPassword)}
+                        className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-gray-600"
+                      >
+                        {showOldPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                    <input 
-                      type="password" 
-                      placeholder="Enter new password"
-                      value={editFormData.newPassword}
-                      onChange={(e) => setEditFormData({...editFormData, newPassword: e.target.value})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#681618] focus:border-transparent outline-none transition-all"
-                    />
+                    <label className="block mb-1 text-sm font-medium text-gray-700">New Password</label>
+                    <div className="relative">
+                      <input 
+                        type={showNewPassword ? "text" : "password"} 
+                        placeholder="Enter new password"
+                        value={editFormData.newPassword}
+                        onChange={(e) => setEditFormData({...editFormData, newPassword: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#681618] focus:border-transparent outline-none transition-all pr-12"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-gray-600"
+                      >
+                        {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

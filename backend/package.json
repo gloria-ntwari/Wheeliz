@@ -18,7 +18,9 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^5.20.0",
+    "@types/adm-zip": "^0.5.7",
     "@types/multer": "^2.0.0",
+    "adm-zip": "^0.5.16",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^1.41.3",
     "cors": "^2.8.5",

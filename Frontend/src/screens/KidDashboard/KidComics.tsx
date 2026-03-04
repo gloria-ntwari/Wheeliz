@@ -126,20 +126,27 @@ export const KidComics = (): JSX.Element => {
       return dateB - dateA;
     });
 
-  const recentComics = submittedComics.slice(0, 2);
+  const recentComics = [...allComics]
+    .filter(c => c.title.toLowerCase().includes(searchQuery) || c.subtitle.toLowerCase().includes(searchQuery))
+    .sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return dateB - dateA;
+    })
+    .slice(0, 3);
   const notSubmittedComics = allComics
     .filter(c => c.status === 'not_submitted')
     .filter(c => c.title.toLowerCase().includes(searchQuery) || c.subtitle.toLowerCase().includes(searchQuery));
 
-  const startIndex = (currentPage - 1) * 2;
-  const endIndex = startIndex + 2;
+  const startIndex = (currentPage - 1) * 3;
+  const endIndex = startIndex + 3;
 
   const currentRecent = recentComics.slice(startIndex, endIndex);
   const currentSubmitted = submittedComics.slice(startIndex, endIndex);
   const currentNotSubmitted = notSubmittedComics.slice(startIndex, endIndex);
 
   // Calculate total pages based on the largest category
-  const totalPages = Math.ceil(Math.max(recentComics.length, submittedComics.length, notSubmittedComics.length) / 2) || 1;
+  const totalPages = Math.ceil(Math.max(recentComics.length, submittedComics.length, notSubmittedComics.length) / 3) || 1;
 
   const ComicCard = ({ comic}: { comic: Comic, borderColor: string }) => {
     const submissionPercentage = comic.totalKids && comic.totalKids > 0 
@@ -148,14 +155,14 @@ export const KidComics = (): JSX.Element => {
 
     return (
       <div 
-        className="flex flex-col mb-6 overflow-hidden bg-white shadow-sm rounded-2xl border border-gray-100/50 cursor-pointer hover:shadow-md transition-shadow"
+        className="flex flex-col mb-6 overflow-hidden transition-shadow bg-white border shadow-sm cursor-pointer rounded-2xl border-gray-100/50 hover:shadow-md"
         onClick={() => navigate(`/kid/comics/${comic.id}`)}
       >
           <div className="w-full h-[175px] overflow-hidden">
             <img 
               src={getImageUrl(comic.image)} 
               alt={comic.title} 
-              className="w-full h-full object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
           
@@ -179,9 +186,9 @@ export const KidComics = (): JSX.Element => {
           </div>
 
           {/* File Section */}
-          <div className="flex items-center justify-between p-2 bg-white rounded-xl border border-gray-50">
+          <div className="flex items-center justify-between p-2 bg-white border rounded-xl border-gray-50">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-red-50 rounded-lg flex items-center justify-center">
+              <div className="flex items-center justify-center rounded-lg w-9 h-9 bg-red-50">
                 <FileText className="w-4 h-4 text-[#EF4444]" />
               </div>
               <div className="flex flex-col">
@@ -191,7 +198,7 @@ export const KidComics = (): JSX.Element => {
                 <span className="text-[9px] text-gray-400">PDF/Page 1</span>
               </div>
             </div>
-            <button className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+            <button className="p-2 transition-colors bg-gray-100 rounded-lg hover:bg-gray-200">
               <Download className="w-3.5 h-3.5 text-gray-600" />
             </button>
           </div>
@@ -210,7 +217,7 @@ export const KidComics = (): JSX.Element => {
           <p className="text-sm text-gray-500">You have {allComics.length} comics in total</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {/* Recent Column */}
           <div className="bg-[#F4F4F4] p-5 rounded-[12px] flex flex-col">
             <div className="flex items-center gap-2 mb-6 ml-1">
@@ -220,8 +227,8 @@ export const KidComics = (): JSX.Element => {
             {currentRecent.length > 0 ? (
                currentRecent.map(c => <ComicCard key={c.id} comic={c} borderColor="bg-[#F59E0B]" />)
             ) : (
-                <div className="flex-1 flex items-center justify-center py-20">
-                    <p className="text-sm text-gray-400 italic">No recent comics</p>
+                <div className="flex items-center justify-center flex-1 py-20">
+                    <p className="text-sm italic text-gray-400">No recent comics</p>
                 </div>
             )}
           </div>
@@ -235,8 +242,8 @@ export const KidComics = (): JSX.Element => {
             {currentSubmitted.length > 0 ? (
                currentSubmitted.map(c => <ComicCard key={c.id} comic={c} borderColor="bg-[#EF4444]" />)
             ) : (
-                <div className="flex-1 flex items-center justify-center py-20">
-                    <p className="text-sm text-gray-400 italic">No submitted comics</p>
+                <div className="flex items-center justify-center flex-1 py-20">
+                    <p className="text-sm italic text-gray-400">No submitted comics</p>
                 </div>
             )}
           </div>
@@ -250,8 +257,8 @@ export const KidComics = (): JSX.Element => {
             {currentNotSubmitted.length > 0 ? (
                currentNotSubmitted.map(c => <ComicCard key={c.id} comic={c} borderColor="bg-[#10B981]" />)
             ) : (
-                <div className="flex-1 flex items-center justify-center py-20">
-                    <p className="text-sm text-gray-400 italic">No pending comics</p>
+                <div className="flex items-center justify-center flex-1 py-20">
+                    <p className="text-sm italic text-gray-400">No pending comics</p>
                 </div>
             )}
           </div>
@@ -260,7 +267,7 @@ export const KidComics = (): JSX.Element => {
         {/* Pagination */}
         <div className="flex flex-col items-center justify-between gap-4 mt-12 mb-10 sm:flex-row">
           <button 
-            className="flex items-center gap-2 px-6 py-2 border border-gray-200 rounded-full text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 px-6 py-2 text-sm text-gray-600 transition-colors border border-gray-200 rounded-full hover:bg-gray-50"
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
           >
@@ -287,7 +294,7 @@ export const KidComics = (): JSX.Element => {
           </div>
 
           <button 
-            className="flex items-center gap-2 px-6 py-2 border border-gray-200 rounded-full text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 px-6 py-2 text-sm text-gray-600 transition-colors border border-gray-200 rounded-full hover:bg-gray-50"
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
           >

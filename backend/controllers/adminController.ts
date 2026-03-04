@@ -748,3 +748,120 @@ export const gradeSubmission = async (req: Request, res: Response) => {
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
+
+import cloudinary from '../config/cloudinary';
+import AdmZip from 'adm-zip';
+import https from 'https';
+
+// Download Submission File (Proxy to bypass Cloudinary PDF restrictions)
+// Uses Cloudinary's generate_archive API (the ONLY method that bypasses PDF delivery restrictions),
+// then extracts the raw PDF from the zip on the server and sends it directly to the browser.
+export const downloadSubmissionFile = async (req: Request, res: Response) => {
+  try {
+    let fileUrl = req.query.url as string;
+    if (!fileUrl) {
+      return res.status(400).json({ status: 'error', message: 'File URL is required' });
+    }
+
+    // If it's not a Cloudinary URL, just redirect
+    if (!fileUrl.includes('cloudinary.com')) {
+      return res.redirect(fileUrl);
+    }
+
+    // Strip fl_attachment if present
+    fileUrl = fileUrl.replace('/upload/fl_attachment/', '/upload/');
+
+    // Extract public ID from the Cloudinary URL
+    const parts = fileUrl.split('/upload/');
+    if (parts.length < 2) {
+      return res.status(400).json({ status: 'error', message: 'Invalid Cloudinary URL' });
+    }
+
+    const pathPart = parts[1];
+    let publicId = pathPart.replace(/^v\d+\//, '');
+    const lastDotIndex = publicId.lastIndexOf('.');
+    let originalExtension = '';
+    if (lastDotIndex > -1) {
+      originalExtension = publicId.substring(lastDotIndex + 1);
+      publicId = publicId.substring(0, lastDotIndex);
+    }
+
+    console.log('[Download Proxy] Public ID:', publicId, 'Extension:', originalExtension);
+
+    // Fetch via Cloudinary's generate_archive API
+    const archiveUrl = cloudinary.utils.download_zip_url({
+      public_ids: [publicId],
+      resource_type: 'image',
+      target_format: 'zip'
+    });
+
+    console.log('[Download Proxy] Fetching archive natively...');
+    
+    // Use native https to ensure no fetch stream freezes
+    const zipBuffer = await new Promise<Buffer>((resolve, reject) => {
+      https.get(archiveUrl, (response) => {
+        if (response.statusCode !== 200) {
+          reject(new Error(`Cloudinary returned status: ${response.statusCode}`));
+          return;
+        }
+
+        const chunks: Buffer[] = [];
+        response.on('data', (chunk) => chunks.push(chunk));
+        response.on('end', () => resolve(Buffer.concat(chunks)));
+        response.on('error', reject);
+      }).on('error', reject);
+    });
+
+    console.log(`[Download Proxy] Buffer size: ${zipBuffer.byteLength} bytes. Parsing zip...`);
+    
+    let zipEntries;
+    let zip;
+    try {
+      zip = new (AdmZip as any)(zipBuffer);
+      zipEntries = zip.getEntries();
+    } catch (e: any) {
+      console.error('[Download Proxy] AdmZip threw an error:', e.message);
+      return res.status(500).json({ status: 'error', message: 'Failed to extract zip' });
+    }
+
+    console.log(`[Download Proxy] Found ${zipEntries.length} entries in zip.`);
+
+    // Find the PDF entry inside the zip (or fallback to first entry)
+    const pdfEntry = zipEntries.find((entry: any) =>
+      entry.entryName.toLowerCase().endsWith('.pdf')
+    ) || zipEntries[0];
+
+    if (!pdfEntry) {
+      console.error('[Download Proxy] No file found in archive');
+      return res.status(404).json({ status: 'error', message: 'No file found in archive' });
+    }
+
+    let pdfBuffer;
+    try {
+      pdfBuffer = pdfEntry.getData();
+    } catch (e: any) {
+      console.error('[Download Proxy] pdfEntry.getData() threw an error:', e.message);
+      return res.status(500).json({ status: 'error', message: 'Failed to extract PDF data' });
+    }
+
+    const baseName = publicId.split('/').pop() || 'submission';
+    const fileName = `${baseName}.${originalExtension || 'pdf'}`;
+
+    console.log(`[Download Proxy] Extracted "${pdfEntry.entryName}" (${pdfBuffer.length} bytes), sending as "${fileName}"`);
+
+    // Send the raw PDF — Content-Disposition: attachment forces the browser to download the file directly
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Length', pdfBuffer.length.toString());
+    
+    // Required headers for iframes sometimes
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    return res.send(pdfBuffer);
+
+  } catch (error: any) {
+    console.error('Download proxy top-level error:', error.message || error);
+    res.status(500).json({ status: 'error', message: 'Server error generating download link' });
+  }
+};

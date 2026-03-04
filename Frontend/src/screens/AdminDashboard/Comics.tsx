@@ -68,7 +68,7 @@ export const Comics = (): JSX.Element => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search")?.toLowerCase() || "";
-  
+
   const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
   const [comics, setComics] = useState<Comic[]>([]);
   const [loading, setLoading] = useState(true);
@@ -249,7 +249,7 @@ export const Comics = (): JSX.Element => {
                     <div 
                     key={comic.id} 
                     onClick={() => navigate(`/admin/comics/view/${comic.id}`)}
-                    className="relative flex flex-col overflow-hidden transition-shadow bg-white border border-gray-100 shadow-sm rounded-xl hover:shadow-md cursor-pointer"
+                    className="relative flex flex-col overflow-hidden transition-shadow bg-white border border-gray-100 shadow-sm cursor-pointer rounded-xl hover:shadow-md"
                     >
                         {/* Image Header */}
                         {comic.image ? (
@@ -281,7 +281,7 @@ export const Comics = (): JSX.Element => {
                                         e.stopPropagation();
                                         setActiveMenuId(activeMenuId === comic.id ? null : comic.id);
                                     }}
-                                    className="p-1 text-gray-400 hover:text-black transition-colors"
+                                    className="p-1 text-gray-400 transition-colors hover:text-black"
                                 >
                                     <MoreHorizontal className="w-5 h-5" />
                                 </button>

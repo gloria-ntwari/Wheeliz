@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile, verifyEmail, completeKidProfile, submitAssignment, getComicSubmissions, updateKidProfile } from '../controllers/kidController';
+import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile, verifyEmail, completeKidProfile, submitAssignment, getComicSubmissions, updateKidProfile, getKidNotifications } from '../controllers/kidController';
 
 import { verifyKid } from '../middlewares/authMiddleware';
 import { Router } from 'express';
@@ -124,5 +124,6 @@ router.post('/submit', verifyKid, uploadSubmissionFiles, submitAssignment);
  *     tags: [Kid]
  */
 router.put('/profile', verifyKid, uploadAvatar, updateKidProfile);
+router.get('/notifications', verifyKid, getKidNotifications);
 
 export default router;

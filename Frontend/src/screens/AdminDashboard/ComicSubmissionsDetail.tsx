@@ -114,6 +114,65 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
     return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
   };
 
+  const getDownloadUrl = (path: string | null) => {
+    let url = getFullImageUrl(path);
+    if (url.includes("cloudinary.com") && url.toLowerCase().endsWith(".pdf")) {
+      // Correctly insert fl_attachment to bypass raw pdf viewing restriction and force a download format instead
+      if (url.includes("/upload/") && !url.includes("/upload/fl_attachment/")) {
+        url = url.replace("/upload/", "/upload/fl_attachment/");
+      }
+    }
+    return url;
+  };
+
+  const handleOpenFile = async (url: string) => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      let fetchUrl = url;
+
+      // If it's a Cloudinary link, route through our backend proxy which extracts the raw PDF
+      if (url.includes("cloudinary.com")) {
+        fetchUrl = `${API_BASE_URL}/admin/submissions/download?url=${encodeURIComponent(url)}`;
+      }
+      
+      const response = await fetch(fetchUrl, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (!response.ok) {
+        console.error("Failed to fetch file stream", response.statusText);
+        window.open(url, "_blank");
+        return;
+      }
+      
+      // Convert to blob and download the PDF
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = blobUrl;
+
+      // Extract original file name
+      const urlParts = url.split('/');
+      let baseName = urlParts[urlParts.length - 1] || 'submission_document';
+      // Remove extension
+      if (baseName.includes('.')) baseName = baseName.substring(0, baseName.lastIndexOf('.'));
+      
+      // Since it's a PDF proxy, the backend already gives us the raw PDF.
+      a.download = fetchUrl.includes('/download?') ? `${baseName}.pdf` : baseName;
+      
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+    } catch (error) {
+      console.error("Error opening file:", error);
+      window.open(url, "_blank");
+    }
+  };
+
   const handleVerifySubmission = async () => {
     if (!selectedKid?.submission || !gradeValue) return;
 
@@ -151,7 +210,7 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
       {/* Sidebar (AdminDashboard Navbar style) */}
       <aside className={`bg-[#181817] flex flex-col fixed inset-y-0 left-0 z-50 w-80 transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:static lg:translate-x-0`}>
         <div className="flex items-center justify-center p-8">
-          <img src="/clip-path-group-16.png" alt="Wheeliez" className="object-contain h-20 w-auto" />
+          <img src="/clip-path-group-16.png" alt="Wheeliez" className="object-contain w-auto h-20" />
         </div>
         <nav className="flex-1 px-8 mt-16 space-y-8">
           <button onClick={() => navigate("/admin/dashboard")} className="w-full flex items-center gap-3 px-10 py-5 rounded-full text-white hover:bg-[#2a2a2a] transition-colors font-medium text-[15px]">
@@ -173,10 +232,10 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
         </nav>
       </aside>
 
-      <div className="flex flex-col flex-1 min-w-0 bg-white rounded-tl-3xl overflow-hidden">
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden bg-white rounded-tl-3xl">
         <AdminHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12">
+        <main className="flex-1 p-4 overflow-y-auto md:p-8 lg:p-12">
           {/* Back Link */}
           <button 
             onClick={() => navigate("/admin/submissions")}
@@ -186,7 +245,7 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
             <span>Back to submissions</span>
           </button>
 
-          <div className="flex flex-col lg:flex-row gap-12">
+          <div className="flex flex-col gap-12 lg:flex-row">
             {/* Left Content */}
             <div className="flex-1">
               <div className="mb-8">
@@ -199,15 +258,15 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-4 mb-10">
                 <div className="bg-[#2ecc71] text-white p-6 rounded-2xl flex flex-col items-center justify-center shadow-sm">
-                  <span className="text-3xl font-bold mb-1">{verifiedCount}</span>
+                  <span className="mb-1 text-3xl font-bold">{verifiedCount}</span>
                   <span className="text-[15px] font-medium opacity-90">Verified</span>
                 </div>
                 <div className="bg-[#ff4757] text-white p-6 rounded-2xl flex flex-col items-center justify-center shadow-sm">
-                  <span className="text-3xl font-bold mb-1">{notVerifiedCount}</span>
+                  <span className="mb-1 text-3xl font-bold">{notVerifiedCount}</span>
                   <span className="text-[15px] font-medium opacity-90">Not Verified</span>
                 </div>
                 <div className="bg-[#cbd5e0] text-[#718096] p-6 rounded-2xl flex flex-col items-center justify-center shadow-sm">
-                  <span className="text-3xl font-bold mb-1">{waitingCount}</span>
+                  <span className="mb-1 text-3xl font-bold">{waitingCount}</span>
                   <span className="text-[15px] font-medium opacity-90">Waiting</span>
                 </div>
               </div>
@@ -221,13 +280,13 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                     className={`flex items-center justify-between p-4  cursor-pointer transition-all ${selectedKid?.id === kid.id }`}
                   >
                     <div className="flex items-center gap-4">
-                      <img src={getFullImageUrl(kid.avatar)} alt={kid.name} className="w-12 h-12 rounded-xl object-cover" />
+                      <img src={getFullImageUrl(kid.avatar)} alt={kid.name} className="object-cover w-12 h-12 rounded-xl" />
                       <span className="text-[15px] font-bold text-black">{kid.name}</span>
                     </div>
                     
                     <div className="flex items-center gap-6">
                       {kid.marks !== undefined && (
-                        <div className="w-24 h-11 flex items-center justify-center border border-gray-100 rounded-lg bg-white">
+                        <div className="flex items-center justify-center w-24 bg-white border border-gray-100 rounded-lg h-11">
                           <span className="text-emerald-500 font-bold text-[15px]">{kid.marks} / {comic?.totalMarks || 20}</span>
                         </div>
                       )}
@@ -256,7 +315,7 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                     <div className="flex items-center gap-4">
                       <img 
                         src={getFullImageUrl(selectedKid.submission?.files?.[0]) || getFullImageUrl(selectedKid.avatar)} 
-                        className="w-20 h-20 rounded-xl object-cover border border-gray-100 shadow-sm"
+                        className="object-cover w-20 h-20 border border-gray-100 shadow-sm rounded-xl"
                         alt="Submission thumbnail"
                       />
                       <div className="flex flex-col gap-2">
@@ -290,20 +349,20 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                       <h3 className="text-[15px] font-bold text-black">Uploads</h3>
                       <div className="grid grid-cols-4 gap-2">
                         {selectedKid.submission.files.map((file: string, idx: number) => (
-                          <a 
+                          <button 
                             key={idx} 
-                            href={getFullImageUrl(file)} 
-                            download 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="w-full aspect-square bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 hover:border-[#005a5a] transition-colors"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleOpenFile(getDownloadUrl(file));
+                            }}
+                            className="w-full cursor-pointer aspect-square bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 hover:border-[#005a5a] transition-colors"
                           >
                             {file.toLowerCase().endsWith('.pdf') ? (
                               <FileText className="w-6 h-6 text-red-400" />
                             ) : (
-                              <img src={getFullImageUrl(file)} className="w-full h-full object-cover" alt="upload" />
+                              <img src={getFullImageUrl(file)} className="object-cover w-full h-full" alt="upload" />
                             )}
-                          </a>
+                          </button>
                         ))}
                       </div>
                     </div>
@@ -324,7 +383,7 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center justify-center p-20 text-gray-400 text-sm italic">
+                <div className="flex items-center justify-center p-20 text-sm italic text-gray-400">
                   Select a kid to view details
                 </div>
               )}
@@ -335,22 +394,22 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
 
       {/* Verify Modal */}
       {showVerifyModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#f4f7fe]/95 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white w-full max-w-[1000px] rounded-[20px] overflow-hidden shadow-2xl animate-in zoom-in duration-200 flex flex-col h-[85vh]">
-            <div className="px-8 py-6 flex items-center justify-between">
+            <div className="flex items-center justify-between px-8 py-6">
               <h2 className="text-[17px] font-bold text-black font-[Poppins]">Verify Submission</h2>
               <button 
                 onClick={() => {
                   setShowVerifyModal(false);
                   setActivePreviewUrl(null);
                 }} 
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-2 transition-colors rounded-full hover:bg-gray-100"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="flex-1 flex overflow-hidden">
+            <div className="flex flex-1 overflow-hidden">
                {/* Sidebar Thumbnails */}
                <div className="w-[120px] bg-[#f8fafc] border-r border-gray-100 overflow-y-auto p-4 flex flex-col gap-4">
                   {selectedKid?.submission?.files?.map((file: string, idx: number) => (
@@ -360,11 +419,11 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                         className={`cursor-pointer rounded-lg overflow-hidden border-2 transition-all shrink-0 aspect-square ${activePreviewUrl === file ? 'border-[#005a5a]' : 'border-transparent opacity-60 hover:opacity-100'}`}
                      >
                         {file.toLowerCase().endsWith('.pdf') ? (
-                           <div className="w-full h-full bg-white flex items-center justify-center">
+                           <div className="flex items-center justify-center w-full h-full bg-white">
                               <FileText className="w-8 h-8 text-red-400" />
                            </div>
                         ) : (
-                           <img src={getFullImageUrl(file)} className="w-full h-full object-cover" alt="thumb" />
+                           <img src={getFullImageUrl(file)} className="object-cover w-full h-full" alt="thumb" />
                         )}
                      </div>
                   ))}
@@ -374,29 +433,27 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                <div className="flex-1 bg-[#f1f5f9] p-8 flex items-center justify-center overflow-hidden">
                   {activePreviewUrl ? (
                     activePreviewUrl.toLowerCase().endsWith('.pdf') ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-white rounded-xl shadow-inner">
+                      <div className="flex flex-col items-center justify-center w-full h-full gap-4 bg-white shadow-inner rounded-xl">
                         <FileText className="w-20 h-20 text-red-400" />
-                        <span className="text-gray-500 font-medium">PDF Document</span>
-                        <a 
-                          href={getFullImageUrl(activePreviewUrl)} 
-                          target="_blank" 
-                          rel="noreferrer"
-                          className="px-6 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-bold transition-colors"
+                        <span className="font-medium text-gray-500">PDF Document</span>
+                        <button 
+                          onClick={() => handleOpenFile(getDownloadUrl(activePreviewUrl))}
+                          className="px-6 py-2 text-sm font-bold transition-colors bg-gray-100 rounded-full hover:bg-gray-200 cursor-pointer"
                         >
-                          Open PDF
-                        </a>
+                          Download PDF
+                        </button>
                       </div>
                     ) : (
-                      <div className="w-full h-full relative">
+                      <div className="relative w-full h-full">
                         <img 
                           src={getFullImageUrl(activePreviewUrl)} 
-                          className="w-full h-full object-contain rounded-xl"
+                          className="object-contain w-full h-full rounded-xl"
                           alt="Full preview" 
                         />
                       </div>
                     )
                   ) : (
-                    <div className="text-gray-400 font-medium italic">No file selected for preview</div>
+                    <div className="italic font-medium text-gray-400">No file selected for preview</div>
                   )}
                </div>
 
@@ -419,7 +476,7 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                         </p>
                      </div>
 
-                     <div className="pt-4 flex flex-col gap-4">
+                     <div className="flex flex-col gap-4 pt-4">
                         <button 
                           onClick={handleVerifySubmission}
                           className="w-52 py-4 bg-[#005a5a] text-white rounded-xl font-bold text-[16px] hover:bg-[#004a4a] transition-all shadow-xl shadow-[#005a5a]/10 active:scale-[0.98]"

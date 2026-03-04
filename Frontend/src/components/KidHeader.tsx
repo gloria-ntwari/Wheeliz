@@ -7,7 +7,9 @@ import {
   User, 
   LogOut,
   X,
-  Camera 
+  Camera,
+  Eye,
+  EyeOff
 } from "lucide-react";
 import { API_BASE_URL } from "../config/api";
 
@@ -26,6 +28,8 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [newComics, setNewComics] = useState<{ id: string; title: string }[]>([]);
 
   const getAvatarUrl = (avatar: string | null) => {
     if (!avatar) return "/clip-path-group-16.png";
@@ -45,7 +49,31 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
     navigate("/login");
   };
 
+  // Fetch kid notifications (comics with no submission)
+  React.useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem("kidToken");
+        if (!token) return;
+        const response = await fetch(`${API_BASE_URL}/kid/notifications`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+          setNewComics(data.data.comics);
+        }
+      } catch (error) {
+        console.error("Error fetching kid notifications:", error);
+      }
+    };
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: kidData.kidName,
     email: kidData.email || "",
@@ -171,16 +199,57 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
         </div>
 
         {/* Notification Bell */}
-        <button className="relative flex items-center justify-center bg-white rounded-full w-9 h-9">
-          <Bell className="w-5 h-5 text-[#111827]" />
-          <span className="absolute w-1.5 h-1.5 bg-red-500 rounded-full top-1.5 right-2.5"></span>
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+            className="relative flex items-center justify-center bg-white rounded-full w-9 h-9 hover:bg-gray-50 transition-colors"
+          >
+            <Bell className="w-5 h-5 text-[#111827]" />
+            {newComics.length > 0 && (
+              <span className="absolute flex items-center justify-center w-4 h-4 text-[9px] font-bold text-white bg-red-500 rounded-full -top-0.5 -right-0.5 border border-white">
+                {newComics.length}
+              </span>
+            )}
+          </button>
+
+          {isNotificationsOpen && (
+            <div className="absolute right-0 z-50 w-72 mt-2 overflow-hidden bg-white border border-gray-100 rounded-xl shadow-lg font-[Poppins]">
+              <div className="px-4 py-3 border-b border-gray-50 bg-gray-50/50">
+                <p className="text-sm font-bold text-gray-900">Notifications</p>
+              </div>
+              <div className="py-2 max-h-64 overflow-y-auto">
+                {newComics.length > 0 ? (
+                  newComics.map(comic => (
+                    <button
+                      key={comic.id}
+                      onClick={() => {
+                        navigate('/kid/comics');
+                        setIsNotificationsOpen(false);
+                      }}
+                      className="flex items-center w-full px-4 py-3 text-sm text-left transition-colors hover:bg-gray-50 gap-3"
+                    >
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">New Comic Available</p>
+                        <p className="text-xs text-gray-500 mt-0.5 truncate">{comic.title} — Submit your work!</p>
+                      </div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full shrink-0"></div>
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-4 py-3 text-sm text-center text-gray-500">
+                    No new notifications
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
         </div>
 
         {/* Profile Dropdown */}
         <div className="relative">
           <div 
-            className="flex items-center gap-2 p-1 transition-colors rounded-lg cursor-pointer hover:bg-gray-50"
+            className="flex items-center gap-2 p-1 transition-colors rounded-lg cursor-pointer hover:bg-gray-20"
             onClick={() => setIsProfileOpen(!isProfileOpen)}
           >
             <div className="w-8 h-8 overflow-hidden bg-gray-200 border rounded-full shrink-0 border-gray-50">
@@ -201,24 +270,24 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
           </div>
 
           {isProfileOpen && (
-            <div className="absolute right-0 z-50 w-56 mt-2 overflow-hidden bg-white border border-gray-100 shadow-lg rounded-xl">
+            <div className="absolute right-0 z-50 w-64 mt-2 overflow-hidden bg-white border border-gray-100 shadow-xl rounded-2xl">
               <div className="px-4 py-3 border-b border-gray-50 bg-gray-50/50">
-                <p className="text-xs font-bold text-gray-900 truncate [font-family:'Poppins']">{kidData.kidName}</p>
-                <p className="text-[10px] text-gray-500 truncate mt-0.5">{kidData.email || 'Kid Member'}</p>
+                <p className="text-[14px] font-bold text-gray-900 truncate [font-family:'Poppins']">{kidData.kidName}</p>
+                <p className="text-[12px] text-gray-500 truncate mt-0.5">{kidData.email || 'Kid Member'}</p>
               </div>
               <div className="py-1">
                 <button 
-                  className="flex items-center w-full gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors [font-family:'Poppins']"
+                  className="flex items-center w-full gap-3 px-4 py-4 text-sm text-gray-700 hover:bg-gray-50 transition-colors [font-family:'Poppins']"
                   onClick={() => {
                     setIsProfileOpen(false);
                     setIsEditProfileOpen(true);
                   }}
                 >
-                  <User className="w-3.5 h-3.5" />
+                  <User className="w-4 h-4" />
                   <span>Profile</span>
                 </button>
                 <button 
-                  className="flex items-center w-full gap-2 px-4 py-2 text-xs text-red-500 hover:bg-red-50 transition-colors [font-family:'Poppins']"
+                  className="flex items-center w-full gap-2 px-4 py-4 text-sm text-red-500 hover:bg-red-50 transition-colors [font-family:'Poppins']"
                   onClick={handleLogout}
                 >
                   <LogOut className="w-3.5 h-3.5" />
@@ -233,15 +302,29 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
 
           {/* Profile Edit Modal */}
           {isEditProfileOpen && (
-            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-              <div className="relative w-full max-w-md p-8 bg-white rounded-2xl shadow-2xl">
+            <div 
+              className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm "
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setIsEditProfileOpen(false);
+              }}
+            >
+              <style>{`
+                .no-scrollbar::-webkit-scrollbar {
+                  display: none;
+                }
+                .no-scrollbar {
+                  -ms-overflow-style: none;
+                  scrollbar-width: none;
+                }
+              `}</style>
+              <div className="relative w-full max-w-md p-8 bg-white shadow-2xl rounded-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
                 <button 
                   onClick={() => setIsEditProfileOpen(false)}
-                  className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute z-10 p-2 text-gray-400 transition-colors top-4 right-4 hover:text-gray-600"
                 >
                   <X className="w-5 h-5" />
                 </button>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 font-[Poppins]">Edit Profile</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-6 font-[Poppins]">Edit Profile</h3>
                 
                 <form onSubmit={handleUpdateProfile} className="space-y-4">
                   {/* Profile Photo Upload */}
@@ -329,27 +412,45 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1 font-[Poppins]">Old Password</label>
-                        <input 
-                          type="password" 
-                          placeholder="Enter old password"
-                          value={editFormData.oldPassword}
-                          onChange={(e) => setEditFormData({...editFormData, oldPassword: e.target.value})}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#681618] focus:border-transparent outline-none transition-all font-[Poppins]"
-                        />
+                        <div className="relative">
+                          <input 
+                            type={showOldPassword ? "text" : "password"} 
+                            placeholder="Enter old password"
+                            value={editFormData.oldPassword}
+                            onChange={(e) => setEditFormData({...editFormData, oldPassword: e.target.value})}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#681618] focus:border-transparent outline-none transition-all font-[Poppins] pr-12"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowOldPassword(!showOldPassword)}
+                            className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-gray-600"
+                          >
+                            {showOldPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          </button>
+                        </div>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1 font-[Poppins]">New Password</label>
-                        <input 
-                          type="password" 
-                          placeholder="Enter new password"
-                          value={editFormData.newPassword}
-                          onChange={(e) => setEditFormData({...editFormData, newPassword: e.target.value})}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#681618] focus:border-transparent outline-none transition-all font-[Poppins]"
-                        />
+                        <div className="relative">
+                          <input 
+                            type={showNewPassword ? "text" : "password"} 
+                            placeholder="Enter new password"
+                            value={editFormData.newPassword}
+                            onChange={(e) => setEditFormData({...editFormData, newPassword: e.target.value})}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#681618] focus:border-transparent outline-none transition-all font-[Poppins] pr-12"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                            className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-gray-600"
+                          >
+                            {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-
+ 
                   <div className="pt-4">
                     <button 
                       type="submit"

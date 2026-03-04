@@ -354,7 +354,7 @@ export const Login = (): JSX.Element => {
 
                 {/* Error Message */}
                 {error && (
-                  <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg [font-family:'Barlow',Helvetica]">
+                  <div className="py-3 px-4 ml-0 lg:ml-3 w-full text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg [font-family:'Barlow',Helvetica]">
                     {error}
                   </div>
                 )}

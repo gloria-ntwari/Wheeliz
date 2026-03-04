@@ -12,7 +12,8 @@ import {
   updateAdminProfile,
   getSubmissions,
   gradeSubmission,
-  getNotifications
+  getNotifications,
+  downloadSubmissionFile
 } from '../controllers/adminController';
 import { verifyAdmin, verifyAuth } from '../middlewares/authMiddleware';
 
@@ -105,6 +106,7 @@ router.post('/kids', uploadAvatar, createKid);
 router.post('/kids', uploadAvatar, createKid);
 router.get('/notifications', getNotifications);
 router.get('/submissions', getSubmissions);
+router.get('/submissions/download', downloadSubmissionFile);
 router.post('/submissions/:submissionId/grade', gradeSubmission);
 router.put('/profile', uploadAvatar, updateAdminProfile);
 
