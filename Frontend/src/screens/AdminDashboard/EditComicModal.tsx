@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { X, CloudUpload } from "lucide-react";
 
 import { Comic } from "./Comics";
-import { API_BASE_URL } from "../../config/api";
+import { API_BASE_URL, API_ROOT } from "../../config/api";
 import { toast } from "sonner";
 
 interface EditComicModalProps {
@@ -45,7 +45,7 @@ export const EditComicModal = ({ isOpen, onClose, comic, onUpdate }: EditComicMo
       });
 
         if (comic.image) {
-             const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "").replace(/\/+$/, "");
+             const baseUrl = API_ROOT;
              const cleanPath = comic.image.startsWith("/") ? comic.image : `/${comic.image}`;
              const fullUrl = comic.image.startsWith('http') ? comic.image : `${baseUrl}${cleanPath}`;
              setCoverImagePreview(fullUrl);

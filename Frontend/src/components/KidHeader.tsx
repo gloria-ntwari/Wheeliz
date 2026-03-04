@@ -11,7 +11,7 @@ import {
   Eye,
   EyeOff
 } from "lucide-react";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL,API_ROOT } from "../config/api";
 import { toast } from "sonner";
 
 interface KidHeaderProps {
@@ -35,7 +35,7 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
   const getAvatarUrl = (avatar: string | null) => {
     if (!avatar) return "/clip-path-group-16.png";
     if (avatar.startsWith('http')) return avatar;
-    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, '');
+    const baseUrl = API_ROOT;
     const cleanPath = avatar.startsWith('/') ? avatar : `/${avatar}`;
     return `${baseUrl}${cleanPath}`;
   };
@@ -208,7 +208,7 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
         <div className="relative">
           <button
             onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-            className="relative flex items-center justify-center bg-white rounded-full w-9 h-9 hover:bg-gray-50 transition-colors"
+            className="relative flex items-center justify-center transition-colors bg-white rounded-full w-9 h-9 hover:bg-gray-50"
           >
             <Bell className="w-5 h-5 text-[#111827]" />
             {newComics.length > 0 && (
@@ -223,7 +223,7 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
               <div className="px-4 py-3 border-b border-gray-50 bg-gray-50/50">
                 <p className="text-sm font-bold text-gray-900">Notifications</p>
               </div>
-              <div className="py-2 max-h-64 overflow-y-auto">
+              <div className="py-2 overflow-y-auto max-h-64">
                 {newComics.length > 0 ? (
                   newComics.map(comic => (
                     <button
@@ -232,7 +232,7 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
                         navigate('/kid/comics');
                         setIsNotificationsOpen(false);
                       }}
-                      className="flex items-center w-full px-4 py-3 text-sm text-left transition-colors hover:bg-gray-50 gap-3"
+                      className="flex items-center w-full gap-3 px-4 py-3 text-sm text-left transition-colors hover:bg-gray-50"
                     >
                       <div className="flex-1">
                         <p className="font-medium text-gray-900">New Comic Available</p>

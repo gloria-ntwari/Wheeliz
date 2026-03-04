@@ -109,7 +109,7 @@ export const KidDashboard = (): JSX.Element => {
                     <div className="w-16 h-16 overflow-hidden bg-gray-200 rounded-lg shrink-0">
                          {/* Comic Cover */}
                          <img 
-                            src={comic.cover ? (comic.cover.startsWith('http') ? comic.cover : `${API_BASE_URL.replace(/\/api\/?$/, '')}${comic.cover.startsWith('/') ? '' : '/'}${comic.cover}`) : "/group.png"} 
+                             src={comic.cover ? (comic.cover.startsWith('http') ? comic.cover : `${API_ROOT}${comic.cover.startsWith('/') ? '' : '/'}${comic.cover}`) : "/group.png"} 
                             alt={comic.title} 
                             className="object-cover w-full h-full" 
                          />

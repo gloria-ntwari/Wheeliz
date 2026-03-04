@@ -22,7 +22,7 @@ export const Login = (): JSX.Element => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL.replace('/api', '')}/api/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

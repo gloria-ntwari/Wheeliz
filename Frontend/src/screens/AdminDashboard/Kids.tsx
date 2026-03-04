@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { API_BASE_URL } from "../../config/api";
+import { API_BASE_URL, API_ROOT } from "../../config/api";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowRight, ArrowLeft, UserPlus, Pencil, Download, Printer, Share2} from "lucide-react";
 import { AdminHeader } from "../../components/AdminHeader";
@@ -62,7 +62,7 @@ export const Kids = (): JSX.Element => {
   const getFullImageUrl = (path: string | null) => {
     if (!path) return null;
     if (path.startsWith("http")) return path;
-    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
+    const baseUrl = API_ROOT;
     return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
   };
 

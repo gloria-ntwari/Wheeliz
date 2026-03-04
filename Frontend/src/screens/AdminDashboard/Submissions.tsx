@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../../config/api";
+import { API_BASE_URL, API_ROOT } from "../../config/api";
 import {
   Grid3X3,
   MessageCircleMore,
@@ -82,7 +82,7 @@ export const Submissions = (): JSX.Element => {
   const getFullImageUrl = (path: string | null) => {
     if (!path) return undefined;
     if (path.startsWith("http")) return path;
-    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
+    const baseUrl = API_ROOT;
     return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
   };
 

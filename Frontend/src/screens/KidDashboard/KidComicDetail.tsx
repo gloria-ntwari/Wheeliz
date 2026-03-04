@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../../config/api";
+import { API_BASE_URL, API_ROOT } from "../../config/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { KidHeader } from "../../components/KidHeader";
 import { CloudinaryPdfViewer } from "../../components/CloudinaryPdfViewer";
@@ -35,7 +35,7 @@ export const KidComicDetail = (): JSX.Element => {
   const getImageUrl = (path?: string | null) => {
     if (!path) return "/clip-path-group-16.png";
     if (path.startsWith("http")) return path;
-    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "").replace(/\/+$/, "");
+    const baseUrl = API_ROOT.replace(/\/+$/, "");
     const cleanPath = (path.startsWith("/") ? path : `/${path}`).replace(/\\/g, "/");
     return `${baseUrl}${cleanPath}`;
   };

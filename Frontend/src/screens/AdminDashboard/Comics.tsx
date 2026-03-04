@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { API_BASE_URL } from "../../config/api";
+import { API_BASE_URL, API_ROOT } from "../../config/api";
 import {
   Home,
   Smile,
@@ -27,7 +27,7 @@ export const getComicImageUrl = (path?: string | null) => {
   if (path.startsWith("http")) return path;
   
   // Clean base URL: remove trailing /api and trailing slashes
-  const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "").replace(/\/+$/, "");
+    const baseUrl = API_ROOT;
   
   // Clean path: ensure it has leading slash but no double slashes, and fix Windows backslashes
   const cleanPath = (path.startsWith("/") ? path : `/${path}`).replace(/\\/g, "/");
@@ -338,7 +338,7 @@ export const Comics = (): JSX.Element => {
                                 </span>
                             </div>
                         </div>
-    
+
                         {/* File Attachment */}
                         {comic.document ? (() => {
                             let docUrl = "";

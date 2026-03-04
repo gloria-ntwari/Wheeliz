@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../../config/api";
+import { API_BASE_URL, API_ROOT } from "../../config/api";
 import { useNavigate, useLocation } from "react-router-dom";
 import { KidHeader } from "../../components/KidHeader";
 import { 
@@ -38,9 +38,9 @@ export const KidComics = (): JSX.Element => {
   const getImageUrl = (path?: string | null) => {
     if (!path) return "/clip-path-group-16.png";
     if (path.startsWith("http")) return path;
-    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "").replace(/\/+$/, "");
+    // Use API_ROOT for relative paths
     const cleanPath = (path.startsWith("/") ? path : `/${path}`).replace(/\\/g, "/");
-    return `${baseUrl}${cleanPath}`;
+    return `${API_ROOT}${cleanPath}`;
   };
 
   const getTimeAgo = (dateString: string) => {

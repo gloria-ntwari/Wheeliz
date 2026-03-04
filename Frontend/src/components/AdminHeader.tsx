@@ -13,7 +13,7 @@ import {
   Eye,
   EyeOff
 } from "lucide-react";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL, API_ROOT } from "../config/api";
 import { toast } from "sonner";
 
 interface AdminHeaderProps {
@@ -84,9 +84,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const getAvatarUrl = (avatar: string | null) => {
-    if (!avatar) return "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face";
+    if (!avatar) return "/clip-path-group-16.png";
     if (avatar.startsWith('http')) return avatar;
-    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, '');
+    const baseUrl = API_ROOT;
     const cleanPath = avatar.startsWith('/') ? avatar : `/${avatar}`;
     return `${baseUrl}${cleanPath}`;
   };

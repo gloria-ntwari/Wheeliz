@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../../config/api";
+import { API_BASE_URL, API_ROOT } from "../../config/api";
 import { 
   ArrowLeft, 
   CheckCircle2,
@@ -110,7 +110,7 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
   const getFullImageUrl = (path: string | null) => {
     if (!path) return "/clip-path-group-16.png";
     if (path.startsWith("http")) return path;
-    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
+    const baseUrl = API_ROOT;
     return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
   };
 
