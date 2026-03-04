@@ -191,7 +191,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
           </div>
 
           <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl text-sm text-blue-700 font-[Poppins]">
-            📧 A password setup link will be automatically sent to the kid's email address after account creation.
+            A password setup link will be automatically sent to the email address after account creation.
           </div>
 
           <div className="flex justify-end gap-4 pt-6 border-t border-gray-100">
