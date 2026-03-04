@@ -500,13 +500,19 @@ export const createKid = async (req: Request, res: Response) => {
       motherName, 
       dateOfBirth, 
       parentPhone,
-      password 
     } = req.body;
 
     if (!name || !parentPhone) {
       return res.status(400).json({
         status: 'error',
         message: 'Name and Parent Phone are required'
+      });
+    }
+
+    if (!email) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Email is required to send the password setup link'
       });
     }
 
@@ -517,7 +523,10 @@ export const createKid = async (req: Request, res: Response) => {
       avatar = files.avatar[0].path;
     }
 
-    const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
+    // Generate a secure setup token (24h expiry)
+    const crypto = require('crypto');
+    const setupToken = crypto.randomBytes(32).toString('hex');
+    const setupTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
     const kid = await prisma.kid.create({
       data: {
@@ -528,14 +537,26 @@ export const createKid = async (req: Request, res: Response) => {
         motherName,
         parentPhone,
         dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
-        passwordHash: hashedPassword,
+        passwordHash: null, // No password until kid sets it
         avatar: avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
+        verificationCode: setupToken,
+        verificationCodeExpires: setupTokenExpires,
       }
     });
 
+    // Send password setup email
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const setupLink = `${frontendUrl}/set-password?token=${setupToken}&email=${encodeURIComponent(email)}`;
+
+    const { sendPasswordSetupEmail } = require('../config/emailService');
+    const emailSent = await sendPasswordSetupEmail(email, name, setupLink);
+    if (!emailSent) {
+      console.warn(`[CreateKid] Failed to send setup email to ${email}`);
+    }
+
     res.status(201).json({
       status: 'success',
-      message: 'Kid created successfully',
+      message: `Kid created successfully. A password setup link has been sent to ${email}.`,
       data: kid
     });
   } catch (error: any) {
@@ -550,6 +571,51 @@ export const createKid = async (req: Request, res: Response) => {
       status: 'error',
       message: 'Server error'
     });
+  }
+};
+
+// Set Kid Password (via email setup link)
+export const setKidPassword = async (req: Request, res: Response) => {
+  try {
+    const { email, token, password } = req.body;
+
+    if (!email || !token || !password) {
+      return res.status(400).json({ status: 'error', message: 'Email, token, and password are required' });
+    }
+
+    const kid = await prisma.kid.findUnique({ where: { email } });
+
+    if (!kid) {
+      return res.status(404).json({ status: 'error', message: 'Account not found' });
+    }
+
+    if (kid.verificationCode !== token) {
+      return res.status(400).json({ status: 'error', message: 'Invalid or expired setup link' });
+    }
+
+    if (kid.verificationCodeExpires && kid.verificationCodeExpires < new Date()) {
+      return res.status(400).json({ status: 'error', message: 'This setup link has expired. Please contact an admin.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.kid.update({
+      where: { id: kid.id },
+      data: {
+        passwordHash: hashedPassword,
+        isVerified: true,
+        verificationCode: null,
+        verificationCodeExpires: null,
+      }
+    });
+
+    res.json({
+      status: 'success',
+      message: 'Password set successfully! You can now log in.'
+    });
+  } catch (error) {
+    console.error('Set kid password error:', error);
+    res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
 

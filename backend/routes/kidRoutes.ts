@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
-import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile, verifyEmail, completeKidProfile, submitAssignment, getComicSubmissions, updateKidProfile, getKidNotifications } from '../controllers/kidController';
+import { kidLogin, createKid, kidSignup, getKidDashboardStats, checkKidProfile, verifyEmail, completeKidProfile, submitAssignment, getComicSubmissions, updateKidProfile, getKidNotifications, forgotPassword } from '../controllers/kidController';
+import { setKidPassword } from '../controllers/adminController';
 
 import { verifyKid } from '../middlewares/authMiddleware';
 import { Router } from 'express';
@@ -29,6 +30,12 @@ const router = Router();
  *         description: Success or confirmation needed
  */
 router.post('/check', checkKidProfile);
+
+// Public: set password via email link (no auth required)
+router.post('/set-password', setKidPassword);
+
+// Public: request password reset link via email
+router.post('/forgot-password', forgotPassword);
 
 /**
  * @swagger

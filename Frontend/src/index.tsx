@@ -13,8 +13,11 @@ import { Submissions } from "./screens/AdminDashboard/Submissions";
 import { ComicSubmissionsDetail } from "./screens/AdminDashboard/ComicSubmissionsDetail";
 import { KidDashboard } from "./screens/KidDashboard/KidDashboard";
 import { KidComics } from "./screens/KidDashboard/KidComics";
-import { KidComicDetail } from "./screens/KidDashboard/KidComicDetail";
 import { ComicView } from "./screens/AdminDashboard";
+import { SetPassword } from "./screens/SetPassword/SetPassword";
+import { ForgotPassword } from "./screens/ForgotPassword/ForgotPassword";
+import { ResetPassword } from "./screens/ForgotPassword/ResetPassword";
+import { KidComicDetail } from "./screens/KidDashboard/KidComicDetail";
 
 // Protected Route Component for Admin
 const ProtectedAdminRoute = ({ children }: { children: React.ReactElement }) => {
@@ -42,6 +45,9 @@ root.render(
         <Route path="/" element={<MacbookPro />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/set-password" element={<SetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="/admin/dashboard"
           element={

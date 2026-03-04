@@ -17,13 +17,13 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
     motherName: "",
     parentPhone: "",
     dateOfBirth: "",
-    password: ""
   });
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -48,6 +48,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const token = localStorage.getItem("adminToken");
@@ -67,20 +68,15 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
 
       const result = await response.json();
       if (result.status === 'success') {
+        setSuccess(`Kid added! A password setup email has been sent to ${formData.email}.`);
         onSuccess();
-        onClose();
-        setFormData({
-          name: "",
-          email: "",
-          gender: "",
-          fatherName: "",
-          motherName: "",
-          parentPhone: "",
-          dateOfBirth: "",
-          password: ""
-        });
-        setAvatarFile(null);
-        setAvatarPreview(null);
+        setTimeout(() => {
+          onClose();
+          setFormData({ name: "", email: "", gender: "", fatherName: "", motherName: "", parentPhone: "", dateOfBirth: "" });
+          setAvatarFile(null);
+          setAvatarPreview(null);
+          setSuccess(null);
+        }, 2500);
       } else {
         setError(result.message || "Failed to add kid");
       }
@@ -108,6 +104,11 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
               <p className="text-sm font-medium">{error}</p>
             </div>
           )}
+          {success && (
+            <div className="p-4 text-green-700 border-l-4 border-green-500 rounded-r bg-green-50">
+              <p className="text-sm font-medium">{success}</p>
+            </div>
+          )}
 
           {/* Profile Photo Upload */}
           <div className="flex flex-col items-center mb-8">
@@ -130,13 +131,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
               >
                 <Camera className="w-4 h-4" />
               </button>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                className="hidden" 
-                accept="image/*" 
-                onChange={handleFileChange}
-              />
+              <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
             </div>
           </div>
 
@@ -144,34 +139,24 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Full Name*</label>
               <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
+                type="text" name="name" value={formData.name} onChange={handleInputChange} required
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Enter full name"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700">Email Address</label>
+              <label className="text-sm font-bold text-gray-700">Email Address* <span className="text-gray-400 text-xs font-normal">(setup link will be sent here)</span></label>
               <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
+                type="email" name="email" value={formData.email} onChange={handleInputChange} required
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
-                placeholder="Enter email"
+                placeholder="Enter email address"
               />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Gender</label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
+              <select name="gender" value={formData.gender} onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors appearance-none bg-white text-[15px]"
               >
                 <option value="">Select Gender</option>
@@ -184,11 +169,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Parent Phone*</label>
               <input
-                type="tel"
-                name="parentPhone"
-                value={formData.parentPhone}
-                onChange={handleInputChange}
-                required
+                type="tel" name="parentPhone" value={formData.parentPhone} onChange={handleInputChange} required
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Enter parent phone"
               />
@@ -197,10 +178,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Father's Name</label>
               <input
-                type="text"
-                name="fatherName"
-                value={formData.fatherName}
-                onChange={handleInputChange}
+                type="text" name="fatherName" value={formData.fatherName} onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Enter father's name"
               />
@@ -209,10 +187,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Mother's Name</label>
               <input
-                type="text"
-                name="motherName"
-                value={formData.motherName}
-                onChange={handleInputChange}
+                type="text" name="motherName" value={formData.motherName} onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
                 placeholder="Enter mother's name"
               />
@@ -221,41 +196,26 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Date of Birth</label>
               <input
-                type="date"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
-                onChange={handleInputChange}
+                type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"
-                placeholder="Create password"
               />
             </div>
           </div>
 
+          <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl text-sm text-blue-700 font-[Poppins]">
+            📧 A password setup link will be automatically sent to the kid's email address after account creation.
+          </div>
+
           <div className="flex justify-end gap-4 pt-6 border-t border-gray-100">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2.5 font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 flex-1 sm:flex-none text-semibold text-[14px]"
+            <button type="button" onClick={onClose}
+              className="px-6 py-2.5 font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 flex-1 sm:flex-none text-[14px]"
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-8 py-2.5 font-semibold text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] disabled:opacity-50 flex-1 sm:flex-none text-semibold text-[14px]"
+            <button type="submit" disabled={loading}
+              className="px-8 py-2.5 font-semibold text-white bg-[#681618] rounded-xl hover:bg-[#8a1322] disabled:opacity-50 flex-1 sm:flex-none text-[14px]"
             >
-              {loading ? "Adding..." : "Add Kid"}
+              {loading ? "Creating..." : "Add Kid & Send Invite"}
             </button>
           </div>
         </form>

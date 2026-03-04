@@ -699,3 +699,51 @@ export const getKidNotifications = async (req: Request, res: Response) => {
         res.status(500).json({ status: 'error', message: 'Server error' });
     }
 };
+
+export const forgotPassword = async (req: Request, res: Response) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ status: 'error', message: 'Email is required' });
+        }
+
+        // Find kid by email
+        const kid = await prisma.kid.findUnique({ where: { email } });
+        if (!kid) {
+            // We return success even if not found to prevent email enumeration attacks
+            return res.status(200).json({
+                status: 'success',
+                message: 'If an account with that email exists, we have sent a reset link.',
+            });
+        }
+
+        // Generate a reset token (using same verification field as setup, valid for 1 hour)
+        const crypto = require('crypto');
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpires = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour
+
+        await prisma.kid.update({
+            where: { id: kid.id },
+            data: {
+                verificationCode: resetToken,
+                verificationCodeExpires: resetTokenExpires
+            }
+        });
+
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        // We reuse the set-password page since it's practically identical in flow,
+        // or we could point to a new reset-password page. Let's point to reset-password to be clean.
+        const resetLink = `${frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
+
+        const { sendForgotPasswordEmail } = require('../config/emailService');
+        await sendForgotPasswordEmail(email, kid.name, resetLink);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'If an account with that email exists, we have sent a reset link.',
+        });
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        res.status(500).json({ status: 'error', message: 'Server error' });
+    }
+};
