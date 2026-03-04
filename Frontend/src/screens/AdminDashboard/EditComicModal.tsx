@@ -3,6 +3,7 @@ import { X, CloudUpload } from "lucide-react";
 
 import { Comic } from "./Comics";
 import { API_BASE_URL } from "../../config/api";
+import { toast } from "sonner";
 
 interface EditComicModalProps {
   isOpen: boolean;
@@ -28,7 +29,6 @@ export const EditComicModal = ({ isOpen, onClose, comic, onUpdate }: EditComicMo
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const coverInputRef = useRef<HTMLInputElement>(null);
 
@@ -80,11 +80,10 @@ export const EditComicModal = ({ isOpen, onClose, comic, onUpdate }: EditComicMo
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      setError(null);
 
       // Validate required fields
       if (!formData.title || !formData.subtitle || !formData.description) {
-        setError("Please fill in all required fields (Title, Subtitle, Description)");
+        toast.error("Please fill in all required fields (Title, Subtitle, Description)");
         return;
       }
 
@@ -119,15 +118,16 @@ export const EditComicModal = ({ isOpen, onClose, comic, onUpdate }: EditComicMo
       const result = await response.json();
 
       if (response.ok && result.status === 'success') {
+        toast.success("Comic updated successfully");
         onUpdate();
         onClose();
       } else {
-        setError(result.message || 'Failed to update comic');
+        toast.error(result.message || 'Failed to update comic');
       }
 
     } catch (err) {
       console.error("Error updating comic:", err);
-      setError("An unexpected error occurred");
+      toast.error("An unexpected error occurred");
     } finally {
       setLoading(false);
     }
@@ -144,11 +144,6 @@ export const EditComicModal = ({ isOpen, onClose, comic, onUpdate }: EditComicMo
         </div>
 
         <div className="p-8 space-y-8">
-            {error && (
-                <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r">
-                    <p>{error}</p>
-                </div>
-            )}
 
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {/* Title */}

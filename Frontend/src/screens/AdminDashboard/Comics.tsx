@@ -20,6 +20,7 @@ import {
 import React from "react";
 import { EditComicModal } from "./EditComicModal";
 import { AdminHeader } from "../../components/AdminHeader";
+import { toast } from "sonner";
 
 export const getComicImageUrl = (path?: string | null) => {
   if (!path) return "/clip-path-group-16.png";
@@ -118,7 +119,7 @@ export const Comics = (): JSX.Element => {
           if (result.status === 'success') {
               fetchComics(); // Refresh list
           } else {
-              alert(result.message || "Failed to delete");
+              toast.error(result.message || "Failed to delete");
           }
       } catch (error) {
           console.error("Error deleting comic:", error);

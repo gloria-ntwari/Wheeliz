@@ -14,6 +14,7 @@ import {
   EyeOff
 } from "lucide-react";
 import { API_BASE_URL } from "../config/api";
+import { toast } from "sonner";
 
 interface AdminHeaderProps {
   sidebarOpen: boolean;
@@ -34,6 +35,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // Fetch notifications count
   React.useEffect(() => {
@@ -91,6 +93,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsUpdating(true);
     try {
       const token = localStorage.getItem("adminToken");
       const formData = new FormData();
@@ -119,17 +122,20 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         };
         setAdminProfileData(newAdminData);
         localStorage.setItem("adminData", JSON.stringify(newAdminData));
-        setIsEditProfileOpen(false);
+        toast.success("Profile updated successfully");
         setEditFormData({ ...editFormData, oldPassword: "", newPassword: "" });
         setAvatarFile(null);
         setAvatarPreview(null);
-        alert("Profile updated successfully");
+        // Close modal after delay
+        setTimeout(() => setIsEditProfileOpen(false), 2000);
       } else {
-        alert(result.message || "Failed to update profile");
+        toast.error(result.message || "Failed to update profile");
       }
     } catch (error) {
       console.error("Update profile error:", error);
-      alert("An error occurred");
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -400,9 +406,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
               <div className="pt-4">
                 <button 
                   type="submit"
-                  className="w-full py-3 bg-[#681618] text-white font-semibold rounded-lg hover:bg-[#8a1322] transition-colors"
+                  disabled={isUpdating}
+                  className="w-full py-3 bg-[#681618] text-white font-semibold rounded-lg hover:bg-[#8a1322] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Save Changes
+                  {isUpdating ? "Updating..." : "Save Changes"}
                 </button>
               </div>
             </form>

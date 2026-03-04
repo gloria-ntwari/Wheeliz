@@ -12,6 +12,7 @@ import {
   EyeOff
 } from "lucide-react";
 import { API_BASE_URL } from "../config/api";
+import { toast } from "sonner";
 
 interface KidHeaderProps {
   kidData: {
@@ -74,6 +75,7 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: kidData.kidName,
     email: kidData.email || "",
@@ -100,6 +102,7 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsUpdating(true);
     try {
       const token = localStorage.getItem("kidToken");
       const formData = new FormData();
@@ -121,21 +124,24 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
       
       const result = await response.json();
       if (result.status === 'success') {
-        const updatedKid = result.data;
-        // Ideally prompt parent to update state or refresh, but for now just close and alert
-        alert("Profile updated successfully. Please refresh to see changes.");
-        setIsEditProfileOpen(false);
+        toast.success("Profile updated successfully. Refreshing...");
         setEditFormData({ ...editFormData, oldPassword: "", newPassword: "" });
         setAvatarFile(null);
         setAvatarPreview(null);
-        // Reload page to reflect changes easily
-        window.location.reload(); 
+        
+        // Delay reload to show success message
+        setTimeout(() => {
+          setIsEditProfileOpen(false);
+          window.location.reload();
+        }, 2000);
       } else {
-        alert(result.message || "Failed to update profile");
+        toast.error(result.message || "Failed to update profile");
       }
     } catch (error) {
       console.error("Update profile error:", error);
-      alert("An error occurred");
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -454,9 +460,10 @@ export const KidHeader: React.FC<KidHeaderProps> = ({ kidData }) => {
                   <div className="pt-4">
                     <button 
                       type="submit"
-                      className="w-full py-3 bg-[#681618] text-white font-semibold rounded-lg hover:bg-[#8a1322] transition-colors font-[Poppins]"
+                      disabled={isUpdating}
+                      className="w-full py-3 bg-[#681618] text-white font-semibold rounded-lg hover:bg-[#8a1322] transition-colors font-[Poppins] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Save Changes
+                      {isUpdating ? "Updating..." : "Save Changes"}
                     </button>
                   </div>
                 </form>

@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "sonner";
 import { MacbookPro } from "./screens/MacbookPro";
 import { Login } from "./screens/Login";
 import { SignUp } from "./screens/SignUp";
@@ -40,6 +41,7 @@ if (!(container as any)._reactRoot) {
 
 root.render(
   <StrictMode>
+    <Toaster richColors position="top-right" />
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MacbookPro />} />

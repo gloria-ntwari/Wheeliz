@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { X, CloudUpload, Camera } from "lucide-react";
 import { API_BASE_URL } from "../../config/api";
+import { toast } from "sonner";
 
 interface AddKidModalProps {
   isOpen: boolean;
@@ -22,8 +23,6 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -47,8 +46,8 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    setSuccess(null);
+    e.preventDefault();
+    setLoading(true);
 
     try {
       const token = localStorage.getItem("adminToken");
@@ -68,21 +67,20 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
 
       const result = await response.json();
       if (result.status === 'success') {
-        setSuccess(`Kid added! A password setup email has been sent to ${formData.email}.`);
+        toast.success(`Kid added! A password setup email has been sent to ${formData.email}.`);
         onSuccess();
         setTimeout(() => {
           onClose();
           setFormData({ name: "", email: "", gender: "", fatherName: "", motherName: "", parentPhone: "", dateOfBirth: "" });
           setAvatarFile(null);
           setAvatarPreview(null);
-          setSuccess(null);
-        }, 2500);
+        }, 2000);
       } else {
-        setError(result.message || "Failed to add kid");
+        toast.error(result.message || "Failed to add kid");
       }
     } catch (err) {
       console.error("Add kid error:", err);
-      setError("An unexpected error occurred");
+      toast.error("An unexpected error occurred");
     } finally {
       setLoading(false);
     }
@@ -99,16 +97,6 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-6 max-h-[70vh] overflow-y-auto font-[Poppins]">
-          {error && (
-            <div className="p-4 text-red-700 border-l-4 border-red-500 rounded-r bg-red-50">
-              <p className="text-sm font-medium">{error}</p>
-            </div>
-          )}
-          {success && (
-            <div className="p-4 text-green-700 border-l-4 border-green-500 rounded-r bg-green-50">
-              <p className="text-sm font-medium">{success}</p>
-            </div>
-          )}
 
           {/* Profile Photo Upload */}
           <div className="flex flex-col items-center mb-8">
@@ -146,7 +134,7 @@ export const AddKidModal: React.FC<AddKidModalProps> = ({ isOpen, onClose, onSuc
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700">Email Address* <span className="text-gray-400 text-xs font-normal">(setup link will be sent here)</span></label>
+              <label className="text-sm font-bold text-gray-700">Email Address* <span className="text-xs font-normal text-gray-400">(setup link will be sent here)</span></label>
               <input
                 type="email" name="email" value={formData.email} onChange={handleInputChange} required
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#681618] outline-none transition-colors text-[15px]"

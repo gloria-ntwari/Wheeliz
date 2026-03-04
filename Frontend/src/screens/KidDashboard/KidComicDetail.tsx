@@ -5,6 +5,7 @@ import { KidHeader } from "../../components/KidHeader";
 import { CloudinaryPdfViewer } from "../../components/CloudinaryPdfViewer";
 import { ArrowLeft } from "lucide-react";
 import { SubmissionDrawer } from "../../components/SubmissionDrawer";
+import { toast } from "sonner";
 
 interface ComicDetail {
   id: string;
@@ -293,7 +294,7 @@ export const KidComicDetail = (): JSX.Element => {
           }}
           onSuccess={() => {
             fetchData();
-            alert('Assignment submitted successfully!');
+            toast.success('Assignment submitted successfully!');
           }}
         />
       )}
