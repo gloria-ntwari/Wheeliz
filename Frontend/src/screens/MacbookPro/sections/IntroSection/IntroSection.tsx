@@ -21,7 +21,7 @@ const contentData = [
 
 export const IntroSection = (): JSX.Element => {
   return (
-    <section className="flex flex-col items-center w-full gap-20 lg:gap-28 px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32 py-12 lg:py-20">
+    <section className="flex flex-col items-center w-full gap-20 px-4 py-12 lg:gap-28 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32 lg:py-20">
       {contentData.map((item, index) => {
         const cardOnRight = item.cardSide === "right";
 
@@ -38,7 +38,7 @@ export const IntroSection = (): JSX.Element => {
               } w-[65%] h-full rounded-2xl overflow-hidden shadow-md`}
             >
               <img
-                className="w-full h-full object-cover"
+                className="object-cover w-full h-full"
                 alt="Store shelf display"
                 src="/Rectangle 339.png"
               />
