@@ -49,7 +49,7 @@ export const ForgotPassword = (): JSX.Element => {
         <img className="absolute w-full h-[37.13%] top-[62.86%] left-0" alt="Clip path group" src="/clip-path-group-1.png" />
 
         {/* Animated car entering the scene on large screens */}
-        <img className="absolute h-[35.13%] top-[65%] left-[calc(50%-864px)] w-[562px] hidden lg:block animate-car-entrance img-hq" alt="Moving Car" src="/car_group.svg" loading="eager" decoding="sync" />
+        <img className="absolute h-[35.13%] top-[65%] left-[calc(50%-864px)] w-[562px] hidden lg:block animate-car-entrance img-hq" alt="Moving Car" src="/car_group1.svg" loading="eager" decoding="sync" />
         <img className="absolute w-[180px] sm:w-[220px] lg:w-[260px] h-auto top-[66px] left-[6%] z-10" src="/clip-path-group-16.png" alt="Wheeliez Logo" />
 
         {/* Decorative elements - clouds, coins, wheels, etc. */}

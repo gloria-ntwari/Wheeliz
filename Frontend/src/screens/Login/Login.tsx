@@ -102,7 +102,7 @@ export const Login = (): JSX.Element => {
         <img
           className="absolute h-[35.13%] top-[65%] left-[calc(50%-864px)] w-[562px] hidden lg:block animate-car-entrance img-hq"
           alt="Moving Car"
-          src="/car_group.svg"
+          src="/car_group1.svg"
           loading="eager"
           decoding="sync"
         />
