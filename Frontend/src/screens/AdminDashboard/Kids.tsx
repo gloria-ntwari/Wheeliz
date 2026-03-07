@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { API_BASE_URL, API_ROOT } from "../../config/api";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ArrowRight, ArrowLeft, UserPlus, Pencil, Download, Printer, Share2} from "lucide-react";
+import { ArrowRight, ArrowLeft, UserPlus, Pencil, Download, Printer, Share2, MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { AdminHeader } from "../../components/AdminHeader";
 import { Home, Clock, Puzzle, Grid3X3 } from "lucide-react";
 import { AddKidModal } from "./AddKidModal";
+import { EditKidModal } from "./EditKidModal";
+import { toast } from "sonner";
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/admin/dashboard", active: false },
@@ -30,6 +32,8 @@ export const Kids = (): JSX.Element => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKid, setSelectedKid] = useState<any | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
   const [kids, setKids] = useState<any[]>([]);
@@ -57,6 +61,46 @@ export const Kids = (): JSX.Element => {
 
   useEffect(() => {
     fetchKids();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this kid?")) return;
+
+    try {
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch(`${API_BASE_URL}/admin/kids/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const result = await response.json();
+      if (result.status === 'success') {
+        toast.success("Kid deleted successfully!");
+        fetchKids();
+      } else {
+        toast.error(result.message || "Failed to delete kid");
+      }
+    } catch (err) {
+      console.error("Delete kid error:", err);
+      toast.error("An unexpected error occurred");
+    } finally {
+      setActiveMenuId(null);
+    }
+  };
+
+  const handleEdit = (kid: any) => {
+    setSelectedKid(kid);
+    setIsEditModalOpen(true);
+    setActiveMenuId(null);
+  };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => setActiveMenuId(null);
+    window.addEventListener('click', handleClickOutside);
+    return () => window.removeEventListener('click', handleClickOutside);
   }, []);
 
   const getFullImageUrl = (path: string | null) => {
@@ -185,11 +229,47 @@ export const Kids = (): JSX.Element => {
                     const isActive = kid.status?.toLowerCase() === "active";
 
                 return (
-                  <button
+                  <div
                     key={kid.id}
                     onClick={() => setSelectedKid(kid)}
-                    className="flex flex-col h-full p-2 text-left transition-all bg-white border rounded-[30px] shadow-sm hover:shadow-md font-poppins"
+                    className="relative flex flex-col h-full p-2 text-left transition-all bg-white border rounded-[30px] shadow-sm hover:shadow-md font-poppins cursor-pointer"
                   >
+                    {/* Menu button */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveMenuId(activeMenuId === kid.id ? null : kid.id);
+                        }}
+                        className="p-1 text-gray-400 transition-colors hover:text-black"
+                      >
+                        <MoreHorizontal className="w-5 h-5" />
+                      </button>
+                      {activeMenuId === kid.id && (
+                        <div className="absolute right-0 w-32 py-1 mt-2 overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(kid);
+                            }}
+                            className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-gray-700 transition-colors hover:bg-gray-50"
+                          >
+                            <Edit className="w-3.5 h-3.5" />
+                            Edit
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(kid.id);
+                            }}
+                            className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-600 transition-colors hover:bg-red-50"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
                     {/* INNER PROFILE CARD */}
                     <div
                       className={`flex flex-col items-center px-6 pt-6 pb-5 rounded-2xl
@@ -250,7 +330,7 @@ export const Kids = (): JSX.Element => {
                         </p>
                       </div>
                     </div>
-                  </button>
+                  </div>
                 );
               })
             )}
@@ -347,32 +427,6 @@ export const Kids = (): JSX.Element => {
                   <span className="inline-block px-4 py-1 mt-3 text-xs font-semibold tracking-wide text-gray-700 uppercase bg-gray-200">
                     {selectedKid.status}
                   </span>
-                  <div className="flex items-center justify-center gap-3 mt-4">
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      <Pencil className="w-4 h-4 text-gray-700" />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      <Download className="w-4 h-4 text-gray-700" />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      <Printer className="w-4 h-4 text-gray-700" />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-10 h-10 transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      <Share2 className="w-4 h-4 text-gray-700" />
-                    </button>
-                  </div>
                 </div>
 
                 <div className="w-full max-w-[280px] mx-auto space-y-6 text-sm text-gray-800 [font-family:'Poppins']">
@@ -425,6 +479,16 @@ export const Kids = (): JSX.Element => {
           isOpen={isAddModalOpen} 
           onClose={() => setIsAddModalOpen(false)} 
           onSuccess={fetchKids} 
+        />
+
+        <EditKidModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          kid={selectedKid}
+          onUpdate={(updatedKid) => {
+            fetchKids();
+            setSelectedKid(updatedKid);
+          }}
         />
       </div>
     </div>

@@ -574,6 +574,103 @@ export const createKid = async (req: Request, res: Response) => {
   }
 };
 
+// Update Kid
+export const updateKid = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { 
+      name, 
+      email, 
+      gender, 
+      fatherName, 
+      motherName, 
+      dateOfBirth, 
+      parentPhone,
+      status
+    } = req.body;
+
+    const dataToUpdate: any = {};
+
+    if (name !== undefined) dataToUpdate.name = name;
+    if (email !== undefined) dataToUpdate.email = email;
+    if (gender !== undefined) dataToUpdate.gender = gender;
+    if (fatherName !== undefined) dataToUpdate.fatherName = fatherName;
+    if (motherName !== undefined) dataToUpdate.motherName = motherName;
+    if (parentPhone !== undefined) dataToUpdate.parentPhone = parentPhone;
+    
+    if (dateOfBirth) {
+      const parsedDate = new Date(dateOfBirth);
+      if (!isNaN(parsedDate.getTime())) {
+        dataToUpdate.dateOfBirth = parsedDate;
+      }
+    }
+
+    // Handle lastLogin logic if status is passed to manually toggle if needed, 
+    // but usually status is derived from lastLogin in getAllKids.
+    // However, the frontend Edit modal has a 'status' field.
+    // Let's check how we want to handle 'Status' from the form.
+    // If we want to persist it, we might need a status field in the schema (which it doesn't have).
+    // The schema does NOT have a status field. It derives it.
+    // So we ignore 'status' in dataToUpdate for now as it's not in the model.
+
+    // Handle avatar upload
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    if (files?.avatar?.[0]) {
+      dataToUpdate.avatar = files.avatar[0].path;
+    }
+
+    const kid = await prisma.kid.update({
+      where: { id: id as string },
+      data: dataToUpdate
+    });
+
+    res.json({
+      status: 'success',
+      message: 'Kid updated successfully',
+      data: kid
+    });
+  } catch (error: any) {
+    console.error('Update kid error:', error);
+    if (error.code === 'P2002') {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Email or Parent Phone already exists'
+      });
+    }
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error'
+    });
+  }
+};
+
+// Delete Kid
+export const deleteKid = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // Delete related submissions first (Prisma doesn't have cascade delete configured in the schema for Kid)
+    await prisma.submission.deleteMany({
+      where: { kidId: id as string }
+    });
+
+    await prisma.kid.delete({
+      where: { id: id as string }
+    });
+
+    res.json({
+      status: 'success',
+      message: 'Kid deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete kid error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error'
+    });
+  }
+};
+
 // Set Kid Password (via email setup link)
 export const setKidPassword = async (req: Request, res: Response) => {
   try {

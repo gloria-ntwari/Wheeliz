@@ -9,6 +9,8 @@ import {
   deleteComic,
   getAllKids,
   createKid,
+  updateKid,
+  deleteKid,
   updateAdminProfile,
   getSubmissions,
   gradeSubmission,
@@ -103,7 +105,8 @@ router.delete('/comics/:id', deleteComic);
  */
 router.get('/kids', getAllKids);
 router.post('/kids', uploadAvatar, createKid);
-router.post('/kids', uploadAvatar, createKid);
+router.put('/kids/:id', uploadAvatar, updateKid);
+router.delete('/kids/:id', deleteKid);
 router.get('/notifications', getNotifications);
 router.get('/submissions', getSubmissions);
 router.get('/submissions/download', downloadSubmissionFile);
