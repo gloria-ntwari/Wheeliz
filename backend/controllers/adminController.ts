@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma';
+import { sendPasswordSetupEmail } from '../config/emailService';
 
 // Admin Login
 export const adminLogin = async (req: Request, res: Response) => {
@@ -548,7 +549,6 @@ export const createKid = async (req: Request, res: Response) => {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const setupLink = `${frontendUrl}/set-password?token=${setupToken}&email=${encodeURIComponent(email)}`;
 
-    const { sendPasswordSetupEmail } = require('../config/emailService');
     const emailSent = await sendPasswordSetupEmail(email, name, setupLink);
     if (!emailSent) {
       console.warn(`[CreateKid] Failed to send setup email to ${email}`);
@@ -654,9 +654,17 @@ export const deleteKid = async (req: Request, res: Response) => {
       where: { kidId: id as string }
     });
 
-    await prisma.kid.delete({
+    // Use deleteMany to avoid P2025 if the record is already gone
+    const deleteResult = await prisma.kid.deleteMany({
       where: { id: id as string }
     });
+
+    if (deleteResult.count === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Kid not found or already deleted'
+      });
+    }
 
     res.json({
       status: 'success',

@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma';
-import { sendVerificationEmail } from '../config/emailService';
+import { sendVerificationEmail, sendForgotPasswordEmail } from '../config/emailService';
 import crypto from 'crypto';
 
 
@@ -735,7 +735,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
         // or we could point to a new reset-password page. Let's point to reset-password to be clean.
         const resetLink = `${frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
 
-        const { sendForgotPasswordEmail } = require('../config/emailService');
         await sendForgotPasswordEmail(email, kid.name, resetLink);
 
         res.status(200).json({
