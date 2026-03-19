@@ -1,18 +1,21 @@
 import 'dotenv/config';
 import nodemailer from 'nodemailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: process.env.SMTP_SECURE === 'true', // true for port 465, false for 587
+const transportOptions: SMTPTransport.Options = {
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: 587,
+    secure: false, 
     auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        pass: process.env.SMTP_PASS, 
     },
     tls: {
-    rejectUnauthorized: false,
-  },
-});
+        rejectUnauthorized: false,
+    },
+};
+
+const transporter = nodemailer.createTransport(transportOptions);
 
 const FROM_EMAIL = process.env.EMAIL_FROM || process.env.SMTP_USER || '';
 
