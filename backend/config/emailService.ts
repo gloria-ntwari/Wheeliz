@@ -1,22 +1,29 @@
 import 'dotenv/config';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM_EMAIL = process.env.EMAIL_FROM || 'onboarding@resend.dev';
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: process.env.SMTP_SECURE === 'true', // true for port 465, false for 587
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+    },
+});
 
-console.log('--- Email Service (Resend API) ---');
-console.log('Resend Initialized with Key Length:', (process.env.RESEND_API_KEY || '').length);
+const FROM_EMAIL = process.env.EMAIL_FROM || process.env.SMTP_USER || '';
+
+console.log('--- Email Service (SMTP) ---');
+console.log('SMTP Host:', process.env.SMTP_HOST);
+console.log('SMTP Port:', process.env.SMTP_PORT);
 console.log('From Email:', FROM_EMAIL);
 console.log('--- --- --- --- --- ---');
 
 export const sendVerificationEmail = async (to: string, code: string) => {
     try {
-        // REDIRECT FOR TESTING: Resend sandbox only allows sending to the account owner
-        const recipient = process.env.NODE_ENV === 'production' ? to : 'gloriantwari@gmail.com';
-        
-        const { data, error } = await resend.emails.send({
+        const info = await transporter.sendMail({
             from: `Wheeliz Noreply <${FROM_EMAIL}>`,
-            to: [recipient],
+            to,
             subject: 'Verify your Wheeliz account',
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
@@ -34,27 +41,19 @@ export const sendVerificationEmail = async (to: string, code: string) => {
             `,
         });
 
-        if (error) {
-            console.error('Error sending verification email via Resend:', error);
-            return false;
-        }
-
-        console.log('Verification email sent via Resend:', data?.id);
+        console.log('Verification email sent via SMTP:', info.messageId);
         return true;
     } catch (error) {
-        console.error('Resend Exception (Verification):', error);
+        console.error('SMTP Exception (Verification):', error);
         return false;
     }
 };
 
 export const sendPasswordSetupEmail = async (to: string, name: string, setupLink: string) => {
     try {
-        // REDIRECT FOR TESTING
-        const recipient = process.env.NODE_ENV === 'production' ? to : 'gloriantwari@gmail.com';
-
-        const { data, error } = await resend.emails.send({
+        const info = await transporter.sendMail({
             from: `Wheeliz Noreply <${FROM_EMAIL}>`,
-            to: [recipient],
+            to,
             subject: 'Welcome to Wheeliz – Set Up Your Password',
             html: `
                 <div style="font-family: 'Barlow', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
@@ -75,27 +74,19 @@ export const sendPasswordSetupEmail = async (to: string, name: string, setupLink
             `,
         });
 
-        if (error) {
-            console.error('Error sending setup email via Resend:', error);
-            return false;
-        }
-
-        console.log('Setup email sent via Resend:', data?.id);
+        console.log('Setup email sent via SMTP:', info.messageId);
         return true;
     } catch (error) {
-        console.error('Resend Exception (Setup):', error);
+        console.error('SMTP Exception (Setup):', error);
         return false;
     }
 };
 
 export const sendForgotPasswordEmail = async (to: string, name: string, resetLink: string) => {
     try {
-        // REDIRECT FOR TESTING
-        const recipient = process.env.NODE_ENV === 'production' ? to : 'gloriantwari@gmail.com';
-
-        const { data, error } = await resend.emails.send({
+        const info = await transporter.sendMail({
             from: `Wheeliz Noreply <${FROM_EMAIL}>`,
-            to: [recipient],
+            to,
             subject: 'Wheeliz – Reset Your Password',
             html: `
                 <div style="font-family: 'Barlow', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
@@ -116,15 +107,10 @@ export const sendForgotPasswordEmail = async (to: string, name: string, resetLin
             `,
         });
 
-        if (error) {
-            console.error('Error sending reset email via Resend:', error);
-            return false;
-        }
-
-        console.log('Reset email sent via Resend:', data?.id);
+        console.log('Reset email sent via SMTP:', info.messageId);
         return true;
     } catch (error) {
-        console.error('Resend Exception (Reset):', error);
+        console.error('SMTP Exception (Reset):', error);
         return false;
     }
 };
