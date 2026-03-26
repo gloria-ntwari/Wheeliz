@@ -18,19 +18,15 @@ RUN npm run build
 # ─── Stage 2: Serve with Nginx ────────────────────────────────────────────────
 FROM nginx:1.27-alpine AS runner
 
-# Install gettext so envsubst is available
-RUN apk add --no-cache gettext
-
 # Remove the default nginx welcome page
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy built assets from the builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy nginx config as a template
-COPY nginx.conf /etc/nginx/conf.d/nginx.conf.template
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 8080
 
-# At startup: substitute $PORT into the nginx config, then launch nginx
-CMD ["/bin/sh", "-c", "export PORT=${PORT:-8080} && envsubst '${PORT}' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["nginx", "-g", "daemon off;"]
