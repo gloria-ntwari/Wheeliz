@@ -730,7 +730,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
             }
         });
 
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        const frontendUrl = process.env.FRONT_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
         // We reuse the set-password page since it's practically identical in flow,
         // or we could point to a new reset-password page. Let's point to reset-password to be clean.
         const resetLink = `${frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;

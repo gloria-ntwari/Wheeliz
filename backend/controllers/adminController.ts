@@ -546,7 +546,7 @@ export const createKid = async (req: Request, res: Response) => {
     });
 
     // Send password setup email
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const frontendUrl = process.env.FRONT_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
     const setupLink = `${frontendUrl}/set-password?token=${setupToken}&email=${encodeURIComponent(email)}`;
 
     const emailSent = await sendPasswordSetupEmail(email, name, setupLink);
