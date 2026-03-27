@@ -4,7 +4,7 @@ const contentData = [
   {
     label: "CHEESE",
     title: "SWEET CHEESE",
-    image: "/26.svg",
+    image: "/27.svg",
     description:
       "Wheeliez Sweet Cheese combines the irresistible crunch of golden potato and wheat with a smooth, cheesy sweetness that keeps you rolling back for more. It's the perfect balance of fun, flavor, and crunch ;  a cheesy joyride in every bite!",
     badge: "*Best selling",
@@ -13,7 +13,7 @@ const contentData = [
   {
     label: "TOMATO",
     title: "SWEET TOMATO",
-    image: "/27.svg",
+    image: "/26.svg",
     description:
       "Buckle up for a tangy twist! Wheeliez Sweet Tomato brings together the bright, zesty flavor of ripe tomatoes with a hint of sweetness,  full of energy and excitement. Every bite is a burst of flavor that makes snacking feel like an adventure.",
     badge: "*Best selling",
