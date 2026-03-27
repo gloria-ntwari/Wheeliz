@@ -47,7 +47,7 @@ export const MacbookPro = (): JSX.Element => {
         <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[2%] left-[-44px] w-16 md:w-20 lg:w-36 pointer-events-none select-none z-20" />
 
         {/* Wheel 2: straddling black/white boundary – left side, mostly in white */}
-        <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[39%] left-2 w-20 md:w-24 lg:w-52 pointer-events-none select-none z-20" />
+        <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[35%] left-2 w-20 md:w-24 lg:w-52 pointer-events-none select-none z-20" />
 
         {/* Wheel 3: bottom-right of the black section */}
         <img src="/clip-path-group-11.png" alt="" className="hidden lg:block absolute top-[55%] right-6 w-16 md:w-20 lg:w-48 pointer-events-none select-none z-20" />
@@ -127,19 +127,45 @@ export const MacbookPro = (): JSX.Element => {
         </div>
 
         {/* JOIN THE ADVENTURE CLUB section */}
-        <div className="w-full bg-[#181817] flex flex-col items-center gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 pt-14 sm:pt-16 lg:pt-20 pb-10 sm:pb-16 lg:pb-28">
-          <h2 className="[font-family:'Barlow',Helvetica] font-extrabold text-[#fcc809] text-2xl sm:text-3xl md:text-[34px] lg:text-[40px] tracking-wide uppercase text-center">
-            JOIN THE ADVENTURE CLUB
-          </h2>
-          <p className="[font-family:'Barlow',Helvetica] font-normal text-white text-sm sm:text-base text-center -mt-2">
-            Your parent can register you here
-          </p>
-          <div className="w-full max-w-[580px] mt-4">
-            <img
-              src="/image 12.png"
-              alt="Wheeliez Adventure Club merchandise"
-              className="object-contain w-full"
-            />
+        <div className="w-full bg-[#181817] relative">
+          <div className="max-w-[1490px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-8 sm:py-12 lg:py-20">
+            {/* Centered Heading */}
+            <div className="w-full mb-8 text-center lg:mb-12">
+              <h2 className="[font-family:'Barlow',Helvetica] font-extrabold text-[#fcc809] text-2xl sm:text-3xl md:text-[34px] lg:text-[40px] tracking-wide uppercase">
+                JOIN THE ADVENTURE CLUB
+              </h2>
+            </div>
+            
+            <div className="flex flex-col items-center justify-between gap-10 lg:flex-row lg:items-center lg:gap-16">
+              {/* Left side: Words (matching width and alignment of previous sections) */}
+              <div className="w-full lg:w-[55%] flex flex-col items-start gap-8">
+                <p className="[font-family:'Barlow',Helvetica] font-normal text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
+                  Children can win prizes by sending photos of completed challenges, games or coloring pages.
+                  All content is shared exclusively within the secure, login-protected member section of this website
+                </p>
+                <p className="[font-family:'Barlow',Helvetica] font-normal text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
+                  As a member of the Adventure Club, each child receives a personal username and password to access this secure area.
+                  Here they can read and download all adventures and games, and see the announcement of the monthly winners.
+                </p>
+              </div>
+
+              {/* Right side: QR Code centered vertically with words area */}
+              <div className="w-full lg:w-[35%] flex justify-center lg:justify-end">
+                <img
+                  src="/qr-code.svg"
+                  alt="Join QR Code"
+                  className="object-contain w-32 h-32 p-2 bg-white rounded-lg sm:w-40 sm:h-40 lg:w-48 lg:h-48"
+                />
+              </div>
+            </div>
+
+            {/* Centered Horizontal List of Items */}
+            <div className="flex flex-wrap items-center justify-center w-full gap-6 mt-12 sm:gap-8 md:gap-10 lg:gap-12">
+              <img src="/22.svg" alt="" className="object-contain h-14 sm:h-18 lg:h-40" />
+              <img src="/23.svg" alt="" className="object-contain h-14 sm:h-18 lg:h-40" />
+              <img src="/24.svg" alt="" className="object-contain h-14 sm:h-18 lg:h-40" />
+              <img src="/25.svg" alt="" className="object-contain h-14 sm:h-18 lg:h-40" />
+            </div>
           </div>
         </div>
       </section>

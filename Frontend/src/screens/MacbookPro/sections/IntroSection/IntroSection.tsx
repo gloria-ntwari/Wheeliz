@@ -4,6 +4,7 @@ const contentData = [
   {
     label: "CHEESE",
     title: "SWEET CHEESE",
+    image: "/26.svg",
     description:
       "Wheeliez Sweet Cheese combines the irresistible crunch of golden potato and wheat with a smooth, cheesy sweetness that keeps you rolling back for more. It's the perfect balance of fun, flavor, and crunch ;  a cheesy joyride in every bite!",
     badge: "*Best selling",
@@ -12,6 +13,7 @@ const contentData = [
   {
     label: "TOMATO",
     title: "SWEET TOMATO",
+    image: "/27.svg",
     description:
       "Buckle up for a tangy twist! Wheeliez Sweet Tomato brings together the bright, zesty flavor of ripe tomatoes with a hint of sweetness,  full of energy and excitement. Every bite is a burst of flavor that makes snacking feel like an adventure.",
     badge: "*Best selling",
@@ -31,16 +33,16 @@ export const IntroSection = (): JSX.Element => {
             className="relative w-full max-w-[1000px] mx-auto"
             style={{ minHeight: "420px" }}
           >
-            {/* Background image — positioned to one side */}
+            {/* Background image — positioned to one side (reverted to 65% width) */}
             <div
               className={`absolute top-0 ${
                 cardOnRight ? "left-0" : "right-0"
               } w-[65%] h-full rounded-2xl overflow-hidden shadow-md`}
             >
               <img
-                className="object-cover w-full h-full"
-                alt="Store shelf display"
-                src="/Rectangle 339.png"
+                className="absolute top-[-15%] left-[-55%] w-[220%] h-[170%] max-w-none object-cover"
+                alt={item.title}
+                src={item.image}
               />
             </div>
 
