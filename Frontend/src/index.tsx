@@ -19,6 +19,7 @@ import { SetPassword } from "./screens/SetPassword/SetPassword";
 import { ForgotPassword } from "./screens/ForgotPassword/ForgotPassword";
 import { ResetPassword } from "./screens/ForgotPassword/ResetPassword";
 import { KidComicDetail } from "./screens/KidDashboard/KidComicDetail";
+import { KidSubmissions } from "./screens/KidDashboard/KidSubmissions";
 
 // Protected Route Component for Admin
 const ProtectedAdminRoute = ({ children }: { children: React.ReactElement }) => {
@@ -135,6 +136,14 @@ root.render(
           element={
             <ProtectedKidRoute>
               <KidComicDetail />
+            </ProtectedKidRoute>
+          }
+        />
+        <Route
+          path="/kid/submission"
+          element={
+            <ProtectedKidRoute>
+              <KidSubmissions />
             </ProtectedKidRoute>
           }
         />
