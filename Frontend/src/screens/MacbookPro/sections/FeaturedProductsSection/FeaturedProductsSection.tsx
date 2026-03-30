@@ -305,12 +305,12 @@ export const FeaturedProductsSection = (): JSX.Element => {
 
           <Button
             variant="outline"
-            className="h-auto px-5 py-2 bg-white border border-gray-800 hover:bg-gray-50"
+            className="h-auto px-6 py-3 bg-[#68161c] border-none rounded-none hover:bg-[#6d1414] transition-colors"
             asChild
           >
             <Link to="/login">
-              <span className="[font-family:'Barlow',Helvetica] font-normal text-base lg:text-[18px] text-black tracking-[0] leading-[normal]">
-                Log in
+              <span className="[font-family:'Barlow',Helvetica] font-normal text-base lg:text-[18px] text-white tracking-[0] leading-[normal]">
+                LOGIN
               </span>
             </Link>
           </Button>
@@ -339,12 +339,12 @@ export const FeaturedProductsSection = (): JSX.Element => {
               <div className="px-4 pt-2">
                 <Button
                   variant="outline"
-                  className="w-full h-auto px-5 py-2 bg-white border border-gray-800 hover:bg-gray-50"
+                  className="w-full h-auto px-5 py-2 bg-[#8B1A1A] border-none rounded-none hover:bg-[#6d1414] transition-colors"
                   asChild
                 >
                   <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                    <span className="[font-family:'Barlow',Helvetica] font-normal text-black text-[16px] tracking-[0] leading-[normal]">
-                      Log in
+                    <span className="[font-family:'Barlow',Helvetica] font-normal text-white text-[16px] tracking-[0] leading-[normal]">
+                      LOGIN
                     </span>
                   </Link>
                 </Button>

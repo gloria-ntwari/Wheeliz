@@ -727,46 +727,87 @@ export const setKidPassword = async (req: Request, res: Response) => {
 // Get All Kids
 export const getAllKids = async (req: Request, res: Response) => {
   try {
-    const kids = await (prisma.kid as any).findMany({
-      orderBy: { name: 'asc' },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        avatar: true,
-        gender: true,
-        fatherName: true,
-        motherName: true,
-        dateOfBirth: true,
-        lastLogin: true,
-        createdAt: true,
-        _count: {
-          select: {
-            submissions: true,
+    const [kids, comics] = await Promise.all([
+      (prisma.kid as any).findMany({
+        orderBy: { name: 'asc' },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          avatar: true,
+          gender: true,
+          fatherName: true,
+          motherName: true,
+          dateOfBirth: true,
+          lastLogin: true,
+          createdAt: true,
+          submissions: {
+            select: {
+              marks: true,
+              comicId: true,
+              createdAt: true
+            }
           }
         }
-      }
-    });
+      }),
+      prisma.comic.findMany({
+        select: {
+          id: true,
+          bonus: true,
+          submissionDeadline: true
+        }
+      })
+    ]);
 
-    // Calculate 7 days ago (start of day)
+    // Calculate 7 days ago (start of day) for active status
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     sevenDaysAgo.setHours(0, 0, 0, 0);
 
-    // Transform data
-    const formattedKids = kids.map((kid: any) => {
-      // Determine active status: true if lastLogin >= sevenDaysAgo
+    // First pass: calculate points and comics for each kid
+    const kidsWithPoints = kids.map((kid: any) => {
+      let totalPoints = 0;
+      const uniqueComics = new Set();
+
+      kid.submissions?.forEach((sub: any) => {
+        // Marks
+        totalPoints += (sub.marks || 0);
+        
+        // Bonus points
+        const comic = comics.find(c => c.id === sub.comicId);
+        if (comic && comic.bonus && comic.submissionDeadline) {
+          if (new Date(sub.createdAt) <= new Date(comic.submissionDeadline)) {
+            totalPoints += comic.bonus;
+          }
+        }
+
+        // Track unique comics
+        uniqueComics.add(sub.comicId);
+      });
+
+      return {
+        ...kid,
+        totalPoints,
+        comicsCount: uniqueComics.size
+      };
+    });
+
+    // Sort by totalPoints to determine ranks
+    const sortedByPoints = [...kidsWithPoints].sort((a, b) => b.totalPoints - a.totalPoints);
+
+    // Final transformation
+    const formattedKids = kidsWithPoints.map((kid: any) => {
       const isActive = kid.lastLogin ? new Date(kid.lastLogin) >= sevenDaysAgo : false;
+      const rank = sortedByPoints.findIndex(k => k.id === kid.id) + 1;
 
       return {
         ...kid,
         status: isActive ? 'Active' : 'Inactive',
-        // Use uploaded avatar if exists, otherwise generate placeholder
         avatar: kid.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(kid.name)}&background=random`,
-        comicsRead: 0, // Placeholder
-        rank: 0,       // Placeholder
-        submissions: kid._count.submissions
+        comicsRead: comics.length, // Total number of comics in the system
+        rank: rank,
+        submissions: kid.submissions?.length || 0
       };
     });
 

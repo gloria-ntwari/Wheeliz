@@ -308,7 +308,7 @@ export const Kids = (): JSX.Element => {
                           {kid.comicsRead}
                         </p>
                         <p className="mt-1 text-[#6B6B6B] text-[13px]">
-                          Comics Read
+                          Comics
                         </p>
                       </div>
 

@@ -69,12 +69,12 @@ export const MainContentSection = (): JSX.Element => {
 
         <Button
           variant="outline"
-          className="h-auto px-6 py-2 bg-white border border-gray-800 rounded-lg hover:bg-gray-50"
+          className="h-auto px-6 py-2 bg-[#8B1A1A] border-none rounded-none hover:bg-[#6d1414] transition-colors"
           asChild
         >
           <Link to="/login">
-            <span className="[font-family:'Barlow',Helvetica] font-medium text-black text-[18px] tracking-[0] leading-[normal]">
-              Log in
+            <span className="[font-family:'Barlow',Helvetica] font-medium text-white text-[18px] tracking-[0] leading-[normal]">
+              LOGIN
             </span>
           </Link>
         </Button>

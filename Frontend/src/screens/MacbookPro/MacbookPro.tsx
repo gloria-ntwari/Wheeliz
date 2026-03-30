@@ -35,7 +35,7 @@ export const MacbookPro = (): JSX.Element => {
       {/* Adventure Club Section */}
       <section className="relative w-full overflow-hidden">
         {/* Dashboard image – absolutely positioned on the RIGHT, spans both blocks */}
-        <div className="hidden lg:block absolute top-[13%] right-[0%] w-[42%] h-[37%] z-10">
+        <div className="hidden lg:block absolute top-[12%] right-[0%] w-[42%] h-[27%] z-10">
           <img
             src="/dashboard.png"
             alt="Wheeliez Adventure Club dashboard"
@@ -47,7 +47,7 @@ export const MacbookPro = (): JSX.Element => {
         <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[2%] left-[-44px] w-16 md:w-20 lg:w-36 pointer-events-none select-none z-20" />
 
         {/* Wheel 2: straddling black/white boundary – left side, mostly in white */}
-        <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[35%] left-2 w-20 md:w-24 lg:w-52 pointer-events-none select-none z-20" />
+        <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[31%] left-2 w-20 md:w-24 lg:w-52 pointer-events-none select-none z-20" />
 
         {/* Wheel 3: bottom-right of the black section */}
         <img src="/clip-path-group-11.png" alt="" className="hidden lg:block absolute top-[55%] right-6 w-16 md:w-20 lg:w-48 pointer-events-none select-none z-20" />
@@ -85,7 +85,7 @@ export const MacbookPro = (): JSX.Element => {
 
         {/* === Block 2: EACH MONTH INCLUDES – full-width white background === */}
         <div className="relative w-full bg-white">
-          <div className="max-w-[1490px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-14 sm:py-16 lg:py-32">
+          <div className="max-w-[1490px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-14 sm:py-16 lg:py-32 ">
             {/* Content constrained to left ~50% */}
             <div className="w-full lg:w-[100%] flex flex-col items-start gap-5">
               <h2 className="[font-family:'Barlow',Helvetica] font-extrabold text-black text-2xl sm:text-3xl md:text-[32px] lg:text-[36px] leading-tight tracking-tight uppercase">
@@ -113,6 +113,13 @@ export const MacbookPro = (): JSX.Element => {
                   </li>
                 ))}
               </ul>
+              {/* Prize images */}
+              <div className="flex flex-wrap items-center justify-center w-full mb-[-50px]">
+                <img src="/22.svg" alt="" className="w-[305px] h-[357px]" />
+                <img src="/23.svg" alt="" className="w-[305px] h-[357px]" />
+                <img src="/24.svg" alt="" className="w-[305px] h-[357px]" />
+                <img src="/25.svg" alt="" className="w-[305px] h-[357px]" />
+              </div>
             </div>
           </div>
         </div>
@@ -126,48 +133,49 @@ export const MacbookPro = (): JSX.Element => {
           />
         </div>
 
-        {/* JOIN THE ADVENTURE CLUB section */}
-        <div className="w-full bg-[#181817] relative">
-          <div className="max-w-[1490px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-8 sm:py-12 lg:py-20">
-            {/* Centered Heading */}
-            <div className="w-full mb-8 text-center lg:mb-12">
-              <h2 className="[font-family:'Barlow',Helvetica] font-extrabold text-[#fcc809] text-2xl sm:text-3xl md:text-[34px] lg:text-[40px] tracking-wide uppercase">
-                JOIN THE ADVENTURE CLUB
-              </h2>
-            </div>
-            
-            <div className="flex flex-col items-center justify-between gap-10 lg:flex-row lg:items-center lg:gap-16">
-              {/* Left side: Words (matching width and alignment of previous sections) */}
-              <div className="w-full lg:w-[55%] flex flex-col items-start gap-8">
-                <p className="[font-family:'Barlow',Helvetica] font-normal text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
-                  Children can win prizes by sending photos of completed challenges, games or coloring pages.
-                  All content is shared exclusively within the secure, login-protected member section of this website
-                </p>
-                <p className="[font-family:'Barlow',Helvetica] font-normal text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
-                  As a member of the Adventure Club, each child receives a personal username and password to access this secure area.
-                  Here they can read and download all adventures and games, and see the announcement of the monthly winners.
-                </p>
-              </div>
+<div className="w-full bg-[#181817]">
+  <div className="max-w-[1490px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-16 lg:py-24 flex flex-col min-h-[80vh]">
+    
+    {/* Heading */}
+    <div className="text-center">
+      <h2 className="[font-family:'Barlow',Helvetica] font-extrabold text-[#fcc809] text-2xl sm:text-3xl md:text-[34px] lg:text-[40px] tracking-wide uppercase">
+        JOIN THE ADVENTURE CLUB
+      </h2>
+    </div>
 
-              {/* Right side: QR Code centered vertically with words area */}
-              <div className="w-full lg:w-[35%] flex justify-center lg:justify-end">
-                <img
-                  src="/qr-code.svg"
-                  alt="Join QR Code"
-                  className="object-contain w-32 h-32 p-2 bg-white rounded-lg sm:w-40 sm:h-40 lg:w-48 lg:h-48"
-                />
-              </div>
-            </div>
+    {/* MAIN CONTENT (takes remaining space) */}
+    <div className="flex flex-col justify-center flex-1 mt-10 lg:flex-row lg:items-center lg:gap-20">
+      
+      {/* LEFT TEXT */}
+      <div className="w-full lg:w-[65%] flex flex-col gap-8">
+        <p className="text-white text-sm sm:text-base md:text-lg lg:text-[18px] leading-relaxed">
+          Children can win prizes by sending photos of completed challenges, games or coloring pages.
+          All content is shared exclusively within the secure, login-protected member section of this website
+        </p>
 
-            {/* Centered Horizontal List of Items */}
-            <div className="flex flex-wrap items-center justify-center w-full gap-6 mt-12 sm:gap-8 md:gap-10 lg:gap-12">
-              <img src="/22.svg" alt="" className="object-contain h-14 sm:h-18 lg:h-40" />
-              <img src="/23.svg" alt="" className="object-contain h-14 sm:h-18 lg:h-40" />
-              <img src="/24.svg" alt="" className="object-contain h-14 sm:h-18 lg:h-40" />
-              <img src="/25.svg" alt="" className="object-contain h-14 sm:h-18 lg:h-40" />
-            </div>
-          </div>
-        </div>
+        <p className="text-white text-sm sm:text-base md:text-lg lg:text-[18px] leading-relaxed">
+          As a member of the Adventure Club, each child receives a personal username and password to access this secure area.
+          Here they can read and download all adventures and games, and see the announcement of the monthly winners.
+        </p>
+
+        <button className="mt-2 flex items-center gap-2 bg-[#68161C] hover:bg-[#6d1414] transition-colors text-white font-semibold text-sm sm:text-base px-6 py-3 tracking-wide w-fit">
+          SCAN QR CODE
+          <span className="text-lg leading-none">→</span>
+        </button>
+      </div>
+
+      {/* RIGHT QR */}
+      <div className="w-full lg:w-[35%] flex justify-center items-center">
+        <img
+          src="/qr-code.svg"
+          alt="Join QR Code"
+          className="object-contain w-[395px] h-[410px] bg-white p-3"
+        />
+      </div>
+
+    </div>
+  </div>
+</div>
       </section>
 
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32" style={{ paddingTop: '24px', paddingBottom: '20px' }}>
