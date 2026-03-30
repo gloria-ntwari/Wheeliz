@@ -3,7 +3,6 @@ import { AboutSection } from "./sections/AboutSection";
 import { ContactFormSection } from "./sections/ContactFormSection";
 import { FeaturedProductsSection } from "./sections/FeaturedProductsSection";
 import { FooterSection } from "./sections/FooterSection";
-import { HeroSection } from "./sections/HeroSection";
 import { IntroSection } from "./sections/IntroSection";
 import { NewsletterSection } from "./sections/NewsletterSection";
 import { ProductShowcaseSection } from "./sections/ProductShowcaseSection";
@@ -22,10 +21,6 @@ export const MacbookPro = (): JSX.Element => {
 
       <section id="about-section">
         <AboutSection />
-      </section>
-
-      <section id="hero-section">
-        <HeroSection />
       </section>
 
       <section id="intro-section">
@@ -50,7 +45,7 @@ export const MacbookPro = (): JSX.Element => {
         <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[31%] left-2 w-20 md:w-24 lg:w-52 pointer-events-none select-none z-20" />
 
         {/* Wheel 3: bottom-right of the black section */}
-        <img src="/clip-path-group-11.png" alt="" className="hidden lg:block absolute top-[55%] right-6 w-16 md:w-20 lg:w-48 pointer-events-none select-none z-20" />
+        <img src="/clip-path-group-9.png" alt="" className="hidden lg:block absolute top-[47%] right-24 w-16 md:w-20 lg:w-44 pointer-events-none select-none z-20" />
 
 
         <div className="w-full bg-[#181817] relative">
@@ -99,7 +94,7 @@ export const MacbookPro = (): JSX.Element => {
                 As a member of the Adventure Club, each child receives a personal username and password to access this secure area.<br className="hidden sm:block" />
                 Here they can read and download all adventures and games, and see the announcement of the monthly winners.
               </p>
-              <ul className="flex flex-col gap-3 mt-4 w-full list-none p-0 m-0 ml-6 sm:ml-8 md:ml-[72px] lg:ml-[88px]">
+              <ul className="flex flex-col gap-3 mt-4 w-full list-none p-0 m-0 ml-6 sm:ml-8 md:ml-[72px] lg:ml-[88px] mb-[-36px]">
                 {[
                   "A new comic-book style adventure story (English or Kinyarwanda)",
                   "A featured location in Rwanda",
@@ -114,11 +109,11 @@ export const MacbookPro = (): JSX.Element => {
                 ))}
               </ul>
               {/* Prize images */}
-              <div className="flex flex-wrap items-center justify-center w-full mb-[-50px]">
-                <img src="/22.svg" alt="" className="w-[305px] h-[357px]" />
-                <img src="/23.svg" alt="" className="w-[305px] h-[357px]" />
-                <img src="/24.svg" alt="" className="w-[305px] h-[357px]" />
-                <img src="/25.svg" alt="" className="w-[305px] h-[357px]" />
+              <div className="flex flex-wrap items-center justify-center w-full mb-[-60px] gap-2 lg:gap-12">
+                <img src="/22.svg" alt="" className="w-[205px] h-[257px]" />
+                <img src="/23.svg" alt="" className="w-[205px] h-[257px]" />
+                <img src="/24.svg" alt="" className="w-[205px] h-[257px]" />
+                <img src="/25.svg" alt="" className="w-[205px] h-[257px]" />
               </div>
             </div>
           </div>

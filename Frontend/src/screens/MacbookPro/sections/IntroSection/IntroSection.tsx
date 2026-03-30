@@ -33,9 +33,9 @@ export const IntroSection = (): JSX.Element => {
             className="w-full max-w-[1490px] flex flex-col lg:flex-row gap-6 items-end"
           >
             {/* Image columns group */}
-            <div className={`flex gap-6 w-full lg:w-1/2 ${isLayoutLeft ? 'order-1' : 'lg:order-2'}`}>
+            <div className={`flex gap-6 w-full lg:w-1/2  ${isLayoutLeft ? 'order-1' : 'lg:order-2'}`}>
               {item.verticalImages.map((img, i) => (
-                <div key={i} className="flex-[1.08] aspect-[3/4.5] overflow-hidden">
+                <div key={i} className="flex-[1.08] aspect-[3/5] overflow-hidden">
                   <img
                     src={img}
                     alt={`${item.title} ${i + 1}`}
@@ -55,7 +55,7 @@ export const IntroSection = (): JSX.Element => {
                   {item.description}
                 </p>
               </div>
-              <div className="w-full aspect-[16/5.5] overflow-hidden">
+              <div className="w-full aspect-[16/6.5] overflow-hidden">
                 <img
                   src={item.shelfImage}
                   alt={`${item.title} shelf`}
