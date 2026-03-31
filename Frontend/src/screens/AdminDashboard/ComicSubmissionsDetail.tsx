@@ -109,7 +109,11 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
 
   const getFullImageUrl = (path: string | null) => {
     if (!path) return "/clip-path-group-16.png";
+    // If it's already a full URL, return it
     if (path.startsWith("http")) return path;
+    // Fix: If it's a relative path that accidentally starts with the full bucket URL (bug prevention)
+    if (path.includes("storage.googleapis.com")) return path;
+    
     const baseUrl = API_ROOT;
     return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
   };
@@ -431,27 +435,63 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
 
                {/* Main Preview Area */}
                <div className="flex-1 bg-[#f1f5f9] p-8 flex items-center justify-center overflow-hidden">
-                  {activePreviewUrl ? (
-                    activePreviewUrl.toLowerCase().endsWith('.pdf') ? (
-                      <div className="flex flex-col items-center justify-center w-full h-full gap-4 bg-white shadow-inner rounded-xl">
-                        <FileText className="w-20 h-20 text-red-400" />
-                        <span className="font-medium text-gray-500">PDF Document</span>
-                        <button 
-                          onClick={() => handleOpenFile(getDownloadUrl(activePreviewUrl))}
-                          className="px-6 py-2 text-sm font-bold transition-colors bg-gray-100 rounded-full hover:bg-gray-200 cursor-pointer"
-                        >
-                          Download PDF
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="relative w-full h-full">
-                        <img 
-                          src={getFullImageUrl(activePreviewUrl)} 
-                          className="object-contain w-full h-full rounded-xl"
-                          alt="Full preview" 
-                        />
-                      </div>
-                    )
+                   {activePreviewUrl ? (
+                    (() => {
+                      const url = getFullImageUrl(activePreviewUrl);
+                      const isPdf = url.toLowerCase().endsWith('.pdf');
+                      const isGCS = url.includes('storage.googleapis.com');
+                      const isImage = /\.(jpg|jpeg|png|webp|gif)/i.test(url.split('?')[0]);
+
+                      if (isPdf) {
+                        const viewerSrc = isGCS 
+                          ? `${url}#toolbar=0&navpanes=0&scrollbar=0`
+                          : `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+                        
+                        return (
+                          <div className="w-full h-full bg-white shadow-inner rounded-xl overflow-hidden relative group">
+                            <iframe 
+                              src={viewerSrc}
+                              className="w-full h-full border-0"
+                              title="PDF Preview"
+                            />
+                            {/* Overlay button for direct opening */}
+                            <a 
+                              href={url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="absolute top-4 right-4 bg-white/90 p-2 rounded-lg shadow-md hover:bg-white text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              Open in New Tab
+                            </a>
+                          </div>
+                        );
+                      }
+
+                      if (isImage) {
+                        return (
+                          <div className="relative w-full h-full">
+                            <img 
+                              src={url} 
+                              className="object-contain w-full h-full rounded-xl"
+                              alt="Full preview" 
+                            />
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div className="flex flex-col items-center justify-center w-full h-full gap-4 bg-white shadow-inner rounded-xl">
+                          <FileText className="w-20 h-20 text-red-400" />
+                          <span className="font-medium text-gray-500">Document File</span>
+                          <button 
+                            onClick={() => handleOpenFile(getDownloadUrl(activePreviewUrl))}
+                            className="px-6 py-2 text-sm font-bold transition-colors bg-gray-100 rounded-full hover:bg-gray-200 cursor-pointer"
+                          >
+                            Download File
+                          </button>
+                        </div>
+                      );
+                    })()
                   ) : (
                     <div className="italic font-medium text-gray-400">No file selected for preview</div>
                   )}
