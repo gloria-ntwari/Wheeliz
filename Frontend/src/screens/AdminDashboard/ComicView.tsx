@@ -248,7 +248,8 @@ export const ComicView = (): JSX.Element => {
 
                             // Fallback for non-Cloudinary PDFs or other types
                             const isLocal = docUrl.includes('localhost');
-                            const viewerSrc = (docUrl.toLowerCase().includes('.pdf') && isLocal) 
+                            const isGCS = docUrl.includes('storage.googleapis.com');
+                            const viewerSrc = (docUrl.toLowerCase().includes('.pdf') && (isLocal || isGCS)) 
                                 ? `${docUrl}#toolbar=0&navpanes=0&scrollbar=0`
                                 : `https://docs.google.com/viewer?url=${encodeURIComponent(docUrl)}&embedded=true`;
 
