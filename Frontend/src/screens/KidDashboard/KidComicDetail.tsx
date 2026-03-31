@@ -3,9 +3,10 @@ import { API_BASE_URL, API_ROOT } from "../../config/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { KidHeader } from "../../components/KidHeader";
 import { CloudinaryPdfViewer } from "../../components/CloudinaryPdfViewer";
-import { ArrowLeft, Download, ExternalLink } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import { SubmissionDrawer } from "../../components/SubmissionDrawer";
 import { toast } from "sonner";
+import { FileText } from "lucide-react";
 
 interface ComicDetail {
   id: string;

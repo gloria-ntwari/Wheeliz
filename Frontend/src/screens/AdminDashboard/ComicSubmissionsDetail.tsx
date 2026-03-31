@@ -6,7 +6,9 @@ import {
   CheckCircle2,
   Image as ImageIcon,
   FileText,
-  X
+  X,
+  Download,
+  ExternalLink
 } from "lucide-react";
 import { AdminHeader } from "../../components/AdminHeader";
 
@@ -443,10 +445,6 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                       const isImage = /\.(jpg|jpeg|png|webp|gif)/i.test(url.split('?')[0]);
 
                       if (isPdf) {
-                        const viewerSrc = isGCS 
-                          ? `${url}#toolbar=0&navpanes=0&scrollbar=0`
-                          : `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
-                        
                         return (
                           <div className="w-full h-full bg-[#f8fafc] shadow-inner rounded-xl overflow-hidden relative flex flex-col items-center justify-center border-2 border-dashed border-gray-100 p-12 text-center">
                             <div className="w-24 h-24 bg-red-50 rounded-2xl flex items-center justify-center mb-6">

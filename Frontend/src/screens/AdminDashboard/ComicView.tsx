@@ -170,7 +170,7 @@ export const ComicView = (): JSX.Element => {
           <div className="flex flex-1 gap-6 px-6 overflow-hidden lg:px-10">
             {/* Left Pane: All Comics List */}
             <div className="flex-col hidden w-72 lg:flex shrink-0">
-              <div className="flex-1 space-y-3 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="flex-1 pr-2 space-y-3 overflow-y-auto custom-scrollbar">
                 {comics.map((comic) => (
                   <div 
                     key={comic.id}
@@ -229,7 +229,7 @@ export const ComicView = (): JSX.Element => {
                     <>
                         {/* Middle Pane: Main Viewer */}
                         <div className="relative flex flex-col items-center flex-1 min-w-0 bg-[#F4F6FB] rounded-2xl overflow-hidden shadow-inner p-4">
-                        <div className="relative flex flex-col items-center justify-center w-full h-full bg-white shadow-2xl rounded-xl overflow-hidden group">
+                        <div className="relative flex flex-col items-center justify-center w-full h-full overflow-hidden bg-white shadow-2xl rounded-xl group">
                             {/* Document Viewer */}
                             {(() => {
                             const currentDocPath = pages[currentPage - 1];
@@ -256,32 +256,23 @@ export const ComicView = (): JSX.Element => {
                                 : `https://docs.google.com/viewer?url=${encodeURIComponent(docUrl)}&embedded=true`;
 
                             return (
-                                <div className="w-full h-full relative group">
-                                    <iframe 
-                                        src={viewerSrc}
-                                        className="w-full h-full border-0"
-                                        key={`${currentComic?.id}-${currentPage}-${currentDocPath}`}
-                                        title={currentComic?.title}
-                                    />
-                                    {/* Premium Overlay for large files/fallback */}
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/95 opacity-0 group-hover:opacity-100 transition-opacity p-8 text-center backdrop-blur-[2px]">
-                                        <div className="w-16 h-16 bg-red-50 rounded-xl flex items-center justify-center mb-4">
-                                            <FileText className="w-8 h-8 text-[#EF4444]" />
-                                        </div>
-                                        <h3 className="text-[15px] font-bold text-gray-900 mb-2">Comic Document</h3>
-                                        <p className="text-[12px] text-gray-500 mb-6 max-w-[240px]">
-                                            This file might be too large to preview directly here.
-                                        </p>
-                                        <button 
-                                            onClick={() => {
-                                                if (docUrl) window.open(docUrl, "_blank");
-                                            }}
-                                            className="px-8 py-3 bg-[#7C1F2D] text-white rounded-xl font-bold text-[13px] hover:bg-[#6a1a26] transition-all flex items-center gap-2 shadow-lg shadow-[#7C1F2D]/10 active:scale-[0.98]"
-                                        >
-                                            <Download className="w-4 h-4" />
-                                            Download & Preview Here
-                                        </button>
+                                <div className="relative flex flex-col items-center justify-center w-full h-full p-8 text-center bg-white">
+                                    <div className="flex items-center justify-center w-20 h-20 mb-6 bg-red-50 rounded-2xl">
+                                        <FileText className="w-10 h-10 text-[#EF4444]" />
                                     </div>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2">Comic Document</h3>
+                                    <p className="text-sm text-gray-500 mb-8 max-w-[280px]">
+                                        Securely stored on Wheeliz Cloud. Click below to read the full comic.
+                                    </p>
+                                    <button 
+                                        onClick={() => {
+                                            if (docUrl) window.open(docUrl, "_blank");
+                                        }}
+                                        className="px-10 py-4 bg-[#7C1F2D] text-white rounded-xl font-bold text-[15px] hover:bg-[#6a1a26] transition-all shadow-xl shadow-[#7C1F2D]/10 active:scale-[0.98] flex items-center gap-3"
+                                    >
+                                        <Download className="w-5 h-5" />
+                                        Download & Preview Here
+                                    </button>
                                 </div>
                             );
                             })()}
@@ -303,13 +294,9 @@ export const ComicView = (): JSX.Element => {
                             </button>
 
                             {/* Page Counter Bottom */}
-                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-                            <div className="flex items-center gap-4 bg-white/90 backdrop-blur-md px-6 py-2 rounded-full shadow-xl border border-white/20">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-red-500">❤️ Thank you!</span>
-                                </div>
-                                <div className="w-[1px] h-4 bg-gray-200 mx-2"></div>
-                                <span className="text-sm font-bold text-gray-700">{currentPage} of {pages.length || 0}</span>
+                            <div className="absolute flex flex-col items-center gap-2 -translate-x-1/2 bottom-6 left-1/2">
+                            <div className="flex items-center gap-4 px-6 py-2 border rounded-full shadow-xl bg-white/90 backdrop-blur-md border-white/20">
+
                             </div>
                             {pages[currentPage - 1] && (
                                 <a 
@@ -327,7 +314,7 @@ export const ComicView = (): JSX.Element => {
 
                         {/* Right Pane: Page Thumbnails */}
                         <div className="flex-col hidden w-40 lg:flex shrink-0">
-                        <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+                        <div className="flex-1 pr-2 space-y-4 overflow-y-auto custom-scrollbar">
                             {pages.map((path, i) => (
                                 <div 
                                 key={i}
@@ -338,7 +325,7 @@ export const ComicView = (): JSX.Element => {
                                     : "border-transparent hover:border-gray-200"
                                 }`}
                                 >
-                                <div className="w-full h-full bg-gray-100 p-2 flex items-center justify-center">
+                                <div className="flex items-center justify-center w-full h-full p-2 bg-gray-100">
                                     {/\.(jpg|jpeg|png|webp|gif)/i.test(path.split('?')[0]) ? (
                                         <img 
                                         src={getComicImageUrl(path)} 
