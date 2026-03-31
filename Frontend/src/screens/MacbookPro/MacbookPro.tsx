@@ -1,5 +1,6 @@
 import React from "react";
 import { AboutSection } from "./sections/AboutSection";
+import { Link } from "react-router-dom";
 import { ContactFormSection } from "./sections/ContactFormSection";
 import { FeaturedProductsSection } from "./sections/FeaturedProductsSection";
 import { FooterSection } from "./sections/FooterSection";
@@ -59,7 +60,7 @@ export const MacbookPro = (): JSX.Element => {
             {/* Content constrained to left ~55% so it doesn't overlap the image */}
             <div className="w-full lg:w-[52%] flex flex-col items-start gap-5">
               <h2 className="[font-family:'Barlow',Helvetica] font-extrabold text-[#fcc809] text-2xl sm:text-3xl md:text-[32px] lg:text-[36px] leading-tight tracking-tight uppercase">
-                PLAY OUTSIDE. THINK SMART.
+                ADVENTURE CLUB COMICS.
               </h2>
               <p className="[font-family:'Barlow',Helvetica] font-normal text-white text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
                 The Wheeliez Adventure Club was created to celebrate the launch of Wheeliez.<br />
@@ -70,10 +71,10 @@ export const MacbookPro = (): JSX.Element => {
                 Together with Manzi and Nzozi, children go on monthly adventures across
                 Rwanda – from volcanoes and forests to lakes and wildlife parks.
               </p>
-              <button className="mt-2 flex items-center gap-2 bg-[#8B1A1A] hover:bg-[#6d1414] transition-colors text-white [font-family:'Barlow',Helvetica] font-semibold text-sm sm:text-base px-6 py-3 tracking-wide">
+              <Link to="/login" className="mt-2 flex items-center gap-2 bg-[#8B1A1A] hover:bg-[#6d1414] transition-colors text-white [font-family:'Barlow',Helvetica] font-semibold text-sm sm:text-base px-6 py-3 tracking-wide">
                 JOIN THE CLUB
                 <span className="text-lg leading-none">→</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -153,10 +154,15 @@ export const MacbookPro = (): JSX.Element => {
           Here they can read and download all adventures and games, and see the announcement of the monthly winners.
         </p>
 
-        <button className="mt-2 flex items-center gap-2 bg-[#68161C] hover:bg-[#6d1414] transition-colors text-white font-semibold text-sm sm:text-base px-6 py-3 tracking-wide w-fit">
-          SCAN QR CODE
+        <a 
+          href="https://docs.google.com/forms/d/e/1FAIpQLSc9QZ_MV5tAgtIwBnORKzoW_9bLOxO9DQtGzIF-tqaJuSWwqw/viewform"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 flex items-center gap-2 bg-[#68161C] hover:bg-[#6d1414] transition-colors text-white font-semibold text-sm sm:text-base px-6 py-3 tracking-wide w-fit"
+        >
+          REGISTER HERE
           <span className="text-lg leading-none">→</span>
-        </button>
+        </a>
       </div>
 
       {/* RIGHT QR */}

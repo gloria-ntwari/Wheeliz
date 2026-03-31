@@ -5,7 +5,7 @@ import { Button } from "../../../../components/ui/button";
 
 const navigationItems = [
   { label: "ABOUT US", href: "#about-section" },
-  { label: "PRODUCTS", href: "#hero-section" },
+  { label: "PRODUCTS", href: "#intro-section" },
   { label: "WHERE TO BUY", href: "#newsletter-section" },
   { label: "CONTACT US", href: "#contact-section" },
 ];
@@ -256,7 +256,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center justify-center gap-[50px] w-full">
+        <div className="hidden lg:flex items-center justify-center gap-[50px] w-full ml-28">
           <Button
             variant="ghost"
             className="h-auto p-2 hover:bg-transparent"
@@ -270,7 +270,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
           <Button
             variant="ghost"
             className="h-auto p-2 hover:bg-transparent"
-            onClick={() => smoothScrollTo('hero-section')}
+            onClick={() => smoothScrollTo('intro-section')}
           >
             <span className="[font-family:'Barlow',Helvetica] font-semibold text-[#68161c] text-[20px] tracking-[0] leading-[normal] whitespace-nowrap">
               {navigationItems[1].label}
@@ -278,7 +278,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
           </Button>
 
           <img
-            className="w-[255.33px] h-[85.2px]"
+            className="w-[255.33px] h-[85.2px] "
             alt="Clip path group"
             src="/clip-path-group-15.png"
           />
@@ -326,7 +326,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
                   variant="ghost"
                   className="justify-start h-auto p-4 hover:bg-gray-50"
                   onClick={() => {
-                    const sectionIds = ['about-section', 'hero-section', 'newsletter-section', 'contact-section'];
+                    const sectionIds = ['about-section', 'intro-section', 'newsletter-section', 'contact-section'];
                     smoothScrollTo(sectionIds[index]);
                     setIsMenuOpen(false);
                   }}
@@ -357,7 +357,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <h1 className="absolute top-64 left-1/2 -translate-x-1/2 -translate-y-1/2 [font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-[90px] xl:text-[90px] tracking-[-2.90px] leading-tight text-center whitespace-nowrap">
           <span className="inline-block animate-hero-title">
-            {"PLAY, LEARN & SNACK".split("").map((ch, i) => (
+            {"PLAY    LEARN    SNACK".split("").map((ch, i) => (
               <span
                 key={i}
                 className="hero-char"

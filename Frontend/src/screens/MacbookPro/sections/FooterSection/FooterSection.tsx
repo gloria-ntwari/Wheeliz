@@ -4,14 +4,14 @@ const quickLinks = [
   { label: "About", href: "#about-section" },
   { label: "Where to Buy", href: "#newsletter-section" },
   { label: "FAQ", href: "#faq-section" },
-  { label: "Careers", href: "#intro-section" },
+  { label: "Contact Us", href: "#contact-section" },
 ];
 
 const productLinks = [
   { label: "About", href: "#about-section" },
   { label: "Where to Buy", href: "#newsletter-section" },
   { label: "FAQ", href: "#faq-section" },
-  { label: "Careers", href: "#intro-section" },
+  { label: "Contact Us", href: "#contact-section" },
 ];
 
 const connectLinks = [
@@ -137,16 +137,16 @@ export const FooterSection = (): JSX.Element => {
               Our Product
             </h3>
             <ul className="flex flex-col items-start gap-3">
-              {productLinks.map((link, index) => (
-                <li key={index}>
-                  <button
-                    onClick={() => smoothScrollTo(link.href.replace('#', ''))}
-                    className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl hover:opacity-80 transition-opacity text-left cursor-pointer lg:text-[18px]"
-                  >
-                    {link.label}
-                  </button>
-                </li>
-              ))}
+                {productLinks.map((link, index) => (
+                  <li key={index}>
+                    <button
+                      onClick={() => smoothScrollTo(link.href.replace('#', ''))}
+                      className="[font-family:'Barlow',Helvetica] font-medium text-white text-lg sm:text-xl hover:opacity-80 transition-opacity text-left cursor-pointer lg:text-[18px]"
+                    >
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
             </ul>
           </nav>
 

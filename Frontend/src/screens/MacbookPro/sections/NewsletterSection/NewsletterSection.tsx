@@ -16,12 +16,17 @@ export const NewsletterSection = (): JSX.Element => {
         or enjoying a movie night with the fam,
       </p>
 
-      <Button className="flex w-[250px] sm:w-[280px] md:w-[300px] h-[50px] sm:h-[55px] md:h-[60px] items-center justify-center gap-2.5 p-2.5 bg-[#fcc809] hover:bg-[#fcc809]/90 rounded-none">
+      <a 
+        href="https://www.vubavuba.rw/" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="flex w-[250px] sm:w-[280px] md:w-[300px] h-[50px] sm:h-[55px] md:h-[60px] items-center justify-center gap-2.5 p-2.5 bg-[#fcc809] hover:bg-[#fcc809]/90 rounded-none transition-colors"
+      >
         <span className="text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[-0.40px] leading-[22.6px] whitespace-nowrap [font-family:'Barlow',Helvetica] font-medium text-white">
           WHERE TO BUY
         </span>
         <ArrowRightIcon className="w-4 h-4 text-white sm:w-5 sm:h-5" />
-      </Button>
+      </a>
     </section>
   );
 };
