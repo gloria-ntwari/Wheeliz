@@ -17,7 +17,7 @@ const transportOptions: SMTPTransport.Options = {
 
 const transporter = nodemailer.createTransport(transportOptions);
 
-const FROM_EMAIL = process.env.EMAIL_FROM || process.env.SMTP_USER || '';
+const FROM_EMAIL = process.env.EMAIL_FROM || process.env.SMTP_USER || 'info@hollandafairfoods.com';
 
 console.log('--- Email Service (SMTP) ---');
 console.log('SMTP Host:', process.env.SMTP_HOST);

@@ -441,7 +441,6 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                     (() => {
                       const url = getFullImageUrl(activePreviewUrl);
                       const isPdf = url.toLowerCase().endsWith('.pdf');
-                      const isGCS = url.includes('storage.googleapis.com');
                       const isImage = /\.(jpg|jpeg|png|webp|gif)/i.test(url.split('?')[0]);
 
                       if (isPdf) {
