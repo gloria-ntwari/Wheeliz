@@ -31,9 +31,9 @@ export const MacbookPro = (): JSX.Element => {
       {/* Adventure Club Section */}
       <section className="relative w-full overflow-hidden">
         {/* Dashboard image – absolutely positioned on the RIGHT, spans both blocks */}
-        <div className="hidden lg:block absolute top-[12%] right-[0%] w-[42%] h-[27%] z-10">
+        <div className="hidden lg:block absolute top-[12%] right-[0%] w-[42%] h-[30%] z-10">
           <img
-            src="/dashboard.png"
+            src="/dashboard_2.png"
             alt="Wheeliez Adventure Club dashboard"
             className="object-cover object-left-top w-full h-full"
           />
@@ -123,7 +123,7 @@ export const MacbookPro = (): JSX.Element => {
         {/* Mobile-only: dashboard image below both blocks */}
         <div className="block w-full lg:hidden">
           <img
-            src="/dashboard.png"
+            src="/dashboard_2.png"
             alt="Wheeliez Adventure Club dashboard"
             className="object-cover w-full"
           />
