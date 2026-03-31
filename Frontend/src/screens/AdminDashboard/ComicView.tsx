@@ -13,7 +13,9 @@ import {
   Filter,
   LayoutGrid,
   List as ListIcon,
-  Maximize2
+  Maximize2,
+  Download,
+  FileText
 } from "lucide-react";
 import { AdminHeader } from "../../components/AdminHeader";
 import { CloudinaryPdfViewer } from "../../components/CloudinaryPdfViewer";
@@ -254,12 +256,33 @@ export const ComicView = (): JSX.Element => {
                                 : `https://docs.google.com/viewer?url=${encodeURIComponent(docUrl)}&embedded=true`;
 
                             return (
-                                <iframe 
-                                src={viewerSrc}
-                                className="w-full h-full border-0"
-                                key={`${currentComic?.id}-${currentPage}-${currentDocPath}`}
-                                title={currentComic?.title}
-                                />
+                                <div className="w-full h-full relative group">
+                                    <iframe 
+                                        src={viewerSrc}
+                                        className="w-full h-full border-0"
+                                        key={`${currentComic?.id}-${currentPage}-${currentDocPath}`}
+                                        title={currentComic?.title}
+                                    />
+                                    {/* Premium Overlay for large files/fallback */}
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/95 opacity-0 group-hover:opacity-100 transition-opacity p-8 text-center backdrop-blur-[2px]">
+                                        <div className="w-16 h-16 bg-red-50 rounded-xl flex items-center justify-center mb-4">
+                                            <FileText className="w-8 h-8 text-[#EF4444]" />
+                                        </div>
+                                        <h3 className="text-[15px] font-bold text-gray-900 mb-2">Comic Document</h3>
+                                        <p className="text-[12px] text-gray-500 mb-6 max-w-[240px]">
+                                            This file might be too large to preview directly here.
+                                        </p>
+                                        <button 
+                                            onClick={() => {
+                                                if (docUrl) window.open(docUrl, "_blank");
+                                            }}
+                                            className="px-8 py-3 bg-[#7C1F2D] text-white rounded-xl font-bold text-[13px] hover:bg-[#6a1a26] transition-all flex items-center gap-2 shadow-lg shadow-[#7C1F2D]/10 active:scale-[0.98]"
+                                        >
+                                            <Download className="w-4 h-4" />
+                                            Download & Preview Here
+                                        </button>
+                                    </div>
+                                </div>
                             );
                             })()}
 

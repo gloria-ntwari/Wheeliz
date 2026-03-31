@@ -448,19 +448,32 @@ export const ComicSubmissionsDetail = (): JSX.Element => {
                           : `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
                         
                         return (
-                          <div className="w-full h-full bg-white shadow-inner rounded-xl overflow-hidden relative group">
-                            <iframe 
-                              src={viewerSrc}
-                              className="w-full h-full border-0"
-                              title="PDF Preview"
-                            />
-                            {/* Overlay button for direct opening */}
+                          <div className="w-full h-full bg-[#f8fafc] shadow-inner rounded-xl overflow-hidden relative flex flex-col items-center justify-center border-2 border-dashed border-gray-100 p-12 text-center">
+                            <div className="w-24 h-24 bg-red-50 rounded-2xl flex items-center justify-center mb-6">
+                              <FileText className="w-12 h-12 text-[#EF4444]" />
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">PDF Document</h3>
+                            <p className="text-sm text-gray-500 mb-8 max-w-[280px]">
+                              This file might be too large to preview directly. You can download it to view the full content.
+                            </p>
+                            <button 
+                              onClick={() => {
+                                handleOpenFile(getDownloadUrl(activePreviewUrl));
+                              }}
+                              className="px-10 py-4 bg-[#005a5a] text-white rounded-xl font-bold text-[15px] hover:bg-[#004a4a] transition-all shadow-xl shadow-[#005a5a]/10 active:scale-[0.98] flex items-center gap-3"
+                            >
+                              <Download className="w-5 h-5" />
+                              Download & Preview Here
+                            </button>
+                            
+                            {/* Subtitle link for browser opening */}
                             <a 
                               href={url} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="absolute top-4 right-4 bg-white/90 p-2 rounded-lg shadow-md hover:bg-white text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="mt-6 text-xs text-gray-400 hover:text-[#005a5a] hover:underline font-medium flex items-center gap-1"
                             >
+                              <ExternalLink className="w-3 h-3" />
                               Open in New Tab
                             </a>
                           </div>

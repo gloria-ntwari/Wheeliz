@@ -192,43 +192,32 @@ export const KidComicDetail = (): JSX.Element => {
                         <CloudinaryPdfViewer url={url} />
                       ) : (
                         <div className="w-full">
-                          <div className="w-full rounded-2xl overflow-hidden border border-gray-100 shadow-xl mb-4 bg-[#F4F6FB]">
-                            {(() => {
-                              const isGCS = url.includes('storage.googleapis.com');
-                              const viewerSrc = (url.toLowerCase().includes('.pdf') && isGCS) 
-                                ? `${url}#toolbar=0&navpanes=0&scrollbar=0`
-                                : `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
-                                
-                              return (
-                                <iframe
-                                  src={viewerSrc}
-                                  className="w-full border-0"
-                                  style={{ height: '80vh', minHeight: '600px' }}
-                                  title={`Comic Document ${index + 1}`}
-                                />
-                              );
-                            })()}
+                          <div className="w-full rounded-2xl overflow-hidden border border-gray-100 shadow-xl mb-4 bg-[#F4F6FB] flex flex-col items-center justify-center p-12 text-center relative group min-h-[400px]">
+                            <div className="w-20 h-20 bg-red-50 rounded-2xl flex items-center justify-center mb-6">
+                              <FileText className="w-10 h-10 text-[#EF4444]" />
+                            </div>
+                            <h3 className="text-base font-bold text-gray-900 mb-2">Comic Document</h3>
+                            <p className="text-[13px] text-gray-500 mb-8 max-w-[280px]">
+                              Securely stored on Wheeliz Cloud. Download to read the full comic.
+                            </p>
+                            <button 
+                              onClick={() => {
+                                window.open(url, "_blank");
+                              }}
+                              className="px-10 py-4 bg-[#7C1F2D] text-white rounded-xl font-bold text-[14px] hover:bg-[#6a1a26] transition-all shadow-xl shadow-[#7C1F2D]/10 active:scale-[0.98] flex items-center gap-3"
+                            >
+                              <Download className="w-5 h-5" />
+                              Download & Preview Here
+                            </button>
+                            
+                            <p className="mt-6 text-[10px] text-gray-400 font-medium">
+                              Supports PDF, high-quality rendering
+                            </p>
                           </div>
                           
                           {/* Fallback/External Links */}
                           <div className="flex flex-wrap items-center gap-4 px-2">
-                             <a 
-                               href={url} 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               className="text-xs text-[#7C1F2D] hover:underline flex items-center gap-1 font-semibold"
-                             >
-                               <Download className="w-3 h-3" />
-                               Download PDF
-                             </a>
-                             <a 
-                               href={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}`} 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               className="text-xs text-blue-600 hover:underline flex items-center gap-1 font-semibold"
-                             >
-                               Open in Google Docs
-                             </a>
+                             {/* Keep this as a small secondary option if needed, but the main action is now on the card */}
                           </div>
                         </div>
                       )}

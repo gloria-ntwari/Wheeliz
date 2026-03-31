@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Download, FileText } from "lucide-react";
 
 // CSS to hide scrollbar but keep scroll functionality
 const hideScrollbarStyle: React.CSSProperties = {
@@ -106,13 +106,23 @@ export const CloudinaryPdfViewer = ({ url }: { url: string }) => {
 
   if (pageImages.length === 0) {
     return (
-      <div className="w-full rounded-2xl overflow-hidden border border-gray-100 shadow-xl">
-        <iframe
-          src={`https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`}
-          className="w-full border-0"
-          style={{ height: '95vh', minHeight: '800px' }}
-          title="Comic Document"
-        />
+      <div className="w-full rounded-2xl overflow-hidden border border-gray-100 shadow-xl mb-4 bg-[#F4F6FB] flex flex-col items-center justify-center p-12 text-center relative min-h-[500px]">
+        <div className="w-20 h-20 bg-red-50 rounded-2xl flex items-center justify-center mb-6">
+          <FileText className="w-10 h-10 text-[#EF4444]" />
+        </div>
+        <h3 className="text-lg font-bold text-gray-900 mb-2">Comic Document</h3>
+        <p className="text-sm text-gray-500 mb-8 max-w-[280px]">
+          Unable to generate a direct preview. You can download and view the full comic here.
+        </p>
+        <button 
+          onClick={() => {
+            window.open(url, "_blank");
+          }}
+          className="px-10 py-4 bg-[#7C1F2D] text-white rounded-xl font-bold text-[14px] hover:bg-[#6a1a26] transition-all shadow-xl shadow-[#7C1F2D]/10 active:scale-[0.98] flex items-center gap-3"
+        >
+          <Download className="w-5 h-5" />
+          Download & Preview Here
+        </button>
       </div>
     );
   }
