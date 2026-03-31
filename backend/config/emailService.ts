@@ -17,7 +17,7 @@ const transportOptions: SMTPTransport.Options = {
 
 const transporter = nodemailer.createTransport(transportOptions);
 
-const FROM_EMAIL = process.env.EMAIL_FROM || process.env.SMTP_USER || 'info@hollandafairfoods.com';
+const FROM_EMAIL = process.env.EMAIL_FROM || process.env.SMTP_USER || '';
 
 console.log('--- Email Service (SMTP) ---');
 console.log('SMTP Host:', process.env.SMTP_HOST);
@@ -64,7 +64,7 @@ export const sendPasswordSetupEmail = async (to: string, name: string, setupLink
             html: `
                 <div style="font-family: 'Barlow', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
                     <div style="text-align: center; margin-bottom: 24px;">
-                        <h2 style="color: #681618;">Welcome to Wheeliz, ${name}! 🎉</h2>
+                        <h2 style="color: #681618;">Welcome to Wheeliz, ${name}! </h2>
                     </div>
                     <p>Hi ${name},</p>
                     <p>Your account has been created by an admin. To get started, please set up your password by clicking the button below:</p>
