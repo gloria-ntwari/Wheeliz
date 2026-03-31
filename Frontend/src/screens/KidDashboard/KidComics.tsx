@@ -198,7 +198,26 @@ export const KidComics = (): JSX.Element => {
                 <span className="text-[9px] text-gray-400">PDF/Page 1</span>
               </div>
             </div>
-            <button className="p-2 transition-colors bg-gray-100 rounded-lg hover:bg-gray-200">
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                let docUrl = "";
+                if (comic.document) {
+                  try {
+                    if (comic.document.startsWith('[') && comic.document.endsWith(']')) {
+                      const pages = JSON.parse(comic.document);
+                      docUrl = getImageUrl(pages[0]);
+                    } else {
+                      docUrl = getImageUrl(comic.document);
+                    }
+                  } catch (e) {
+                    docUrl = getImageUrl(comic.document);
+                  }
+                  window.open(docUrl, "_blank");
+                }
+              }}
+              className="p-2 transition-colors bg-gray-100 rounded-lg hover:bg-gray-200"
+            >
               <Download className="w-3.5 h-3.5 text-gray-600" />
             </button>
           </div>

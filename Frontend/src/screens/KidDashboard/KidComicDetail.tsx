@@ -3,7 +3,7 @@ import { API_BASE_URL, API_ROOT } from "../../config/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { KidHeader } from "../../components/KidHeader";
 import { CloudinaryPdfViewer } from "../../components/CloudinaryPdfViewer";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink } from "lucide-react";
 import { SubmissionDrawer } from "../../components/SubmissionDrawer";
 import { toast } from "sonner";
 
@@ -191,13 +191,45 @@ export const KidComicDetail = (): JSX.Element => {
                       ) : isCloudinaryUrl(url) ? (
                         <CloudinaryPdfViewer url={url} />
                       ) : (
-                        <div className="w-full rounded-2xl overflow-hidden border border-gray-100 shadow-xl">
-                          <iframe
-                            src={`https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`}
-                            className="w-full border-0"
-                            style={{ height: '80vh', minHeight: '600px' }}
-                            title={`Comic Document ${index + 1}`}
-                          />
+                        <div className="w-full">
+                          <div className="w-full rounded-2xl overflow-hidden border border-gray-100 shadow-xl mb-4 bg-[#F4F6FB]">
+                            {(() => {
+                              const isGCS = url.includes('storage.googleapis.com');
+                              const viewerSrc = (url.toLowerCase().includes('.pdf') && isGCS) 
+                                ? `${url}#toolbar=0&navpanes=0&scrollbar=0`
+                                : `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+                                
+                              return (
+                                <iframe
+                                  src={viewerSrc}
+                                  className="w-full border-0"
+                                  style={{ height: '80vh', minHeight: '600px' }}
+                                  title={`Comic Document ${index + 1}`}
+                                />
+                              );
+                            })()}
+                          </div>
+                          
+                          {/* Fallback/External Links */}
+                          <div className="flex flex-wrap items-center gap-4 px-2">
+                             <a 
+                               href={url} 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               className="text-xs text-[#7C1F2D] hover:underline flex items-center gap-1 font-semibold"
+                             >
+                               <Download className="w-3 h-3" />
+                               Download PDF
+                             </a>
+                             <a 
+                               href={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}`} 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               className="text-xs text-blue-600 hover:underline flex items-center gap-1 font-semibold"
+                             >
+                               Open in Google Docs
+                             </a>
+                          </div>
                         </div>
                       )}
                     </div>
