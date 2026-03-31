@@ -119,6 +119,24 @@ app.use('/api/kid', kidRoutes);
 app.use('/api/auth', authRoutes);
 
 
+// Global Error Handler
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('Global Error Handler caught:', err);
+  
+  // Handle Multer errors explicitly
+  if (err.name === 'MulterError') {
+    return res.status(400).json({
+      status: 'error',
+      message: `Upload error: ${err.message}`
+    });
+  }
+
+  res.status(err.status || 500).json({
+    status: 'error',
+    message: err.message || 'Internal Server Error'
+  });
+});
+
 // Start server
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

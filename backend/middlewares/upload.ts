@@ -30,27 +30,27 @@ const imageFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilter
 
 // File filter for documents
 const documentFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowedTypes = /pdf|doc|docx|txt|jpeg|jpg|png|webp/;
+  const allowedTypes = /pdf|doc|docx|txt|jpeg|jpg|png|webp|zip/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
 
   if (extname) {
     return cb(null, true);
   } else {
-    cb(new Error('Only PDF, Word, Text, or Image files are allowed for documents'));
+    cb(new Error('Only PDF, Word, Text, Image, or ZIP files are allowed for documents'));
   }
 };
 
 // Upload middleware for comic images
 export const uploadComicImage = multer({
   storage: comicImageStorage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 70 * 1024 * 1024 }, // 70MB limit
   fileFilter: imageFilter
 }).single('coverImage');
 
 // Upload middleware for comic documents
 export const uploadComicDocuments = multer({
   storage: comicDocumentStorage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  limits: { fileSize: 70 * 1024 * 1024 }, // 70MB limit
   fileFilter: documentFilter
 }).array('documents', 5); // Max 5 documents
 
@@ -66,11 +66,10 @@ export const uploadComicFiles = multer({
       return {
         folder: folderName,
         resource_type: 'auto',
-        allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf', 'doc', 'docx'],
       };
     },
   }),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  limits: { fileSize: 70 * 1024 * 1024 }, // 70MB limit
   fileFilter: (_req, file, cb) => {
     if (file.fieldname === 'coverImage') {
       imageFilter(_req, file, cb);
@@ -86,7 +85,7 @@ export const uploadComicFiles = multer({
 // Upload for avatars (Admin & Kid)
 export const uploadAvatar = multer({
   storage: avatarStorage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 70 * 1024 * 1024 }, // 70MB limit
   fileFilter: imageFilter
 }).fields([{ name: 'avatar', maxCount: 1 }]);
 
@@ -98,10 +97,36 @@ export const uploadSubmissionFiles = multer({
       return {
         folder: 'wheeliz/submissions',
         resource_type: 'auto',
-        allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf', 'doc', 'docx'],
       };
     },
   }),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  limits: { fileSize: 70 * 1024 * 1024 }, // 70MB limit
   fileFilter: documentFilter
 }).array('attachments', 10); // Allow up to 10 files (limit will be checked in controller)
+
+// --- NEW: Google Cloud Storage Middleware ---
+
+// Use Memory Storage for GCS (we'll manually handle the upload in the controller)
+const memoryStorage = multer.memoryStorage();
+
+// Multer instances for GCS-bound uploads
+export const uploadComicFilesGCS = multer({
+  storage: memoryStorage,
+  limits: { fileSize: 70 * 1024 * 1024 }, // 70MB limit
+  fileFilter: (_req, file, cb) => {
+    if (file.fieldname === 'coverImage') {
+      imageFilter(_req, file, cb);
+    } else {
+      documentFilter(_req, file, cb);
+    }
+  }
+}).fields([
+  { name: 'coverImage', maxCount: 1 },
+  { name: 'documents', maxCount: 5 }
+]);
+
+export const uploadSubmissionFilesGCS = multer({
+  storage: memoryStorage,
+  limits: { fileSize: 70 * 1024 * 1024 }, // 70MB limit
+  fileFilter: documentFilter
+}).array('attachments', 10);

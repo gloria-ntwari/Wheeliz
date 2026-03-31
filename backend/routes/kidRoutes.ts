@@ -120,8 +120,8 @@ router.post('/complete-profile', completeKidProfile);
 router.get('/dashboard', verifyKid, getKidDashboardStats);
 router.get('/submissions/:comicId', verifyKid, getComicSubmissions);
 router.get('/submissions/:comicId', verifyKid, getComicSubmissions);
-import { uploadSubmissionFiles, uploadAvatar } from '../middlewares/upload';
-router.post('/submit', verifyKid, uploadSubmissionFiles, submitAssignment);
+import { uploadSubmissionFilesGCS, uploadAvatar } from '../middlewares/upload';
+router.post('/submit', verifyKid, uploadSubmissionFilesGCS, submitAssignment);
 
 /**
  * @swagger

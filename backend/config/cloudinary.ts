@@ -11,7 +11,6 @@ export const cloudinaryStorage = (folder: string) => new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: `wheeliz/${folder}`,
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf', 'doc', 'docx'],
     resource_type: 'auto',
   } as any,
 });

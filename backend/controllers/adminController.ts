@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma';
 import { sendPasswordSetupEmail } from '../config/emailService';
+import { uploadToGCS } from '../config/gcs';
 
 // Admin Login
 export const adminLogin = async (req: Request, res: Response) => {
@@ -60,9 +61,10 @@ export const adminLogin = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
+    console.error('Admin Login Error:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Server error'
+      message: error instanceof Error ? error.message : 'Server error'
     });
   }
 };
@@ -84,7 +86,10 @@ export const getNotifications = async (_req: Request, res: Response) => {
   } catch (error) {
     
     console.error('Error fetching notifications:', error);
-    res.status(500).json({ status: 'error', message: 'Server error' });
+    res.status(500).json({ 
+      status: 'error', 
+      message: error instanceof Error ? error.message : 'Server error' 
+    });
   }
 };
 
@@ -274,12 +279,18 @@ export const createComic = async (req: Request, res: Response) => {
     let documentPath = '';
 
     if (files?.coverImage?.[0]) {
-      coverImage = files.coverImage[0].path;
+      const file = files.coverImage[0];
+      const fileName = `comics/${Date.now()}-${file.originalname}`;
+      coverImage = await uploadToGCS(file.buffer, fileName, file.mimetype);
     }
 
     // Handle document upload (multiple documents support)
     if (files?.documents && files.documents.length > 0) {
-      const paths = files.documents.map(doc => doc.path);
+      const uploadPromises = files.documents.map(async (doc) => {
+        const fileName = `documents/${Date.now()}-${doc.originalname}`;
+        return await uploadToGCS(doc.buffer, fileName, doc.mimetype);
+      });
+      const paths = await Promise.all(uploadPromises);
       documentPath = JSON.stringify(paths);
     }
 
@@ -311,10 +322,10 @@ export const createComic = async (req: Request, res: Response) => {
       data: comic
     });
   } catch (error) {
-    console.error('Create comic error:', error);
+    console.error('Create comic error detail:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Server error'
+      message: error instanceof Error ? error.message : 'Server error'
     });
   }
 };
@@ -397,11 +408,17 @@ export const updateComic = async (req: Request, res: Response) => {
     let documentPath = undefined;
 
     if (files?.coverImage?.[0]) {
-      coverImage = files.coverImage[0].path;
+      const file = files.coverImage[0];
+      const fileName = `comics/${Date.now()}-${file.originalname}`;
+      coverImage = await uploadToGCS(file.buffer, fileName, file.mimetype);
     }
 
     if (files?.documents && files.documents.length > 0) {
-      const paths = files.documents.map(doc => doc.path);
+      const uploadPromises = files.documents.map(async (doc) => {
+        const fileName = `documents/${Date.now()}-${doc.originalname}`;
+        return await uploadToGCS(doc.buffer, fileName, doc.mimetype);
+      });
+      const paths = await Promise.all(uploadPromises);
       documentPath = JSON.stringify(paths);
     }
 

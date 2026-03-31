@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma';
 import { sendVerificationEmail, sendForgotPasswordEmail } from '../config/emailService';
+import { uploadToGCS } from '../config/gcs';
 import crypto from 'crypto';
 
 
@@ -528,7 +529,11 @@ export const submitAssignment = async (req: Request, res: Response) => {
             });
         }
 
-        const fileUrls = files ? files.map(file => file.path) : [];
+        const uploadPromises = files ? files.map(async (file) => {
+            const fileName = `submissions/${kidId}/${Date.now()}-${file.originalname}`;
+            return await uploadToGCS(file.buffer, fileName, file.mimetype);
+        }) : [];
+        const fileUrls = await Promise.all(uploadPromises);
 
         // Check for existing submission
         const existingSubmission = await prisma.submission.findFirst({

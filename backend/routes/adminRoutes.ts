@@ -73,9 +73,9 @@ router.get('/stats', getDashboardStats);
  *     summary: Create a new comic
  *     tags: [Comics]
  */
-import { uploadComicFiles, uploadAvatar } from '../middlewares/upload';
+import { uploadComicFilesGCS, uploadAvatar } from '../middlewares/upload';
 
-router.post('/comics', uploadComicFiles, createComic);
+router.post('/comics', uploadComicFilesGCS, createComic);
 
 /**
  * @swagger
@@ -90,7 +90,7 @@ router.post('/comics', uploadComicFiles, createComic);
  *     summary: Delete a comic
  *     tags: [Comics]
  */
-router.put('/comics/:id', uploadComicFiles, updateComic);
+router.put('/comics/:id', uploadComicFilesGCS, updateComic);
 router.delete('/comics/:id', deleteComic);
 
 /**
