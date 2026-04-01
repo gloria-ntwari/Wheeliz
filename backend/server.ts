@@ -20,7 +20,8 @@ const allowedOrigins = envFrontUrl
       'http://localhost:5173',
       'https://wheeliz-web.vercel.app',
       'https://wheeliz-backend.onrender.com',
-      'https://wheeliz-fronte-838164746945.europe-west1.run.app'
+      'https://wheeliz-fronte-838164746945.europe-west1.run.app',
+      'https://wheeliezworld.com'
     ];
 
 
