@@ -145,13 +145,14 @@ export const MacbookPro = (): JSX.Element => {
       {/* LEFT TEXT */}
       <div className="w-full lg:w-[65%] flex flex-col gap-8">
         <p className="text-white text-sm sm:text-base md:text-lg lg:text-[18px] leading-relaxed">
-          Children can win prizes by sending photos of completed challenges, games or coloring pages.
-          All content is shared exclusively within the secure, login-protected member section of this website
+          To join the Wheeliez Adventure Club, simply scan the QR code or 
+          click the sign-up link to complete the registration form.
         </p>
 
         <p className="text-white text-sm sm:text-base md:text-lg lg:text-[18px] leading-relaxed">
-          As a member of the Adventure Club, each child receives a personal username and password to access this secure area.
-          Here they can read and download all adventures and games, and see the announcement of the monthly winners.
+          Once registered, each child will receive a personal username and password to access the secure members’ 
+          section of the website. Inside, they can read and download monthly adventures, 
+          take part in fun challenges and games, and follow updates including the announcement of monthly winners.
         </p>
 
         <a 
