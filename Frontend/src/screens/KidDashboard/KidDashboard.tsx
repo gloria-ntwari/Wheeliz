@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../../config/api";
+import { API_BASE_URL, API_ROOT } from "../../config/api";
 import { useNavigate } from "react-router-dom";
 import { KidHeader } from "../../components/KidHeader";
 
@@ -7,6 +7,7 @@ export const KidDashboard = (): JSX.Element => {
   const navigate = useNavigate();
   const [kidData, setKidData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
 
   // Fetch kid dashboard data
   useEffect(() => {
