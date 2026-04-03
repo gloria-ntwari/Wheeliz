@@ -201,7 +201,7 @@ export const MacbookPro = (): JSX.Element => {
                 <br></br>
                 Factory: Musanze-Cyanika Road
                 <br></br><br></br>
-                Tel: +250780050540<br></br>
+                Tel: +250 786 050 540<br></br>
                 Email: customerservice@hollandafairfoods.com
               </div>
             </div>

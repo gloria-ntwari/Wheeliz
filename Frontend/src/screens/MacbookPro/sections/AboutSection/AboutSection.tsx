@@ -14,7 +14,7 @@ export const AboutSection = (): JSX.Element => {
            <p className="[font-family:'Barlow',Helvetica] text-left font-normal text-black text-sm sm:text-base md:text-lg lg:text-[18px] tracking-[0] leading-relaxed">
           Born from the adventurous spirit of <strong>Hollanda FairFoods</strong>, Wheeliez brings together flavor, excitement, and a dash of play in every crunchy bite. For over 10 years, we have proudly been crafting high-quality snacks made in Rwanda. Wheeliez is our invitation to every explorer at heart; the ones who like to play outside, read comic books and like to do smart games, alone or with their friends.
           <br /><br />
-          Hollanda Fair Foods is the producer of <strong>Winnaz</strong> potato crisps, <strong>Tsinda</strong> banana crisps and <strong>Wheeliez.</strong> We are based in Karwasa, Cyanika road in Musanze. For more information please contact us on <em className="underline">customerservice@hollandafairfoods.com</em>  or give us a call at +250780050540. And dont forget to follow us on Instagram @Wheeliezworld.
+          Hollanda Fair Foods is the producer of <strong>Winnaz</strong> potato crisps, <strong>Tsinda</strong> banana crisps and <strong>Wheeliez.</strong> We are based in Karwasa, Cyanika road in Musanze. For more information please contact us on <em className="underline">customerservice@hollandafairfoods.com</em>  or give us a call at +250 786 050 540. And dont forget to follow us on Instagram @Wheeliezworld.
           <br/> <br/>
           Did you know you can book a tour in our factory with your family or school class? 
         </p>
