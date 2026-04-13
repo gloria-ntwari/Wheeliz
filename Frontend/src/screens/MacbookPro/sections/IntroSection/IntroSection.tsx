@@ -5,7 +5,7 @@ const contentData = [
     label: "TOMATO",
     title: "SWEET TOMATO",
     description:
-      "We believe the best moments in life come with a side of snacks. Whether you're trekking a trail with a buddy, cracking up with a co-worker, or enjoying a movie night with the fam, Hardbite wants you to take a bite outta life, one crunchy, all-natural chip at a time.",
+      "Buckle up for a tangy twist! Wheeliez Sweet Tomato brings together the bright, zesty flavor of ripe tomatoes with a hint of sweetness,  full of energy and excitement. Every bite is a burst of flavor that makes snacking feel like an adventure.",
     verticalImages: ["/tomato_image.jpg", "/smile_tomato.heic"],
     shelfImage: "/shelf_tomato.jpg",
     layout: "left" as const,
@@ -14,7 +14,7 @@ const contentData = [
     label: "CHEESE",
     title: "SWEET CHEESE",
     description:
-      "We believe the best moments in life come with a side of snacks. Whether you're trekking a trail with a buddy, cracking up with a co-worker, or enjoying a movie night with the fam, Hardbite wants you to take a bite outta life, one crunchy, all-natural chip at a time.",
+    "Wheeliez Sweet Cheese combines the irresistible crunch of golden potato with a smooth, cheesy sweetness that keeps you rolling back for more. It’s the perfect balance of fun, flavor, and crunch ;  a cheesy joyride in every bite!",
     verticalImages: ["/cheese_smile.heic", "/smile_cheese.heic"],
     shelfImage: "/shelf_cheese.jpg",
     layout: "right" as const,
@@ -23,7 +23,7 @@ const contentData = [
 
 export const IntroSection = (): JSX.Element => {
   return (
-    <section className="flex flex-col items-center w-full gap-20 py-28 px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
+    <section className="flex flex-col items-center w-full gap-20 px-4 py-28 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
       {contentData.map((item, index) => {
         const isLayoutLeft = item.layout === "left";
 
@@ -39,7 +39,7 @@ export const IntroSection = (): JSX.Element => {
                   <img
                     src={img}
                     alt={`${item.title} ${i + 1}`}
-                    className="w-full h-full object-cover"
+                    className="object-cover w-full h-full"
                   />
                 </div>
               ))}
@@ -59,7 +59,7 @@ export const IntroSection = (): JSX.Element => {
                 <img
                   src={item.shelfImage}
                   alt={`${item.title} shelf`}
-                  className="w-full h-full object-cover"
+                  className="object-cover w-full h-full"
                 />
               </div>
             </div>
