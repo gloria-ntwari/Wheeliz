@@ -9,8 +9,7 @@ export const ProductShowcaseSection = (): JSX.Element => {
 
         We&apos;re always happy to hear from you! Whether it&apos;s a question, partnership inquiry, 
         or feedback about our products, we&apos;d love to connect. Fill out the form below, 
-        and our team will get back to you within 2&ndash;3 business days. Let&apos;s keep the world 
-        rollin&apos; with great snacks!
+        and our team will get back to you within 2&ndash;3 business days.
       </p>
     </div>
   );
