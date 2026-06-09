@@ -5,6 +5,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { API_BASE_URL } from "../../config/api";
+import { MOTION_VIDEO_SRC } from "../../config/assets";
 
 
 export const SignUp = (): JSX.Element => {
@@ -126,7 +127,7 @@ export const SignUp = (): JSX.Element => {
       <div className="absolute inset-0 w-full h-full lg:w-[60%]">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src="/motion%202.mp4"
+          src={MOTION_VIDEO_SRC}
           autoPlay
           loop
           muted

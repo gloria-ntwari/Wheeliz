@@ -2,6 +2,7 @@ import { ArrowRightIcon, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../../../components/ui/button";
+import { MOTION_VIDEO_SRC } from "../../../../config/assets";
 
 const navigationItems = [
   { label: "ABOUT US", href: "#about-section" },
@@ -34,7 +35,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
       <div className="absolute inset-0 w-full h-full">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src="/motion%202.mp4"
+          src={MOTION_VIDEO_SRC}
           autoPlay
           loop
           muted
