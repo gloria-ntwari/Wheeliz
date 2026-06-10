@@ -5,7 +5,7 @@ export const AboutSection = (): JSX.Element => {
     <section className="flex flex-col lg:flex-row w-full items-center justify-center gap-8 lg:gap-[109px] px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32 py-8 sm:py-12 md:py-16 bg-[#fde5bc]">
       <div className="flex flex-col w-full lg:max-w-[819px] items-center lg:items-start justify-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 order-2 lg:order-1">
         <div className="flex flex-col items-center gap-6 lg:items-start sm:gap-8 md:gap-10 lg:gap-12">
-          <h2 className="w-full max-w-[691px] [font-family:'Barlow',Helvetica] font-semibold text-black  text-center lg:text-left text-xl sm:text-2xl md:text-3xl lg:text-[34px] tracking-[1px] leading-tight uppercase">
+          <h2 className="w-full max-w-[691px] [font-family:'Barlow',Helvetica] font-extrabold text-black  text-center lg:text-left text-xl sm:text-2xl md:text-3xl lg:text-[36px] tracking-[1px] leading-tight uppercase">
             WELCOME TO WHEELIEZ
             <br />
             WORLD

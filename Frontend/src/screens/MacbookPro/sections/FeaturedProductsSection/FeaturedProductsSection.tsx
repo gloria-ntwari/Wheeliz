@@ -34,7 +34,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
     <section className="relative w-full h-[420px] sm:h-[480px] md:h-[560px] lg:h-[760px] xl:h-[760px] overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         <video
-          className="absolute top-0 left-0 w-full h-full object-cover"
+          className="absolute top-0 left-0 object-cover w-full h-full"
           src={MOTION_VIDEO_SRC}
           autoPlay
           loop
@@ -169,7 +169,7 @@ export const FeaturedProductsSection = (): JSX.Element => {
       </nav>
 
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <h1 className="absolute top-64 left-1/2 -translate-x-1/2 -translate-y-1/2 [font-family:'Barlow',Helvetica] font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-[90px] xl:text-[90px] tracking-[-2.90px] leading-tight text-center whitespace-nowrap">
+        <h1 className="absolute top-64 left-1/2 -translate-x-1/2 -translate-y-1/2 [font-family:'Barlow',Helvetica] font-extrabold text-white text-2xl sm:text-3xl md:text-4xl lg:text-[90px] xl:text-[90px] tracking-[-2.90px] leading-tight text-center whitespace-nowrap">
           <span className="inline-block animate-hero-title">
             {"PLAY    LEARN    SNACK".split("").map((ch, i) => (
               <span
